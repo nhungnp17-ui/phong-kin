@@ -61,6 +61,7 @@ const WALL_SLIDE = 110, WALLJUMP_X = 280, WALLJUMP_Y = 620, WALLJUMP_LOCK = .14;
 // p con lắc (neo ở mép trên ô; dây dài tới gần sàn) · c / C băng chuyền kéo trái / phải
 // > < gió · } { gió giật · | luồng khí bốc lên · r R gương (/ \\) · u j nguồn sáng (phải / trái) · O cảm biến quang · H cổng ánh sáng
 // Q thùng gỗ xốp (nổi trên nước, axit ăn mòn)
+// s quặng pirit FeS₂ · i mảnh gốm chịu nhiệt Al₂O₃ · F nồi luyện áp suất · K cửa đồng (chỉ H₂SO₄ đặc nóng phá được)
 // _ kệ một chiều (nhảy xuyên từ dưới, giữ ↓ để rơi) · $ hạc giấy bí mật (lời trong LEVELS[i].secrets)
 // Mỗi khu chia thành các đoạn rộng 24 ô; mỗi đoạn có một gợi ý và một điểm hồi sinh.
 const SEG = 24, INTRO = 14;   // INTRO: số cột sảnh vào ở đầu mỗi khu
@@ -547,6 +548,56 @@ const LEVELS = [
   '########################################################################################^^^^^^^^^^^^^^^^######',
   '##############################################################################################################',
  ]},
+ { name:'Lò Luyện', ch:3, theme:'lab', combat:true,
+   pages:['Lò Luyện cần ba thứ: quặng pirit để đốt ra SO₂, gốm chịu nhiệt để vá nồi, và một người đủ kiên nhẫn để chờ.',
+          'Ta từng làm vỡ cái nồi này. Ta tức giận rồi bỏ đi. Có những thứ vỡ rồi vẫn sửa được, nếu mình chịu quay lại nhặt từng mảnh.',
+          'H₂SO₄ đặc nóng hút nước khỏi mọi thứ, kể cả đường, kể cả gỗ. Dùng nó cẩn thận, con ạ. Thứ gì mạnh cũng có cái giá của nó.'],
+   talks:[[5,15,'Cạc! Nồi luyện ở cuối phòng vỡ rồi. Phải đi gom vật liệu thôi.'],[41,14,'Quặng pirit nằm trên tháp. Leo lên bằng các kệ!'],
+          [64,16,'Gốm chịu nhiệt rơi xuống đáy hầm. Lấy xong thì leo thang kệ bên phải.'],[89,15,'Đủ đồ rồi thì nhấn E ở nồi luyện!']],
+   hints:['Lọ có hạn (số lọ ở góc trái). Trung hoà bể axit bằng NaOH, phá tường đá vôi bằng HCl.',
+          'ĐI LÊN: leo kệ lên tháp lấy 3 cục quặng pirit FeS₂. Một cục nằm sau tường đá vôi.',
+          'ĐI XUỐNG: xuống hầm lấy 3 mảnh gốm Al₂O₃, leo thang kệ bên phải để lên. Muốn đi thẳng thì nhảy qua các kệ.',
+          'Đủ đồ thì nhấn E ở nồi luyện. Có H₂SO₄ đặc nóng rồi thì phá cửa đồng và rùa sắt.'],
+   notes:[['AXIT · BAZƠ','HCl + NaOH → NaCl + H₂O','CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑','Lọ có hạn: ném cho chuẩn'],
+          ['QUẶNG PIRIT','FeS₂: "vàng của kẻ ngốc"','4FeS₂ + 11O₂ → 2Fe₂O₃ + 8SO₂','Kệ mỏng: nhảy xuyên từ dưới lên'],
+          ['GỐM CHỊU NHIỆT','Al₂O₃ nóng chảy ở 2072°C','Không cháy, không gỉ, cách nhiệt','Thang kệ bên phải để leo lên'],
+          ['SẢN XUẤT H₂SO₄','2SO₂ + O₂ ⇌ 2SO₃ (V₂O₅, 450°C)','SO₃ + H₂SO₄ → oleum → H₂SO₄ đặc','Cu + 2H₂SO₄ → CuSO₄ + SO₂ + 2H₂O']],
+   secrets:['Hạc giấy trên đỉnh tháp quặng. Trong cánh hạc: “Đừng bao giờ đổ nước vào axit đặc. Hãy rót axit vào nước, thật từ từ.”'],
+   decor:[['sign',8,'LÒ LUYỆN'],['lamp',12],['flask',33,7],['board',92,2]],
+   map:[
+  '##############################################################################################################',
+  '########################################.........$..........##################################################',
+  '########################################...s................##################################################',
+  '########################################.._____.............##################################################',
+  '########################################.....3..........s...##################################################',
+  '########################################........_____._____.##################################################',
+  '########################################....................##################################################',
+  '########################################._____......._____..z...##############################################',
+  '########################################..........6......d..z.s.##############################################',
+  '########################################......._____..._____##################################################',
+  '########################################....................##################################################',
+  '########################################.____..........____.##################################################',
+  '#..............................z....................m................................................K.......#',
+  '#.........................*....z.___..........____....____....................................m......K.......#',
+  '#..............................z.........................................__..........................K.......#',
+  '#..............................z.........____.......................__........__.....................K.......#',
+  '#..P....n..m....1..........1.d.z...2....................................................n..F....7.d..K...E...#',
+  '###################xxxxxx########################################....................#########################',
+  '###############################################################...................___#########################',
+  '###############################################################......................#########################',
+  '###############################################################.i..........m......___#########################',
+  '####################################################################.................#########################',
+  '###############################################################.................1.___#########################',
+  '###############################################################......................#########################',
+  '###############################################################...*....i.5........___#########################',
+  '###############################################################.......####...........#########################',
+  '###############################################################..............4.i..___#########################',
+  '###############################################################.............#####....#########################',
+  '###############################################################...................___#########################',
+  '###############################################################......................#########################',
+  '####################################################################xxx#xxx###################################',
+  '##############################################################################################################',
+ ]},
 ];
 
 // ===================================================================
@@ -852,9 +903,138 @@ function hitsEnemy(x,y){
   if (boss && !boss.dead && x>boss.x && x<boss.x+boss.w && y>boss.y && y<boss.y+boss.h) return true;
   return enemies.some(e=>!e.dead && x>e.x-4 && x<e.x+e.w+4 && y>e.y-4 && y<e.y+e.h+4);
 }
+// ===== LÒ LUYỆN: quặng pirit, gốm chịu nhiệt, nồi luyện áp suất → H₂SO₄ đặc nóng =====
+// Lọ hoá chất có hạn: mỗi khu được cấp ≈ 8 lần lượng cần dùng (tính từ bản đồ: bể axit, tường đá vôi, cửa đồng, quái, boss)
+const AMMO_MULT = 8;
+let ammo = {acid:0, base:0, h2so4:0}, ammoNeed = {acid:0, base:0, h2so4:0}, hasH2SO4 = false;
+let ores = [], ceramics = [], forgeSeq = null, forgeDone = false;
+const ENEMY_CODE = {1:'slime', 2:'limestone', 3:'shade', 4:'slug', 5:'spitter', 6:'jelly', 7:'iron'};
+function tileComps(ch){ let n = 0; const seen = new Set();
+  for (const t of tiles[ch]||[]){ if (seen.has(t.x+','+t.y) || grid[t.y][t.x]!==ch) continue; n++; const q = [[t.x,t.y]];
+    while (q.length){ const [x,y] = q.pop(), k = x+','+y; if (seen.has(k) || x<0||y<0||x>=GW||y>=GH || grid[y][x]!==ch) continue; seen.add(k); q.push([x+1,y],[x-1,y],[x,y+1],[x,y-1]); } }
+  return n; }
+function computeAmmo(L){
+  const types = enemies.map(e=>e.type).concat(L.waves ? L.waves.spawns.flat().map(s=>ENEMY_CODE[s[0]]) : []);
+  const cnt = t => types.filter(x=>x===t).length;
+  ammoNeed = {
+    base:  tileComps('x') + cnt('slime') + cnt('spitter')*ENEMY.spitter.hp + (boss ? BOSS_HP.body : 0),
+    acid:  tileComps('z') + cnt('limestone')*(ENEMY.limestone.armor + ENEMY.limestone.hp) + cnt('slug') + (boss ? BOSS_HP.armor : 0),
+    h2so4: tileComps('K') + cnt('iron') };
+  for (const k in ammoNeed) ammo[k] = ammoNeed[k] ? Math.ceil(ammoNeed[k]*AMMO_MULT) : 4;
+}
+const REAGENT_NAME = {acid:'HCl', base:'NaOH', h2so4:'H₂SO₄', tnt:'TNT'};
+function dissolveCopper(sx, sy){
+  const q=[[sx,sy]], seen=new Set(); let n=0;
+  while (q.length && n<20){ const [x,y]=q.pop(), k=x+','+y; if (seen.has(k)) continue; seen.add(k);
+    if (x<0||y<0||x>=GW||y>=GH||grid[y][x]!=='K') continue;
+    grid[y][x]='.'; n++;
+    for (let i=0;i<5;i++) bubbles.push({x:x*T+Math.random()*T, y:y*T+Math.random()*T, vy:-30-Math.random()*50, r:3+Math.random()*4, life:1.2+Math.random()*.6});
+    for (let i=0;i<6;i++) parts.push({x:x*T+T/2, y:y*T+T/2, vx:(Math.random()-.5)*200, vy:-Math.random()*220, a:Math.random()*6, va:5, l:3+Math.random()*4, life:.6});
+    q.push([x,y+1],[x,y-1],[x+1,y],[x-1,y]); }
+  tiles.K = (tiles.K||[]).filter(t=>grid[t.y][t.x]==='K');
+  SFX.play('fizz'); SFX.play('gate'); shakeT = Math.max(shakeT, .25);
+  popups.push({x:sx*T+T/2, y:sy*T-30, text:'Cu + 2H₂SO₄ (đặc, nóng) → CuSO₄ + SO₂↑ + 2H₂O', life:3.4, big:true});
+  popups.push({x:sx*T+T/2, y:sy*T-6, text:'SO₂↑ mùi hắc', life:2});
+}
+// ---- nồi luyện ----
+const FORGE_STEPS = [
+  [0,   'Vá nồi bằng gốm Al₂O₃: chịu được 2072°C'],
+  [1.9, 'Đốt quặng: 4FeS₂ + 11O₂ → 2Fe₂O₃ + 8SO₂'],
+  [3.9, '2SO₂ + O₂ ⇌ 2SO₃  (xúc tác V₂O₅, 450°C)'],
+  [5.9, 'SO₃ + H₂SO₄ → oleum · pha loãng → H₂SO₄ đặc'],
+  [7.9, 'Có H₂SO₄ đặc nóng: háo nước, oxi hoá mạnh!'],
+];
+const FORGE_DUR = 9.6;
+function furnaceAct(f){
+  const nO = ores.filter(o=>o.got).length, nC = ceramics.filter(c=>c.got).length;
+  if (forgeDone){ popups.push({x:f.x*T+T/2, y:f.y*T-60, text:'Nồi đang nguội dần. Lọ H₂SO₄ đã ở trong ba lô.', life:2}); return; }
+  if (nO < ores.length || nC < ceramics.length){
+    SFX.play('denied'); popups.push({x:f.x*T+T/2, y:f.y*T-70, text:`Nồi vỡ. Cần gốm chịu nhiệt ${nC}/${ceramics.length} · quặng pirit ${nO}/${ores.length}`, life:2.6, big:true});
+    if (!nC && !nO) showTip('forge', ['E'], 'Nồi luyện bị vỡ. Leo LÊN tháp tìm quặng pirit, xuống DƯỚI hầm tìm gốm chịu nhiệt rồi quay lại đây.', null, 9);
+    return; }
+  forgeSeq = {t:0, step:-1, f}; player.face = Math.sign(f.x*T+T/2-(player.x+11)) || 1; SFX.play('strain');
+}
+function updateForge(dt){
+  const F = forgeSeq; F.t += dt; const f = F.f, fx = f.x*T+T/2, fy = f.y*T;
+  while (F.step+1 < FORGE_STEPS.length && F.t >= FORGE_STEPS[F.step+1][0]){ F.step++; const s = FORGE_STEPS[F.step];
+    popups.push({x:fx, y:fy-190, text:s[1], life:1.9, big:true});
+    SFX.play(['clank','boom','pulse','fizz','heal'][F.step] || 'fizz'); if (F.step===1) shakeT = .35; }
+  if (F.t > 1.9 && F.t < 4 && Math.random() < dt*14) parts.push({x:fx+(Math.random()-.5)*30, y:fy-10, vx:(Math.random()-.5)*60, vy:-120-Math.random()*90, a:0, va:0, l:4, life:.6});
+  if (F.t > 3.9 && Math.random() < dt*6) bubbles.push({x:fx+(Math.random()-.5)*50, y:fy-70, vy:-40, r:4+Math.random()*5, life:1.4});
+  if (F.t >= FORGE_DUR){ forgeSeq = null; forgeDone = true; hasH2SO4 = true; ammo.h2so4 = Math.ceil(Math.max(1, ammoNeed.h2so4)*AMMO_MULT);
+    reagent = 'h2so4'; swapFx = {t:0, to:'h2so4', from:'base'}; SFX.play('key'); saveGame();
+    showTip('h2so4', ['X','F'], 'Đã có H₂SO₄ đặc nóng! Nó hoà tan đồng và sắt (thứ HCl bó tay), nhưng gặp đá vôi thì tạo lớp CaSO₄ ít tan và dừng lại.', null, 11); }
+}
+function drawFurnace(t){
+  const X = t.x*T+T/2, Y = t.y*T+T, run = forgeSeq ? forgeSeq.t : forgeDone ? FORGE_DUR : 0, k = run / FORGE_DUR;
+  const fixed = forgeDone || (forgeSeq && forgeSeq.t > .4), hot = forgeSeq && forgeSeq.t > 1.9 ? Math.min(1,(forgeSeq.t-1.9)/1) : forgeDone ? .25 : 0;
+  ctx.save(); ctx.strokeStyle=INK; ctx.fillStyle=INK; ctx.lineCap='round'; ctx.lineJoin='round';
+  // chân + bệ
+  ctx.lineWidth=4; line(X-46,Y,X-38,Y-22); line(X+46,Y,X+38,Y-22); ctx.fillRect(X-52,Y-26,104,8);
+  // thân nồi
+  ctx.fillStyle=PAPER; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(X-44,Y-26); ctx.lineTo(X-48,Y-96); ctx.quadraticCurveTo(X,Y-140,X+48,Y-96); ctx.lineTo(X+44,Y-26); ctx.closePath(); ctx.fill(); ctx.stroke();
+  // các tấm gốm (vá dần khi sửa)
+  const plates = [[-36,-84],[-6,-92],[24,-84],[-36,-56],[-6,-58],[24,-56]];
+  plates.forEach(([dx,dy],i)=>{ const on = fixed && (forgeDone || forgeSeq.t > .4 + i*.22);
+    if (on){ ctx.fillStyle = i%2 ? INK : PAPER; ctx.fillRect(X+dx,Y+dy,24,22); ctx.lineWidth=1.5; ctx.strokeRect(X+dx,Y+dy,24,22); if (i%2){ ctx.fillStyle=PAPER; ctx.font=`700 6px ${FONT}`; ctx.textAlign='center'; ctx.fillText('Al₂O₃', X+dx+12, Y+dy+14); } }
+    else { ctx.setLineDash([3,4]); ctx.lineWidth=1.2; ctx.strokeRect(X+dx,Y+dy,24,22); ctx.setLineDash([]); } });
+  if (!fixed){ ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(X-10,Y-120); ctx.lineTo(X-2,Y-100); ctx.lineTo(X-12,Y-86); ctx.lineTo(X-4,Y-66); ctx.moveTo(X+20,Y-112); ctx.lineTo(X+14,Y-96); ctx.lineTo(X+24,Y-80); ctx.stroke();
+    ctx.globalAlpha=.6; for (let i=0;i<3;i++){ ctx.fillRect(X-30+i*28, Y-24+Math.sin(i)*2, 8, 4); } ctx.globalAlpha=1; }
+  // cửa lò: thấy lửa khi chạy
+  ctx.fillStyle = hot > 0 ? INK : PAPER; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(X, Y-34, 14, Math.PI, 0); ctx.lineTo(X+14,Y-26); ctx.lineTo(X-14,Y-26); ctx.closePath(); ctx.fill(); ctx.stroke();
+  if (hot > 0){ ctx.fillStyle=PAPER; for (let i=0;i<3;i++){ const h = (8+Math.sin(clock*14+i*2)*3)*hot; ctx.beginPath(); ctx.moveTo(X-8+i*8,Y-27); ctx.quadraticCurveTo(X-11+i*8,Y-27-h*.5,X-8+i*8,Y-27-h); ctx.quadraticCurveTo(X-5+i*8,Y-27-h*.5,X-8+i*8,Y-27); ctx.fill(); } }
+  // đồng hồ áp suất
+  const gx = X+30, gy = Y-118; ctx.fillStyle=PAPER; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(gx,gy,12,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  const ga = -Math.PI*.8 + Math.PI*1.6*Math.min(1, forgeSeq ? forgeSeq.t/6 : forgeDone ? .4 : 0) + (forgeSeq ? Math.sin(clock*30)*.04 : 0);
+  ctx.lineWidth=2; line(gx,gy,gx+Math.sin(ga)*9,gy-Math.cos(ga)*9); ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(gx,gy,2,0,Math.PI*2); ctx.fill();
+  // ống dẫn sang bình hứng
+  ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(X+44,Y-100); ctx.lineTo(X+70,Y-100); ctx.lineTo(X+70,Y-56); ctx.stroke();
+  ctx.fillStyle=PAPER; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(X+64,Y-48); ctx.lineTo(X+64,Y-38); ctx.lineTo(X+56,Y-6); ctx.lineTo(X+84,Y-6); ctx.lineTo(X+76,Y-38); ctx.lineTo(X+76,Y-48); ctx.closePath(); ctx.fill(); ctx.stroke();
+  const lvlq = forgeSeq ? Math.max(0, Math.min(1,(forgeSeq.t-5.9)/2)) : forgeDone ? .3 : 0;
+  if (lvlq > 0){ ctx.fillStyle=INK; ctx.fillRect(X+59, Y-6-28*lvlq, 22, 28*lvlq); if (forgeSeq && forgeSeq.t>5.9 && forgeSeq.t<7.9){ const dy = (clock*120)%40; ctx.beginPath(); ctx.arc(X+70, Y-54+dy, 2.5, 0, Math.PI*2); ctx.fill(); } }
+  ctx.fillStyle=INK; ctx.font=`700 7px ${FONT}`; ctx.textAlign='center'; ctx.fillText('H₂SO₄', X+70, Y+8);
+  // khói/hơi
+  if (hot > 0){ ctx.globalAlpha=.4; ctx.lineWidth=2; for (let i=0;i<3;i++){ const p = (clock*.6 + i/3) % 1; ctx.beginPath(); ctx.arc(X-6+Math.sin(p*6+i)*8, Y-140 - p*60, 5+p*12, 0, Math.PI*2); ctx.stroke(); } ctx.globalAlpha=1; }
+  ctx.font=`700 9px ${FONT}`; ctx.fillStyle=INK; ctx.fillText(forgeDone ? 'NỒI LUYỆN · XONG' : 'NỒI LUYỆN ÁP SUẤT', X, Y-150);
+  // lọ bay về phía Bấc ở bước cuối
+  if (forgeSeq && forgeSeq.t > 7.9){ const q = Math.min(1,(forgeSeq.t-7.9)/1.2), px = player.x+11, py = player.y+10, sx = X+70, sy = Y-30;
+    flaskIcon(sx+(px-sx)*q, sy+(py-sy)*q - Math.sin(q*Math.PI)*80, 'h2so4', q*Math.PI*4, 1.6-q*.6); }
+  ctx.restore();
+}
+function drawOre(o){
+  if (o.got) return; const y = o.y + Math.sin(clock*2.5+o.x)*3;
+  ctx.save(); ctx.strokeStyle=INK; ctx.lineWidth=1.6;
+  for (const [dx,dy,s] of [[-7,2,10],[3,-4,12],[4,6,8]]){ ctx.fillStyle=INK; ctx.fillRect(o.x+dx-s/2, y+dy-s/2, s, s); ctx.fillStyle=PAPER; ctx.fillRect(o.x+dx-s/2+2, y+dy-s/2+2, s*.35, s*.35); ctx.strokeStyle=PAPER; ctx.lineWidth=.8; line(o.x+dx-s/2, y+dy, o.x+dx+s/2, y+dy); }
+  ctx.globalAlpha=.5+.5*Math.sin(clock*4+o.x); ctx.strokeStyle=INK; ctx.lineWidth=1; for (let i=0;i<4;i++){ const a=i/4*Math.PI*2+clock; line(o.x+Math.cos(a)*14, y+Math.sin(a)*14, o.x+Math.cos(a)*19, y+Math.sin(a)*19); }
+  ctx.globalAlpha=1; ctx.fillStyle=INK; ctx.font=`700 7px ${FONT}`; ctx.textAlign='center'; ctx.fillText('FeS₂', o.x, y-16);
+  ctx.restore();
+}
+function drawCeramic(o){
+  if (o.got) return; const y = o.y + Math.sin(clock*2.2+o.x)*3, r = Math.sin(clock*1.5+o.x)*.2;
+  ctx.save(); ctx.translate(o.x, y); ctx.rotate(r); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2.4;
+  ctx.beginPath(); for (let i=0;i<6;i++){ const a=i/6*Math.PI*2; ctx.lineTo(Math.cos(a)*12, Math.sin(a)*12); } ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.lineWidth=1; ctx.beginPath(); for (let i=0;i<6;i++){ const a=i/6*Math.PI*2; ctx.lineTo(Math.cos(a)*7, Math.sin(a)*7); } ctx.closePath(); ctx.stroke();
+  ctx.rotate(-r); ctx.fillStyle=INK; ctx.font=`700 7px ${FONT}`; ctx.textAlign='center'; ctx.fillText('Al₂O₃', 0, -17); ctx.restore();
+}
+function drawCopperTile(X, Y){
+  ctx.save(); ctx.fillStyle=PAPER; ctx.fillRect(X+2,Y,T-4,T); ctx.strokeStyle=INK; ctx.lineWidth=3;
+  for (let i=0;i<4;i++) line(X+7+i*9, Y, X+7+i*9, Y+T); ctx.lineWidth=2; line(X+2,Y+8,X+T-2,Y+8); line(X+2,Y+T-8,X+T-2,Y+T-8);
+  ctx.fillStyle=INK; for (let i=0;i<4;i++){ ctx.beginPath(); ctx.arc(X+7+i*9, Y+8, 2, 0, Math.PI*2); ctx.fill(); }
+  ctx.fillStyle=PAPER; ctx.fillRect(X+T/2-8,Y+T/2-6,16,12); ctx.strokeStyle=INK; ctx.lineWidth=1.2; ctx.strokeRect(X+T/2-8,Y+T/2-6,16,12);
+  ctx.fillStyle=INK; ctx.font=`700 8px ${FONT}`; ctx.textAlign='center'; ctx.fillText('Cu', X+T/2, Y+T/2+3); ctx.restore();
+}
+function drawQuestHUD(){
+  if (!ores.length && !ceramics.length) return;
+  const nO = ores.filter(o=>o.got).length, nC = ceramics.filter(c=>c.got).length, y = LEVELS[lvl].combat ? 112 : 66;
+  ctx.save(); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.fillRect(12,y-12,196,22); ctx.strokeRect(12,y-12,196,22);
+  ctx.fillStyle=INK; ctx.font=`700 9px ${FONT}`; ctx.textAlign='left';
+  ctx.fillText(forgeDone ? 'NỒI LUYỆN ✓  ·  CÓ H₂SO₄ ĐẶC NÓNG' : `QUẶNG FeS₂ ${nO}/${ores.length}  ·  GỐM Al₂O₃ ${nC}/${ceramics.length}`, 20, y+3);
+  ctx.restore();
+}
+
 // Đổi lọ: lọ cũ bay ngược vào ba lô, lọ mới bật ra xoay vòng rồi rơi vào tay
 let swapFx = null; const SWAP_DUR = .6;
-const reagentList = () => dev.tnt ? ['acid','base','tnt'] : ['acid','base'];
+const reagentList = () => ['acid','base', ...(hasH2SO4 ? ['h2so4'] : []), ...(dev.tnt ? ['tnt'] : [])];
 function swapReagent(){
   const L = reagentList(), from = L.includes(reagent) ? reagent : 'base';
   reagent = L[(L.indexOf(from)+1) % L.length];
@@ -865,7 +1045,8 @@ function flaskIcon(x, y, kind, rot, k){
   ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(k, k);
   ctx.strokeStyle=INK; ctx.lineWidth=1.6; ctx.fillStyle=PAPER;
   ctx.beginPath(); ctx.moveTo(-2,-8); ctx.lineTo(-2,-3); ctx.lineTo(-6,5); ctx.lineTo(6,5); ctx.lineTo(2,-3); ctx.lineTo(2,-8); ctx.closePath(); ctx.fill(); ctx.stroke();
-  ctx.fillStyle=INK; if (kind==='tnt'){ ctx.beginPath(); ctx.moveTo(-2,-3); ctx.lineTo(-6,5); ctx.lineTo(6,5); ctx.lineTo(2,-3); ctx.closePath(); ctx.fill(); ctx.fillStyle=PAPER; ctx.font=`700 4px ${FONT}`; ctx.textAlign='center'; ctx.fillText('TNT',0,4); ctx.fillStyle=INK; }
+  ctx.fillStyle=INK; if (kind==='h2so4'){ ctx.beginPath(); ctx.moveTo(-2,-3); ctx.lineTo(-6,5); ctx.lineTo(6,5); ctx.lineTo(2,-3); ctx.closePath(); ctx.fill(); ctx.strokeStyle=PAPER; ctx.lineWidth=.8; line(-4,1,4,1); line(-5,3.5,5,3.5); ctx.strokeStyle=INK; ctx.lineWidth=1; for (const sx of [-3,3]){ ctx.beginPath(); ctx.moveTo(sx,-11); ctx.quadraticCurveTo(sx+2,-14,sx,-17); ctx.stroke(); } }
+  else if (kind==='tnt'){ ctx.beginPath(); ctx.moveTo(-2,-3); ctx.lineTo(-6,5); ctx.lineTo(6,5); ctx.lineTo(2,-3); ctx.closePath(); ctx.fill(); ctx.fillStyle=PAPER; ctx.font=`700 4px ${FONT}`; ctx.textAlign='center'; ctx.fillText('TNT',0,4); ctx.fillStyle=INK; }
   else if (kind==='acid') ctx.fillRect(-5,1,10,4); else { ctx.beginPath(); ctx.arc(0,2.5,2.5,0,Math.PI*2); ctx.fill(); }
   ctx.fillRect(-3,-10,6,2.5);
   ctx.restore();
@@ -888,7 +1069,7 @@ function drawSwapFx(){
   if (k > .8){ const t = (k-.8)/.2; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.globalAlpha = 1-t; ctx.beginPath(); ctx.arc(hand.x, hand.y, 6 + t*16, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1; }
   const la = k < .3 ? 0 : Math.min(1, (k-.3)*4) * (k > .85 ? (1-k)/.15 : 1);
   if (la > 0){ ctx.globalAlpha = la; const ly = p.y - 22 - easeOut(Math.min(1,(k-.3)/.4))*10;
-    const lab = f.to==='acid' ? 'HCl · pH 1 · axit' : f.to==='tnt' ? 'TNT · C₇H₅N₃O₆ · THUỐC NỔ' : 'NaOH · pH 13 · bazơ';
+    const lab = f.to==='acid' ? 'HCl · pH 1 · axit' : f.to==='h2so4' ? 'H₂SO₄ đặc nóng · háo nước · oxi hoá mạnh' : f.to==='tnt' ? 'TNT · C₇H₅N₃O₆ · THUỐC NỔ' : 'NaOH · pH 13 · bazơ';
     ctx.font = `700 10px ${FONT}`; ctx.textAlign = 'center'; const w = ctx.measureText(lab).width + 12;
     ctx.fillStyle = f.to!=='base' ? INK : PAPER; ctx.fillRect(p.x+11-w/2, ly-11, w, 15); ctx.strokeStyle = INK; ctx.lineWidth = 1.2; ctx.strokeRect(p.x+11-w/2, ly-11, w, 15);
     ctx.fillStyle = f.to!=='base' ? PAPER : INK; ctx.fillText(lab, p.x+11, ly); }
@@ -897,6 +1078,7 @@ function drawSwapFx(){
 function throwFlask(){
   const p = player;
   if (mana < FLASK_COST){ manaFlash=.5; SFX.play('denied'); return; }
+  if (reagent!=='tnt'){ if ((ammo[reagent]||0) <= 0){ SFX.play('denied'); popups.push({x:p.x+11, y:p.y-26, text:`hết lọ ${REAGENT_NAME[reagent]}!`, life:1.4}); showTip('noammo', ['X'], 'Hết loại lọ này rồi. Nhấn X để đổi sang lọ khác. Nhấn R chơi lại khu để được cấp lại đầy đủ.', null, 8); return; } ammo[reagent]--; }
   mana -= FLASK_COST;
   const s0 = flaskStart(p), v = flaskVel(p.charge, p.faceS>=0?1:-1);
   flasks.push({x:s0.x, y:s0.y, vx:v.vx, vy:v.vy, kind:reagent, rot:0});
@@ -961,10 +1143,23 @@ function splash(x, y, kind){
       if (kind==='acid' && c==='z'){ dissolveLime(tx,ty); didTile = true; }
       if (kind==='acid' && c==='x'){ popups.push({x, y:y-14, text:'axit đổ vào axit: chẳng có gì xảy ra', life:1.8}); didTile = true; }
       if (kind==='base' && c==='z'){ popups.push({x, y:y-14, text:'bazơ không phản ứng với đá vôi', life:1.8}); didTile = true; }
+      if (kind==='h2so4' && c==='K'){ dissolveCopper(tx,ty); didTile = true; }
+      if (kind==='h2so4' && c==='z'){ popups.push({x, y:y-14, text:'CaSO₄ ít tan phủ kín mặt đá: phản ứng dừng lại!', life:2.4}); co2(x,y); didTile = true; }
+      if (kind==='h2so4' && c==='x'){ popups.push({x, y:y-14, text:'axit vào axit: không cần đâu', life:1.6}); didTile = true; }
+      if (kind==='acid' && c==='K'){ popups.push({x, y:y-14, text:'Cu đứng sau H: HCl không hoà tan được đồng', life:2.2}); didTile = true; }
+      if (kind==='base' && c==='K'){ popups.push({x, y:y-14, text:'bazơ không phản ứng với đồng', life:1.8}); didTile = true; }
     }
   // tác dụng lên quái
   for (const e of enemies){
     if (e.dead || Math.hypot(e.x+e.w/2-x, e.y+e.h/2-y) > SPLASH_R + e.w/2) continue;
+    if (kind==='h2so4'){
+      if (e.type==='iron'){ SFX.play('fizz'); co2(e.x+e.w/2, e.y); killEnemy(e, '2Fe + 6H₂SO₄ đặc → Fe₂(SO₄)₃ + 3SO₂↑ + 6H₂O'); }
+      else if (e.type==='slug'){ SFX.play('fizz'); killEnemy(e, '2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O'); }
+      else if (e.type==='limestone'){ popups.push({x:e.x+e.w/2, y:e.y-14, text:'CaSO₄ ít tan bọc vỏ: H₂SO₄ không ăn sâu được', life:2}); }
+      else if (e.type==='jelly') popJelly(e);
+      else popups.push({x:e.x+e.w/2, y:e.y-10, text: e.type==='shade' ? 'bóng mực không phải chất: cần ánh sáng' : 'axit + axit: không phản ứng', life:1.6});
+      continue;
+    }
     if (e.type==='slime'){
       if (kind==='base'){ SFX.play('fizz'); killEnemy(e, 'HCl + NaOH → NaCl + H₂O'); }
       else popups.push({x:e.x+e.w/2, y:e.y-10, text:'axit + axit: không phản ứng', life:1.6});
@@ -986,6 +1181,7 @@ function splash(x, y, kind){
       popJelly(e);
     } else if (e.type==='iron'){
       popups.push({x:e.x+e.w/2, y:e.y-14, text: kind==='acid' ? 'Fe + 2HCl → FeCl₂ + H₂: quá chậm!' : 'sắt không phản ứng với bazơ', life:1.8});
+      if (kind==='acid' && !hasH2SO4) showTip('iron', [], 'Rùa sắt: HCl ăn quá chậm. Giẫm từ trên cao (≥ 4 ô) xuống để vỡ vỏ, hoặc chờ có axit mạnh hơn.', null, 8);
     }
   }
   if (boss && !boss.dead && Math.hypot(boss.x+boss.w/2-x, boss.y+boss.h/2-y) < SPLASH_R + boss.w/2) bossFlask(kind);
@@ -2101,11 +2297,19 @@ const STORY = {
     ],
     [{scene:'chapter', title:'Phần 2 · Phòng Quang Học', icon:'lab', lines:['Nơi ánh sáng học cách rẽ hướng.']}],
     [{scene:'chapter', title:'Phần 3 · Phòng Áp Suất', icon:'lab', lines:['Nơi mọi thứ đều chịu một sức ép.']}],
+    [
+      {shots:[
+        cineShot('forge', [0,140,.85,0], [0,-120,.85,0], 7.5, 'Cuối Phòng Áp Suất là Lò Luyện: một ngọn lửa trắng cháy mà không cần dầu, cũng không cần bấc.', {tr:'fade'}),
+        cineShot('kit',   [-40,0,1.1,0], [-100,30,1.35,0], 7, 'Trên bàn, Giáo sư để lại một lời nhắn: “Nồi luyện đã vỡ. Hãy tìm quặng pirit trên tháp, gốm chịu nhiệt dưới hầm.”'),
+        cineCard('Có những thứ vỡ rồi vẫn sửa được, nếu mình chịu quay lại nhặt từng mảnh.', 5),
+      ]},
+      {scene:'chapter', title:'Phần 4 · Lò Luyện', icon:'lab', lines:['Nơi Bấc nhận được ngọn lửa thứ hai: H₂SO₄ đặc nóng.']},
+    ],
   ],
   finale: [
     {shots:[
-      cineShot('forge', [0,140,.85,0], [0,-120,.85,0],  7.5, 'Cuối Phòng Áp Suất là Lò Luyện: một ngọn lửa trắng cháy mà không cần dầu, cũng không cần bấc.', {tr:'fade'}),
-      cineShot('forge', [0,200,1,0],   [0,120,1.4,0],7,   'Ngọn lửa nhỏ trong ngực Bấc bừng lên, như đáp lại. Lần đầu tiên, cậu cháy mà không thấy mình ngắn đi.', {chest:true}),
+      cineShot('forge', [0,200,1,0],   [0,120,1.4,0],7,   'Nồi luyện chạy lại. Ngọn lửa nhỏ trong ngực Bấc bừng lên, như đáp lại. Lần đầu tiên, cậu cháy mà không thấy mình ngắn đi.', {chest:true, tr:'fade'}),
+      cineCard('Trong ba lô giờ có ba lọ: một để phá, một để hoá giải, và một thứ mạnh đến mức phải học cách dùng nó.', 6),
       cineCard('Một sợi bấc cháy để soi đường cho người khác. Nếu một ngày nó không còn phải đốt chính mình… nó sẽ trở thành gì?', 6.5),
       cineCard(`Chương ${LAST_CH.no} · Còn tiếp`, 4),
     ]},
@@ -2285,6 +2489,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
+  ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4;
   parts=[]; ghosts=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
@@ -2299,6 +2504,8 @@ function load(i){
     else if (c==='o'){ saws.push({x:x*T+T/2,y:y*T+T/2}); grid[y][x]='.'; }
     else if (c==='m'){ orbs.push({x:x*T+T/2,y:y*T+T/2,cd:0}); grid[y][x]='.'; }
     else if (c==='d'){ diary.push({x:x*T+T/2,y:y*T+T/2}); grid[y][x]='.'; }
+    else if (c==='s'){ ores.push({x:x*T+T/2,y:y*T+T/2,got:hasH2SO4}); grid[y][x]='.'; }
+    else if (c==='i'){ ceramics.push({x:x*T+T/2,y:y*T+T/2,got:hasH2SO4}); grid[y][x]='.'; }
     else if (c==='Y'){ ropes.push({ax:x*T+T/2, ay:y*T, L:ROPE_L, th:0, w:0, held:false, cd:0}); grid[y][x]='.'; }
     else if (c==='p'){ pendulums.push({ax:x*T+T/2, ay:y*T, ty:y}); grid[y][x]='.'; }
     else if (c==='$'){ const id = i+':'+x+','+y; secrets.push({x:x*T+T/2, y:y*T+T/2, id, got:gotSecrets.has(id)}); grid[y][x]='.'; }
@@ -2311,6 +2518,7 @@ function load(i){
   diary.sort((a,b)=>a.x-b.x).forEach((d,i)=>{ d.idx=i; d.no=i_global(i); d.got=gotPages.has(d.no); });
   secrets.sort((a,b)=>a.x-b.x).forEach((q,k)=>{ q.text = (L.secrets||[])[k] || 'Một con hạc giấy nhỏ.'; });
   buildCeil();
+  computeAmmo(L); if (!reagentList().includes(reagent)) reagent = 'base';
   beams = []; hOpen = {}; sensorLit = {}; beamSrc = null; mirrorAng = {}; mirrorNear = null;
   for (const t of (tiles.r||[])) mirrorAng[t.x+','+t.y] = -Math.PI/4;
   for (const t of (tiles.R||[])) mirrorAng[t.x+','+t.y] = Math.PI/4; tileCache.clear(); tntFx = []; flashT = 0;
@@ -2347,7 +2555,7 @@ const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 function solid(tx,ty){
   if (tx<0||ty<0||tx>=GW||ty>=GH) return true;
   const c = grid[ty][tx];
-  if (c==='#' || c==='g' || c==='S' || c==='h' || c==='z' || c==='c' || c==='C') return true;
+  if (c==='#' || c==='g' || c==='S' || c==='h' || c==='z' || c==='c' || c==='C' || c==='K') return true;
   if (c==='G') return !!(boss && !boss.dead && (tx > boss.home.x/T || boss.engaged || bossCS));
   if (c==='W') return !!(wave && wave.active);
   if (c>='A'&&c<='D') return !gateOpen[c];
@@ -2473,6 +2681,7 @@ addEventListener('keydown', e=>{
   if (e.code==='KeyN' && state==='title' && !e.repeat){ begin(); return; }
   if (helpOpen){ e.preventDefault(); if (['KeyH','Escape','Enter','Space'].includes(e.code) && !e.repeat) toggleHelp(); return; }
   if (e.code==='KeyH' && !e.repeat && state==='play'){ toggleHelp(); return; }
+  if (e.code==='KeyN' && !e.repeat && state==='play'){ toggleNotes(); return; }
   if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
   const m = KEYMAP[e.code]; if (m) inp[m]=true;
   if (e.repeat) return;
@@ -2508,6 +2717,7 @@ cv.addEventListener('pointerdown', e=>{
   if (e.pointerType==='touch' && !touchUI){ touchUI=true; resize(); }
   if (state==='title' && loadSave() && titleNewBtn && e.clientX>titleNewBtn.x && e.clientX<titleNewBtn.x+titleNewBtn.w && e.clientY>titleNewBtn.y && e.clientY<titleNewBtn.y+titleNewBtn.h){ begin(); return; }
   if (helpOpen){ toggleHelp(); return; }
+  if (state==='play' && notesBox && noteT > 0){ const nx = OX + notesBox.x*S, ny = OY + notesBox.y*S; if (e.clientX > nx && e.clientX < nx + notesBox.w*S && e.clientY > ny && e.clientY < ny + notesBox.h*S){ toggleNotes(); return; } }
   if (state!=='play' || reading){ trigger('jump'); return; }
   const id = touchUI ? hitBtn(e.clientX,e.clientY) : null;
   if (!id) return;
@@ -2525,14 +2735,14 @@ const SAVE_KEY = 'phongkin_save_v1';
 let saveT = 0;
 function saveGame(){
   if (!player || !cp || !(state==='play' || state==='trans')) return;
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({v:1, lvl, cpSeg, cp:{x:cp.x, y:cp.y}, pages:[...gotPages], secrets:[...gotSecrets], deaths, time:(performance.now()-t0)/1000, introSeen})); } catch(e){}
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({v:1, lvl, cpSeg, cp:{x:cp.x, y:cp.y}, pages:[...gotPages], secrets:[...gotSecrets], deaths, time:(performance.now()-t0)/1000, introSeen, h2so4:hasH2SO4})); } catch(e){}
 }
 function loadSave(){ try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (s && s.v===1 && LEVELS[s.lvl]) return s; } catch(e){} return null; }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch(e){} }
 function continueGame(){
   const sv = loadSave(); if (!sv){ begin(); return; }
   SFX.play('start');
-  lvl = sv.lvl; deaths = sv.deaths||0; gotPages = new Set(sv.pages||[]); gotSecrets = new Set(sv.secrets||[]); introSeen = !!sv.introSeen;
+  lvl = sv.lvl; deaths = sv.deaths||0; gotPages = new Set(sv.pages||[]); gotSecrets = new Set(sv.secrets||[]); introSeen = !!sv.introSeen; hasH2SO4 = !!sv.h2so4;
   load(lvl);
   if (sv.cp && sv.cpSeg > 0){ player.x = sv.cp.x; player.y = sv.cp.y; cp = {x:sv.cp.x, y:sv.cp.y}; cpSeg = curSeg = sv.cpSeg; updateCam(0, true, true); }
   t0 = performance.now() - (sv.time||0)*1000; state = 'play';
@@ -2541,7 +2751,7 @@ function continueGame(){
 function begin(){
   clearSave();
   SFX.play('start');
-  lvl=0; deaths=0; gotPages = new Set(); gotSecrets = new Set();
+  lvl=0; deaths=0; gotPages = new Set(); gotSecrets = new Set(); hasH2SO4 = false;
   startStory([...STORY.intro, ...STORY.chapters[0]], ()=>{ t0=performance.now(); load(0); state='play'; });
 }
 function die(){
@@ -2573,7 +2783,7 @@ function updateMirrorHold(dt){
 function updatePlayer(dt){
   const p = player;
   updateMirrorHold(dt);
-  if (leverAct){ p.vx = 0; jumpBuf = 0; dashBuf = 0; p.vy = Math.min(p.vy + G*dt, FALL_MAX); moveY(p, p.vy*dt); heroAnim(p, dt); return; }
+  if (leverAct || forgeSeq){ p.vx = 0; jumpBuf = 0; dashBuf = 0; p.vy = Math.min(p.vy + G*dt, FALL_MAX); moveY(p, p.vy*dt); heroAnim(p, dt); return; }
   p.flingT = Math.max(0, (p.flingT||0) - dt);
   if (p.rope){ if (updateRopePlayer(p, dt)) return; }
   else if (!p.ground && !p.crouch) tryGrabRope(p);
@@ -2820,6 +3030,8 @@ function update(dt){
       else startLever(lv);
       player.actT = .3;
     }
+    const fu = !lv && !vv && (tiles.F||[]).find(t=>Math.hypot(t.x*T+T/2-(player.x+11), t.y*T+T/2-(player.y+17)) < 80);
+    if (fu && !forgeSeq){ furnaceAct(fu); player.actT = .3; }
   }
   const p = player, cx=p.x+11, cy=p.y+17;
   updateCam(dt, false, false);
@@ -2830,6 +3042,10 @@ function update(dt){
     popups.push({x:cx, y:p.y-14, text:'đã lưu', life:1.4});
     for (let i=0;i<12;i++){ const a=i/12*Math.PI*2; parts.push({x:cx,y:p.y+p.h,vx:Math.cos(a)*170,vy:Math.sin(a)*50-40,a,va:0,l:5,life:.5}); }
   }
+  for (const [arr, name] of [[ores,'quặng pirit FeS₂'],[ceramics,'gốm chịu nhiệt Al₂O₃']]) for (const o of arr) if (!o.got && Math.hypot(o.x-cx, o.y-cy)<28){
+    o.got = true; SFX.play('key'); const n = arr.filter(q=>q.got).length; popups.push({x:cx, y:p.y-18, text:`${name} ${n}/${arr.length}`, life:2, big:n===arr.length});
+    for (let i=0;i<12;i++){ const a=i/12*Math.PI*2; parts.push({x:o.x,y:o.y,vx:Math.cos(a)*180,vy:Math.sin(a)*180,a,va:0,l:5,life:.5}); }
+    if (ores.every(q=>q.got) && ceramics.every(q=>q.got)) showTip('forgeready', ['E'], 'Đủ vật liệu rồi! Quay về nồi luyện ở cuối phòng và nhấn E.', null, 8); }
   for (const k of keyItems) if (!k.got && Math.hypot(k.x-cx, k.y-cy)<26){
     k.got=true; hasKey=true; SFX.play('key'); popups.push({x:cx, y:p.y-14, text:'có chìa khoá', life:1.6});
     for (let i=0;i<14;i++){ const a=i/14*Math.PI*2; parts.push({x:k.x,y:k.y,vx:Math.cos(a)*220,vy:Math.sin(a)*220,a,va:0,l:6,life:.5}); }
@@ -2856,6 +3072,7 @@ function update(dt){
   manaShow += (mana - manaShow)*Math.min(1, dt*10); manaFlash -= dt;
   // hoạt ảnh đồ vật
   mechA = Math.min(1, mechA + dt/.5);
+  if (forgeSeq) updateForge(dt);
   if (leverAct) updateLever(dt);
   else leverA += ((leverOn?.7:-.7) - leverA)*Math.min(1,dt*14);
   const nearDoor = (tiles.E||[]).some(t=>Math.hypot(t.x*T+T/2-cx, t.y*T-cy)<140);
@@ -3066,7 +3283,8 @@ function contactShadow(e, k){
 // Gợi ý tương tác: phím E nổi trên cần gạt / van khi đứng gần
 function drawPrompts(){
   const px = player.x+11, py = player.y+17;
-  for (const c of ['l','v','n']) for (const t of tiles[c]||[]){
+  for (const c of ['l','v','n','F']) for (const t of tiles[c]||[]){
+    if (c==='F' && (forgeDone || forgeSeq)) continue;
     if (c==='n' && litLamps.has(t.x+','+t.y)) continue;
     const d = Math.hypot(t.x*T+T/2-px, t.y*T+T/2-py); if (d > 90) continue;
     const a = clamp((90-d)/40, 0, 1), x = t.x*T+T/2, y = t.y*T - 14 + Math.sin(clock*4)*2;
@@ -3331,6 +3549,8 @@ function drawTile(c,x,y){
     ctx.lineWidth=1.2; ctx.globalAlpha=.55;
     const sh=((x*7+y*3)%5); line(X+10+sh,Y+T-6,X+22+sh,Y+6); line(X+18+sh,Y+T-4,X+24+sh,Y+T-16);
     ctx.globalAlpha=1;
+  } else if (c==='K'){ drawCopperTile(X, Y);
+  } else if (c==='F'){ /* nồi luyện vẽ riêng (drawFurnace) */
   } else if (c==='S'){            // lò xo
     const k = springA[x+','+y] || 0, comp = Math.sin(k*Math.PI*3)*k*8;
     ctx.fillRect(X,Y+T-8,T,8);
@@ -3559,7 +3779,10 @@ function drawSteam(){
     if (!c.acid){ ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; ctx.fillStyle=INK; ctx.globalAlpha=.6; ctx.fillText('↑ H₂O', c.x+T/2, c.top+16+Math.sin(clock*2)*3); ctx.globalAlpha=1; }
   }
 }
+let notesBox = null;
+function toggleNotes(){ if (!LEVELS[lvl].notes) return; if (noteT > 0) noteT = 0; else { noteT = 8.9; } SFX.play('page'); }
 function drawNotes(){
+  notesBox = null;
   const L = LEVELS[lvl]; if (!L.notes || noteT<=0 || bossCS || (boss && boss.engaged && !boss.dead)) return;
   const n = L.notes[curSeg]; if (!n) return;
   const a = Math.min(1, noteT*1.5, (9-noteT)*4);
@@ -3569,7 +3792,7 @@ function drawNotes(){
   // gáy sổ lò xo
   for (let i=0;i*30+14<w;i++){ ctx.beginPath(); ctx.arc(14+i*30, 0, 3, Math.PI, 0); ctx.stroke(); }
   ctx.fillStyle=INK; ctx.fillRect(0,4,w,16);
-  ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillStyle=PAPER; ctx.fillText('SỔ TAY · '+n[0], 8, 16, w-14);
+  ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillStyle=PAPER; ctx.fillText('SỔ TAY · '+n[0], 8, 16, w-60); ctx.textAlign='right'; ctx.fillText('✕ N', w-8, 16); ctx.textAlign='left'; notesBox = {x, y, w, h};
   ctx.fillStyle=INK; ctx.font=`400 ${w<280?9.5:11}px ${FONT}`;
   for (let i=1;i<n.length;i++) ctx.fillText(n[i], 8, 20+i*16, w-14);
   ctx.restore();
@@ -4059,7 +4282,7 @@ function drawCombatHUD(){
   }
   // lọ đang chọn
   const bx = 30 + HP_MAX*22, by = 54;
-  const RL = reagentList(), RW = 50*RL.length, LAB = {acid:'HCl', base:'NaOH', tnt:'TNT'};
+  const RL = reagentList(), RW = 50*RL.length, LAB = {acid:'HCl', base:'NaOH', h2so4:'H₂SO₄', tnt:'TNT'};
   ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.fillRect(bx,by,RW,24); ctx.strokeRect(bx,by,RW,24);
   ctx.font=`700 10px ${FONT}`; ctx.textAlign='center';
   const slotX = k => 25 + Math.max(0, RL.indexOf(k))*50;
@@ -4071,6 +4294,8 @@ function drawCombatHUD(){
   for (const k of RL) ctx.fillText(LAB[k], bx+slotX(k)+6, by+16-bump);
   ctx.restore();
   for (const k of RL){ const on = reagent===k; ctx.save(); ctx.translate(bx+slotX(k)-14, by+12 - (on?bump:0)); flaskIcon(0, 0, k, on && swapFx ? Math.sin(swapFx.t*30)*.3*(1-Math.min(1,swapFx.t/SWAP_DUR)) : 0, .7); ctx.restore(); }
+  ctx.font=`700 9px ${FONT}`; ctx.textAlign='center';
+  for (const k of RL){ if (k==='tnt') continue; const n = ammo[k]||0; ctx.fillStyle = n ? INK : '#999'; ctx.fillText(n ? '×'+n : 'HẾT', bx+slotX(k), by+34); }
   if (reagent==='tnt'){ ctx.fillStyle=INK; ctx.font=`700 8px ${FONT}`; ctx.textAlign='center'; ctx.globalAlpha=.6+.4*Math.sin(clock*8); ctx.fillText('SUPER ATTACK', bx+slotX('tnt'), by+34); ctx.globalAlpha=1; }
   ctx.textAlign='center';
   ctx.fillStyle=INK; ctx.font=`400 9px ${FONT}`; ctx.textAlign='left'; ctx.fillText('X đổi · F ném', bx+RW+6, by+15);
@@ -5463,11 +5688,11 @@ function drawHelp(){
   const w = Math.min(860, W-24), h = Math.min(H-24, 600), x = (W-w)/2, y = (H-h)/2;
   ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.fillRect(x,y,w,h); ctx.strokeRect(x,y,w,h); ctx.fillStyle=INK; ctx.fillRect(x+6,y+h,w,5);
   ctx.textAlign='left'; ctx.font=`700 ${Math.min(22, w/30)}px ${FONT}`; ctx.fillText('SỔ HƯỚNG DẪN', x+20, y+34);
-  ctx.font=`400 11px ${FONT}`; ctx.textAlign='right'; ctx.fillText('H / Esc / Enter để đóng', x+w-16, y+30);
+  { const bw = 118, bx = x+w-bw-14, by = y+12; ctx.fillStyle=INK; ctx.fillRect(bx,by,bw,26); ctx.fillStyle=PAPER; ctx.font=`700 12px ${FONT}`; ctx.textAlign='center'; ctx.fillText('✕  ĐÓNG (H)', bx+bw/2, by+17); ctx.fillStyle=INK; }
   const L = LEVELS[lvl]; ctx.textAlign='left'; ctx.font=`700 12px ${FONT}`; ctx.fillText('MỤC TIÊU', x+20, y+60);
   ctx.font=`400 13px ${FONT}`; const goal = wrapText(`Đi tới cửa LỐI RA ở cuối khu (mũi tên ở mép màn hình chỉ hướng). Gợi ý lúc này: ${L.hints[curSeg]}`, w-40); goal.forEach((l,i)=>ctx.fillText(l, x+20, y+78+i*17));
   const two = w > 640, cw = two ? (w-60)/2 : w-40, top = y + 90 + goal.length*17;
-  const controls = [[['←','→'],'Đi (A / D)'],[['↑','Space'],'Nhảy · giữ lâu nhảy cao · nhảy vào tường để bám'],[['Q'],'Lướt · trên không: lần đầu miễn phí, sau đó tốn 35 mực'],[['↓'],'Cúi chui chỗ thấp · rơi khỏi kệ · ↓ + Q trượt (tốn mực)'],[['E'],'Gạt cần, van, thắp đèn · GIỮ E xoay gương'],[['F','X'],'Chương chiến đấu: ném lọ · đổi axit ⇄ bazơ'],[['R'],'Chơi lại cả khu'],[['M'],'Tắt / bật tiếng'],[['Esc'],'Bỏ qua cảnh phim']];
+  const controls = [[['←','→'],'Đi (A / D)'],[['↑','Space'],'Nhảy · giữ lâu nhảy cao · nhảy vào tường để bám'],[['Q'],'Lướt · trên không: lần đầu miễn phí, sau đó tốn 35 mực'],[['↓'],'Cúi chui chỗ thấp · rơi khỏi kệ · ↓ + Q trượt (tốn mực)'],[['E'],'Gạt cần, van, thắp đèn · GIỮ E xoay gương'],[['F','X'],'Chương chiến đấu: ném lọ · đổi lọ. Số lọ có hạn (×n dưới mỗi lọ)'],[['R'],'Chơi lại cả khu'],[['N'],'Đóng / mở sổ tay khoa học'],[['M'],'Tắt / bật tiếng'],[['Esc'],'Bỏ qua cảnh phim']];
   const mech = [['MỰC','Thanh góc trái. Lướt thêm, trượt, đẩy thùng đều tốn mực. Đứng trên đất để hồi.'],['ĐIỂM LƯU','Đầu mỗi đoạn (ô vuông trên cùng). Chết sẽ quay lại đây, máu hồi đầy.'],['HẠT SÁNG','Chạm giữa không trung: thêm 1 nhảy + 1 lướt.'],['GIỌT MỰC','Hồi 30 mực.'],['LÒ XO','Rơi càng cao, bật càng cao.'],['THÙNG','Đi vào để đẩy. Thùng gỗ xốp nổi trên nước.'],['CẦN GẠT','Đóng/mở các khối có vạch. Camera chỉ chỗ thay đổi.'],['GƯƠNG','Góc tới = góc phản xạ. Chiếu tia sáng vào cảm biến tròn.'],['GIÓ / DÂY ĐU','Gió đẩy theo mũi tên. Dây đu: lấy đà rồi buông.']];
   let cy = top + 14; ctx.font=`700 12px ${FONT}`; ctx.fillText('ĐIỀU KHIỂN', x+20, cy); cy += 22;
   for (const [ks, d] of controls){ let kx = x+20; for (const k of ks) kx += keycap(kx, cy, k) + 5; ctx.font=`400 12px ${FONT}`; ctx.fillStyle=INK; ctx.textAlign='left'; const ls = wrapText(d, cw - (kx-x-20) - 8); ls.forEach((l,i)=>ctx.fillText(l, kx+6, cy+4+i*14)); cy += Math.max(30, ls.length*14+16); }
@@ -5620,6 +5845,9 @@ function drawGame(){
   for (const k of keyItems) if (!k.got) drawKey(k);
   for (const c of crystals) drawCrystal(c);
   for (const o of orbs) drawOrb(o);
+  for (const t of tiles.F||[]) drawFurnace(t);
+  for (const o of ores) drawOre(o);
+  for (const o of ceramics) drawCeramic(o);
   for (const d of diary) drawDiaryItem(d);
   for (const q of secrets) drawSecret(q);
   for (const s of saws) drawSaw(s);
@@ -5667,7 +5895,7 @@ function drawGame(){
   drawExitArrow();
   if (reading) drawReading();
   drawBossCSOverlay();
-  if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawBossLine(); }
+  if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawQuestHUD(); drawBossLine(); }
   drawNotes();
   // nút loa (cạnh thanh mực): bấm hoặc nhấn M
   { const sx = 184, sy = 29; ctx.save(); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5;
