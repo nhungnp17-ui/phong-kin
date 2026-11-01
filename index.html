@@ -1498,7 +1498,8 @@ function updateSines(){
     const ny = sineY(s), dy = ny - s.r.y; if (!dy) continue;
     const riders = ridersOf(s.r);
     if (dy < 0){ for (const e of riders){ moveY(e, dy); e.ground = true; } s.r.y = ny; }
-    else { s.r.y = ny; for (const e of riders){ moveY(e, dy); e.ground = true; } }
+    else { const oy = s.r.y; s.r.y = ny; for (const e of riders){ moveY(e, dy); e.ground = true; }
+      for (const e of [player, ...boxes]) if (!riders.includes(e) && ov(e, s.r) && e.y + e.h > s.r.y + 10){ if (crushUnder(e, s.r) === 'block'){ s.r.y = oy; for (const q of riders) moveY(q, -dy); } } }
   }
 }
 // ---- bệ phóng vectơ ----
@@ -3208,7 +3209,7 @@ addEventListener('resize', resize);
 
 // ===== Trạng thái =====
 let state='title', lvl=0, grid, player, boxes, keyItems, crystals, saws, hasKey, leverOn, gateOpen, gateAnim, tiles;
-let parts=[], ghosts=[], deaths=0, t0=0, tState=0, jamT=0, msgT=0, endTime=0, clock=0;
+let dashFx = [], parts=[], ghosts=[], deaths=0, t0=0, tState=0, jamT=0, msgT=0, endTime=0, clock=0;
 let cp = null, cpSeg = 0, curSeg = 0;   // điểm hồi sinh
 let leverA = -.7, doorA = 0, plateA = {}, popups = [], leverAct = null;
 const LEVER_DUR = 1.7;   // (cũ) giữ cho tương thích
@@ -3243,7 +3244,7 @@ function load(i){
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
   ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; const orbCells = []; let bossCell = null;
-  parts=[]; ghosts=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
+  parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
     if (c==='P'){ player=makePlayer(x*T+9, y*T+T-34); cp={x:player.x, y:player.y}; grid[y][x]='.'; }
@@ -3337,11 +3338,12 @@ function solidsFor(e, withPlayer){
 }
 function moveX(e,dx){
   if (!dx) return;
-  const pre = e.isP ? boxes.filter(b=>ov(e,b)) : null;   // thùng đã chồng lấn sẵn (vd thùng nổi dâng vào chân) thì không đẩy văng
+  const pre = e.isP ? boxes.filter(b=>ov(e,b) && (e.y+e.h - b.y) < 12) : null;   // chỉ thùng nổi vừa dâng vào CHÂN mới được bỏ qua, không cho chui ngang vào thùng
   e.x += dx;
   // người đẩy thùng; thùng xốp đang bị đẩy cũng đẩy thùng xốp kề bên (đẩy cả dãy)
   if (e.isP || e.float) for (const b of boxes) if (b!==e && (e.isP || b.float) && ov(e,b)) moveX(b, dx>0 ? (e.x+e.w)-b.x : e.x-(b.x+b.w));
-  for (const r of solidsFor(e,false)) if (ov(e,r) && !(pre && pre.includes(r))) e.x = dx>0 ? r.x-e.w : r.x+r.w;
+  // chỉ chặn bởi vật ở PHÍA TRƯỚC theo hướng đi (không bị vật đang đẩy mình kéo giật lùi xuyên qua)
+  for (const r of solidsFor(e,false)) if (ov(e,r) && !(pre && pre.includes(r)) && (dx>0 ? r.x + r.w/2 >= e.x + e.w/2 - 1 : r.x + r.w/2 <= e.x + e.w/2 + 1)) e.x = dx>0 ? r.x-e.w : r.x+r.w;
 }
 function moveY(e,dy){
   const prevB = e.y + e.h;
@@ -3379,6 +3381,14 @@ function ridersOf(r){
   return [player, ...boxes].filter(e => e.y+e.h > r.y-6 && e.y+e.h < r.y+6 && e.x+e.w > r.x+1 && e.x < r.x+r.w-1);
 }
 const massOf = e => e===player ? MASS.player : MASS.box;
+// Vật nặng hạ xuống đè lên ai đó: đẩy người/thùng xuống theo; nếu bên dưới là sàn thì Bấc bị ép, thùng thì chặn lại
+function crushUnder(e, r){
+  const need = r.y + r.h - e.y; if (need <= 0) return 'ok';
+  const y0 = e.y; e.y += need; const blocked = solidsFor(e, false).some(o => o !== r && ov(e, o)); e.y = y0;
+  if (!blocked){ e.y += need; e.vy = Math.max(e.vy||0, 0); return 'ok'; }
+  if (e === player){ if (state==='play'){ popups.push({x:e.x+11, y:e.y-10, text:'bị bàn ép bẹp!', life:1.4, big:true}); shakeT = .3; SFX.play('crash'); die(); } return 'crush'; }
+  return 'block';
+}
 function updatePulley(dt){
   if (!pulley) return;
   const [ru, rv] = pulleyRects(), onU = ridersOf(ru), onV = ridersOf(rv);
@@ -3404,9 +3414,12 @@ function updatePulley(dt){
   const dd = nd - pulley.d; if (!dd) return;
   const up = dd>0 ? onV : onU, down = dd>0 ? onU : onV;
   for (const e of up){ moveY(e, -Math.abs(dd)); e.ground = true; }
-  pulley.d = nd;
+  const dOld = pulley.d; pulley.d = nd;
   for (const e of down){ moveY(e, Math.abs(dd)); }
-  // an toàn: ai bị bàn lấn vào từ dưới thì đẩy lên mặt bàn, không đẩy ngang
+  { const [nu, nv] = pulleyRects(), descR = dd>0 ? nu : nv;   // bàn đang hạ: ai ở bên dưới bị đẩy xuống, kẹt thì bị ép
+    for (const e of [player, ...boxes]) if (!down.includes(e) && !up.includes(e) && ov(e, descR) && e.y + e.h > descR.y + 10){
+      if (crushUnder(e, descR) === 'block'){ pulley.d = dOld; for (const q of down) moveY(q, -Math.abs(dd)); return; } } }
+  // an toàn: ai bị bàn lấn vào từ dưới CHÂN (bàn đang nâng lên) thì đặt lên mặt bàn, không đẩy ngang
   for (const r of pulleyRects()) for (const e of [player, ...boxes])
     if (ov(e, r) && e.y+e.h - r.y < 14){ e.y = r.y - e.h; e.vy = Math.min(e.vy, 0); e.ground = true; }
   pulley.spin = (pulley.spin||0) + dd*.05;
@@ -3490,7 +3503,7 @@ cv.addEventListener('pointerdown', e=>{
   if (bestiary){ bestiary = null; return; }
   if (devMenu){ devClick(e.clientX, e.clientY); return; }
   if (e.clientX < 90 && e.clientY < 50){ devTap(); if (devMenu) return; }
-  if (Math.hypot(e.clientX-(OX+184*S), e.clientY-(OY+29*S)) < 16*S && state==='play'){ SFX.toggle(); return; }
+  if (Math.hypot(e.clientX-(OX+212*S), e.clientY-(OY+29*S)) < 16*S && state==='play'){ SFX.toggle(); return; }
   if (e.pointerType==='touch' && !touchUI){ touchUI=true; resize(); }
   if (state==='title' && loadSave() && titleNewBtn && e.clientX>titleNewBtn.x && e.clientX<titleNewBtn.x+titleNewBtn.w && e.clientY>titleNewBtn.y && e.clientY<titleNewBtn.y+titleNewBtn.h){ begin(); return; }
   if (helpOpen){ toggleHelp(); return; }
@@ -3591,6 +3604,9 @@ function updatePlayer(dt){
     p.face = p.dashDir; p.vy = 0; p.wall = 0; p.lock = 0;
     p.sx = 1.35; p.sy = .75;
     dust(p.x+11, p.y+20, 6, -p.dashDir);
+    p.trail = []; dashFx.push({kind:'burst', x:p.x+11, y:p.y+17, dir:p.dashDir, ink:p.inkDash, t:0});
+    for (let i=0;i<(p.inkDash?14:8);i++) parts.push({x:p.x+11-p.dashDir*6, y:p.y+14+(Math.random()-.5)*10, vx:-p.dashDir*(120+Math.random()*260), vy:-60-Math.random()*160, a:0, va:0, l:p.inkDash?2.5:1.5, life:.45+Math.random()*.25});
+    if (p.inkDash) shakeT = Math.max(shakeT, .06);
   }
 
   // Nhảy: đất → tường → nhảy thêm (hạt sáng)
@@ -3617,8 +3633,10 @@ function updatePlayer(dt){
   // Ngang
   if (p.dashT>0){
     p.dashT-=dt; p.vx=p.dashDir*DASH_SPEED; p.vy=0;
-    ghosts.push({x:p.x,y:p.y,faceS:p.faceS,sx:p.sx,sy:p.sy,life:.22,ink:p.inkDash});
-    if (p.dashT<=0) p.vx = p.dashDir*SPEED;
+    if (Math.floor(p.dashT*60) % 2 === 0) ghosts.push({x:p.x,y:p.y,faceS:p.faceS,sx:p.sx,sy:p.sy,life:.18,ink:p.inkDash});
+    (p.trail ||= []).push({x:p.x+11 - p.dashDir*4, y:p.y+15 + Math.sin(clock*60)*.8, t:clock, ink:p.inkDash});
+    if (Math.random() < dt*40) parts.push({x:p.x+11-p.dashDir*14, y:p.y+18+(Math.random()-.5)*8, vx:-p.dashDir*40, vy:40+Math.random()*80, a:1.57, va:0, l:p.inkDash?2.2:1.2, life:.4});
+    if (p.dashT<=0){ p.vx = p.dashDir*SPEED; dashFx.push({kind:'end', x:p.x+11+p.dashDir*10, y:p.y+p.h, dir:p.dashDir, ground:p.ground, ink:p.inkDash, t:0}); if (p.ground){ dust(p.x+11+p.dashDir*8, p.y+p.h, 6, p.dashDir); p.sx = .82; p.sy = 1.16; } }
   } else if (p.lock<=0){
     const a = (p.ground?ACC_GROUND:ACC_AIR)*dt;
     // vừa buông dây: giữ quán tính (không tự hãm), chỉ bấm ngược chiều mới giảm tốc
@@ -3763,8 +3781,11 @@ function update(dt){
         const top = P.y+P.h - b.y, bot = b.y+b.h - P.y, lef = P.x+P.w - b.x, rig = b.x+b.w - P.x, m = Math.min(top, bot, lef, rig);
         if (m === top){ P.y = b.y - P.h; P.vy = Math.min(P.vy, 0); P.ground = true; }
         else if (m === bot){ b.y = P.y - b.h; b.vy = Math.min(b.vy, 0); }
-        else moveX(b, m === lef ? lef : -rig);            // đẩy thùng ra, không đẩy Bấc xuyên tường
-        if (ov(P, b)) P.y = b.y - P.h;                   // vẫn kẹt (thùng bị tường chặn) → đặt Bấc lên mặt thùng
+        else {   // chồng lấn ngang: đẩy BẤC ra khỏi thùng (thùng đang tựa tường thì giữ nguyên chỗ)
+          const px0 = P.x; P.x += m === lef ? -lef : rig;
+          if (solidsFor(P, false).some(o => o !== b && ov(P, o))){ P.x = px0; const bx0 = b.x; moveX(b, m === lef ? lef : -rig); if (Math.sign(b.x - bx0) !== Math.sign(b.x+b.w/2 - (P.x+P.w/2)) && b.x !== bx0) b.x = bx0; }
+        }
+        if (ov(P, b)) P.y = b.y - P.h;                   // vẫn kẹt → đặt Bấc lên mặt thùng
       }
       // lần đầu chạm nước: giải thích ngắn
       if (f > 0 && !b.wetSeen){ b.wetSeen = true; if (!archiTold){ archiTold = true; popups.push({x:b.x+T/2, y:b.y-40, text:'Lực đẩy Archimedes nâng thùng lên!', life:2.6, big:true}); } }
@@ -5403,7 +5424,70 @@ function drawHero(p, opts={}){
     ctx.beginPath(); ctx.arc(0,0,2.5,0,Math.PI*2); ctx.stroke(); line(0,2.5,0,8); line(0,6,2,6); ctx.restore();
   }
 }
+const TRAIL_LIFE = .3;
+function drawDashFx(){
+  const p = player, now = clock;
+  dashFx = dashFx.filter(f => now - (f.t0 ??= now) < (f.kind==='end' ? 1.1 : .45));
+  ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
+  // nét cọ mực: dày ở đầu, thon dần về đuôi, có vệt "cọ khô" bằng màu giấy
+  const tr = (p && p.trail || []).filter(q => now - q.t < TRAIL_LIFE); if (p) p.trail = tr;
+  if (tr.length > 1){
+    const ink = tr[tr.length-1].ink, maxW = ink ? 17 : 11, n = tr.length;
+    const wAt = i => maxW * Math.pow(i/(n-1), .6) * (1 - (now - tr[i].t)/TRAIL_LIFE);
+    ctx.globalAlpha = ink ? .92 : .5; ctx.fillStyle = INK; ctx.beginPath();
+    for (let i=0;i<n;i++) ctx.lineTo(tr[i].x, tr[i].y - wAt(i)/2 + Math.sin(i*1.7)*1.2);
+    for (let i=n-1;i>=0;i--) ctx.lineTo(tr[i].x, tr[i].y + wAt(i)/2 + Math.cos(i*1.3)*1.2);
+    ctx.closePath(); ctx.fill();
+    ctx.globalAlpha = ink ? .8 : .5; ctx.strokeStyle = PAPER; ctx.lineWidth = 1;
+    for (const off of [-.25, .1, .3]){ ctx.beginPath(); for (let i=Math.floor(n*.15); i<n-1; i++) ctx.lineTo(tr[i].x, tr[i].y + wAt(i)*off); ctx.stroke(); }
+    // vạch tốc độ quanh Bấc
+    if (p.dashT > 0){ ctx.globalAlpha = .5; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; const d = p.dashDir;
+      for (let i=0;i<6;i++){ const yy = p.y + 2 + crand(i + Math.floor(now*30))*32, x0 = p.x+11 - d*(18 + crand(i*3+Math.floor(now*30))*30); line(x0, yy, x0 - d*(26 + crand(i*7)*40), yy); } }
+  }
+  for (const f of dashFx){ const k = (now - f.t0);
+    if (f.kind==='burst'){ const q = k/.45; ctx.globalAlpha = (1-q)*(f.ink ? .9 : .55); ctx.strokeStyle = INK; ctx.lineWidth = f.ink ? 3 : 2;
+      ctx.beginPath(); ctx.ellipse(f.x - f.dir*6, f.y, 6 + q*26, 14 + q*22, 0, 0, Math.PI*2); ctx.stroke();
+      ctx.lineWidth = 2; for (let i=-1;i<=1;i++){ ctx.beginPath(); ctx.arc(f.x - f.dir*(10 + q*30), f.y + i*10, 12 + q*10, f.dir>0 ? Math.PI*.6 : -Math.PI*.4, f.dir>0 ? Math.PI*1.4 : Math.PI*.4); ctx.stroke(); } }
+    else if (f.kind==='end'){ const q = k/1.1;
+      if (f.ground){ ctx.globalAlpha = (1-q)*(f.ink ? .7 : .3); ctx.fillStyle = INK; ctx.beginPath(); ctx.ellipse(f.x - f.dir*20, f.y - 1, 22*(1 + q*.3), 3, 0, 0, Math.PI*2); ctx.fill();
+        if (f.ink) for (let i=0;i<5;i++){ ctx.beginPath(); ctx.arc(f.x - f.dir*(8 + i*9), f.y - 2 - (i%2)*2, 2.2 - i*.25, 0, Math.PI*2); ctx.fill(); } }
+      else if (q < .4){ ctx.globalAlpha = (1 - q/.4)*.5; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; for (let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(f.x, f.y - 17, 8 + q*40 + i*6, -0.9, 0.9); ctx.stroke(); } } }
+  }
+  ctx.restore();
+}
+// Thanh mực: cây bút máy nằm ngang — thân trong suốt chứa mực, ngòi bút ở đầu phải nhỏ giọt khi đủ mực để lướt
 function drawManaHUD(){
+  const shake = manaFlash>0 ? Math.sin(clock*70)*2.5 : 0, lv = Math.max(0, manaShow)/MANA_MAX;
+  ctx.save(); ctx.translate(14+shake, 14); ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  const capW = 26, x0 = capW + 4, bw = 104, y = 8, h = 14;
+  // nắp bút + kẹp
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(0, y+2); ctx.quadraticCurveTo(0, y, 3, y); ctx.lineTo(capW, y); ctx.lineTo(capW, y+h); ctx.lineTo(3, y+h); ctx.quadraticCurveTo(0, y+h, 0, y+h-2); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = PAPER; ctx.lineWidth = 1.2; line(5, y+3, capW-3, y+3); ctx.strokeStyle = INK; ctx.lineWidth = 2; line(4, y-3, capW-4, y-3); line(capW-4, y-3, capW-4, y+1);
+  ctx.fillStyle = PAPER; ctx.fillRect(capW, y-1, 4, h+2); ctx.strokeRect(capW, y-1, 4, h+2);
+  // thân bút trong suốt: mực dâng theo lượng mực, mặt mực gợn và có bọt
+  ctx.fillStyle = PAPER; ctx.lineWidth = 2; ctx.beginPath(); ctx.rect(x0, y, bw, h); ctx.fill(); ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.rect(x0+1, y+1, bw-2, h-2); ctx.clip();
+  const fx = x0 + bw*lv; ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(fx, y);
+  for (let yy = y; yy <= y+h; yy += 2) ctx.lineTo(fx + Math.sin(clock*5 + yy*.8)*1.6, yy); ctx.lineTo(x0, y+h); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = PAPER; ctx.globalAlpha = .55; ctx.lineWidth = 1.5; line(x0+3, y+3.5, x0 + Math.max(3, bw*lv - 6), y+3.5); ctx.globalAlpha = 1;   // ánh phản chiếu trên thân thuỷ tinh
+  ctx.fillStyle = PAPER; for (let i=0;i<4;i++){ const bxp = x0 + ((clock*18 + i*29) % Math.max(1, bw*lv)); ctx.globalAlpha = .7; ctx.beginPath(); ctx.arc(bxp, y + 3 + (i%3)*4, 1.2, 0, Math.PI*2); ctx.fill(); } ctx.globalAlpha = 1;
+  ctx.restore();
+  // vạch chia: mỗi nấc = một lần lướt mực
+  for (let v=MANA_DASH; v<MANA_MAX; v+=MANA_DASH){ const tx = x0 + bw*v/MANA_MAX; ctx.strokeStyle = v <= manaShow ? PAPER : INK; ctx.lineWidth = 1.2; line(tx, y+1, tx, y+5); line(tx, y+h-5, tx, y+h-1); }
+  // cổ bút + ngòi
+  const gx = x0 + bw; ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(gx, y+1); ctx.lineTo(gx+10, y+3); ctx.lineTo(gx+10, y+h-3); ctx.lineTo(gx, y+h-1); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = PAPER; ctx.beginPath(); ctx.moveTo(gx+10, y+3); ctx.quadraticCurveTo(gx+20, y+4, gx+27, y+h/2); ctx.quadraticCurveTo(gx+20, y+h-4, gx+10, y+h-3); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.lineWidth = 1; line(gx+14, y+h/2, gx+26, y+h/2); ctx.beginPath(); ctx.arc(gx+14, y+h/2, 1.4, 0, Math.PI*2); ctx.fill();
+  if (mana >= MANA_DASH){ const dq = (clock*1.2) % 1; ctx.fillStyle = INK; ctx.globalAlpha = 1 - dq*.6; ctx.beginPath(); const dx = gx+28, dy = y+h/2 + dq*10; ctx.moveTo(dx, dy-3); ctx.quadraticCurveTo(dx+2.5, dy+1, dx, dy+2.5); ctx.quadraticCurveTo(dx-2.5, dy+1, dx, dy-3); ctx.fill(); ctx.globalAlpha = 1; }
+  else { ctx.strokeStyle = INK; ctx.lineWidth = 1; ctx.globalAlpha = .6; line(gx+20, y+3, gx+23, y+6); line(gx+21, y+h-3, gx+24, y+h-7); ctx.globalAlpha = 1; }
+  // chữ
+  ctx.fillStyle = INK; ctx.font = `700 8px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(manaFlash > 0 ? 'KHÔNG ĐỦ MỰC' : 'MỰC', x0, y-2);
+  ctx.textAlign = 'right'; ctx.fillText(Math.floor(mana) + '', x0 + bw, y + h + 9);
+  ctx.textAlign = 'left'; ctx.font = `400 7px ${FONT}`; ctx.globalAlpha = .7; ctx.fillText(`${Math.floor(mana/MANA_DASH)} lần lướt`, x0, y + h + 9); ctx.globalAlpha = 1;
+  ctx.restore();
+}
+function drawManaHUD_old(){
   const shake = manaFlash>0 ? Math.sin(clock*70)*2.5 : 0;
   ctx.save(); ctx.translate(12+shake, 12);
   const W = 150, H = 34;
@@ -6715,6 +6799,7 @@ function drawGame(){
   if (LEVELS[lvl].combat){ ENEMY_LOOK = {x:player.x+11, y:player.y+17}; drawDecals(); drawSpawns(); const vis = e => e.x+e.w > camX-80 && e.x < camX+viewW+80 && e.y+e.h > camY-80 && e.y < camY+viewH+80; for (const e of enemies) if (vis(e)) contactShadow(e, e.fly ? .45 : .9); for (const e of enemies) if (vis(e)) drawEnemy(e); drawBoss(); }
   for (const g of ghosts){ ctx.globalAlpha=g.life*2.2; drawHero({x:g.x,y:g.y,h:34,faceS:g.faceS,sx:g.sx,sy:g.sy,pose:player.pose,st:'dash',scarf:[],pk:player.pk},{ghost:true,ink:g.ink}); }
   ctx.globalAlpha=1;
+  drawDashFx();
   drawItemGetBack();
   if (state!=='dying'){
     // viền sáng (rim light) tách nhân vật khỏi nền tối
@@ -6753,7 +6838,7 @@ function drawGame(){
   if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawQuestHUD(); drawMathBossHUD(); drawBossLine(); }
   drawNotes();
   // nút loa (cạnh thanh mực): bấm hoặc nhấn M
-  { const sx = 184, sy = 29; ctx.save(); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5;
+  { const sx = 212, sy = 29; ctx.save(); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.arc(sx,sy,13,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle=INK;
     ctx.beginPath(); ctx.moveTo(sx-7,sy-3); ctx.lineTo(sx-4,sy-3); ctx.lineTo(sx,sy-7); ctx.lineTo(sx,sy+7); ctx.lineTo(sx-4,sy+3); ctx.lineTo(sx-7,sy+3); ctx.closePath(); ctx.fill();
     if (SFX.muted){ line(sx+2,sy-4,sx+8,sy+4); line(sx+8,sy-4,sx+2,sy+4); }
