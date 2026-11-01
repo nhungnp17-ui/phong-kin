@@ -4,4 +4,4 @@ Game giải đố – platformer đen trắng kết hợp vật lý & hoá học
 
 **Chơi ngay:** https://nhungnp17-ui.github.io/phong-kin/
 
-Điều khiển: ←/→ di chuyển · Space nhảy · Shift lướt · E tương tác · ↓ cúi · J/K ném bình (chương chiến đấu).
+Điều khiển: ←/→ (A/D) di chuyển · Space/↑ nhảy · Q lướt · E tương tác (giữ E xoay gương) · ↓ cúi · J/F ném bình, X đổi bình (chương chiến đấu) · P menu · M tắt tiếng.
