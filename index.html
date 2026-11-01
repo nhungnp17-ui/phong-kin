@@ -821,6 +821,7 @@ function hurtPlayer(n, fromX){
   if (dev.god){ if (p.invT<=0){ p.invT = .6; hurtFlash = .15; } return; }
   if (p.invT > 0 || state!=='play') return;
   p.hp -= n; p.invT = INVULN; hurtFlash = .35; shakeT = .2;
+  showTip('hurt', [], 'Bị thương! Máu là các ngọn lửa dưới thanh mực. Điểm lưu kế tiếp sẽ hồi đầy máu.', null, 7);
   p.vx = Math.sign(p.x+11-fromX || 1)*280; p.vy = -320; p.lock = .22; p.dashT = 0;
   SFX.play('hurt');
   if (p.hp <= 0) die();
@@ -2470,6 +2471,8 @@ addEventListener('keydown', e=>{
   if (devMenu){ e.preventDefault(); if (!e.repeat || e.code.startsWith('Arrow')) devKey(e); return; }
   if (e.code==='KeyM' && !e.repeat){ SFX.toggle(); return; }
   if (e.code==='KeyN' && state==='title' && !e.repeat){ begin(); return; }
+  if (helpOpen){ e.preventDefault(); if (['KeyH','Escape','Enter','Space'].includes(e.code) && !e.repeat) toggleHelp(); return; }
+  if (e.code==='KeyH' && !e.repeat && state==='play'){ toggleHelp(); return; }
   if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
   const m = KEYMAP[e.code]; if (m) inp[m]=true;
   if (e.repeat) return;
@@ -2491,6 +2494,7 @@ const BTN = () => [
   {id:'dash', x:innerWidth-160,y:innerHeight-75, l:'Q'},
   {id:'jump', x:innerWidth-70, y:innerHeight-75, l:'▲'},
   {id:'act',  x:innerWidth-115,y:innerHeight-155, l:'E'},
+  {id:'help', x:innerWidth-40, y:Math.max(110, OY+70), l:'?'},
   ...(LEVELS[lvl] && LEVELS[lvl].combat ? [{id:'throw', x:innerWidth-205,y:innerHeight-155, l:'F'}, {id:'swap', x:250,y:innerHeight-75, l:'⇄'}] : [])];
 const ptrs = new Map();
 function hitBtn(x,y){ for (const b of BTN()) if (Math.hypot(x-b.x,y-b.y)<42) return b.id; return null; }
@@ -2503,12 +2507,14 @@ cv.addEventListener('pointerdown', e=>{
   if (Math.hypot(e.clientX-(OX+184*S), e.clientY-(OY+29*S)) < 16*S && state==='play'){ SFX.toggle(); return; }
   if (e.pointerType==='touch' && !touchUI){ touchUI=true; resize(); }
   if (state==='title' && loadSave() && titleNewBtn && e.clientX>titleNewBtn.x && e.clientX<titleNewBtn.x+titleNewBtn.w && e.clientY>titleNewBtn.y && e.clientY<titleNewBtn.y+titleNewBtn.h){ begin(); return; }
+  if (helpOpen){ toggleHelp(); return; }
   if (state!=='play' || reading){ trigger('jump'); return; }
   const id = touchUI ? hitBtn(e.clientX,e.clientY) : null;
   if (!id) return;
   ptrs.set(e.pointerId,id); syncTouch();
   if (id==='jump'||id==='dash'||id==='act') trigger(id);
   if (id==='swap') swapReagent();
+  if (id==='help'){ ptrs.delete(e.pointerId); syncTouch(); toggleHelp(); }
 });
 const up = e=>{ ptrs.delete(e.pointerId); syncTouch(); };
 cv.addEventListener('pointerup',up); cv.addEventListener('pointercancel',up);
@@ -2543,6 +2549,7 @@ function die(){
   if (dev.god){ player.x = cp.x; player.y = cp.y; player.vx = player.vy = 0; updateCam(0, true, true); popups.push({x:player.x+11, y:player.y-14, text:'(bất tử) về điểm lưu', life:1.2}); return; }
   bossLoss = !!(boss && boss.engaged && !boss.dead);
   deaths++; state='dying'; tState=0; SFX.play('death');
+  showTip('death', ['R'], 'Bạn sẽ hồi sinh ở điểm lưu gần nhất (ô vuông trên cùng). Nhấn R nếu muốn chơi lại cả khu.', null, 8);
   SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0);
   for (let i=0;i<16;i++) parts.push({x:player.x+11,y:player.y+17,vx:(Math.random()-.5)*420,vy:-Math.random()*420,a:Math.random()*6,va:(Math.random()-.5)*12,l:6+Math.random()*10,life:1});
 }
@@ -2587,9 +2594,10 @@ function updatePlayer(dt){
   if (inWater){ p.canDash = true; }
 
   // Lướt
-  if (dashBuf>0 && p.dashT<=0 && p.dashCd<=0 && !p.canDash && mana < MANA_DASH){ dashBuf=0; manaFlash=.5; SFX.play('denied'); }
-  if (dashBuf>0 && (p.canDash || mana>=MANA_DASH) && p.dashT<=0 && p.dashCd<=0){
-    p.inkDash = !p.canDash; SFX.play(p.inkDash ? 'inkdash' : 'dash');
+  const slide = p.crouch && p.ground, needInk = !p.canDash || slide;   // cúi + lướt = trượt: luôn tốn mực
+  if (dashBuf>0 && p.dashT<=0 && p.dashCd<=0 && needInk && mana < MANA_DASH){ dashBuf=0; manaFlash=.5; SFX.play('denied'); if (slide) popups.push({x:p.x+11, y:p.y-16, text:'không đủ mực để trượt', life:1.2}); }
+  if (dashBuf>0 && (!needInk || mana>=MANA_DASH) && p.dashT<=0 && p.dashCd<=0){
+    p.inkDash = needInk; SFX.play(p.inkDash ? 'inkdash' : 'dash');
     if (p.inkDash){ mana -= MANA_DASH; for (let i=0;i<10;i++) parts.push({x:p.x+11,y:p.y+17,vx:(Math.random()-.5)*260,vy:(Math.random()-.5)*260,a:Math.random()*6,va:0,l:3,life:.5}); }
     dashBuf=0; p.canDash=false; p.dashT=DASH_TIME; p.dashCd=DASH_CD; p.dashHit = new Set();
     p.dashDir = p.wall ? -p.wall : (dir || p.face);
@@ -2711,6 +2719,7 @@ function update(dt){
     else if (c1 > c0 && c1 <= panelLen(P) && c1 % 2 === 0) SFX.play('tick');
     updateSceneHero(dt); return; }
   if (reading){ reading.t += dt; return; }
+  if (helpOpen && state==='play') return;
   if (bossCS && state==='play'){ shakeT -= dt; updateAmbience(dt); updateZoom(dt); updateBossCS(dt); updateCam(dt, false); updateCrow(dt);
     for (const u of popups){ u.life-=dt; u.y-=dt*24; } popups = popups.filter(u=>u.life>0);
     for (const b of bubbles){ b.y += b.vy*dt; b.life -= dt; } bubbles = bubbles.filter(b=>b.life>0); return; }
@@ -2834,7 +2843,7 @@ function update(dt){
     d.got = true; gotPages.add(d.no); SFX.play('page'); reading = {no:d.no, text:LEVELS[lvl].pages[d.idx] || 'Trang này đã nhoè mực, không đọc được nữa.', t:0};
     for (let i=0;i<12;i++){ const a=i/12*Math.PI*2; parts.push({x:d.x,y:d.y,vx:Math.cos(a)*160,vy:Math.sin(a)*160,a,va:0,l:5,life:.5}); }
   }
-  updateCrow(dt);
+  updateCrow(dt); updateTips(dt);
   if (p.ground && p.dashT<=0 && !p.pushing) mana = Math.min(MANA_MAX, mana + MANA_REGEN*dt);
   for (const o of orbs){
     o.cd -= dt;
@@ -5366,6 +5375,107 @@ function drawCine(P){
   ctx.fillText('Enter / chạm: tiếp  ·  Esc: bỏ qua', W-12, Math.max(14, fy-6)); ctx.globalAlpha=1;
 }
 
+// ===== HƯỚNG DẪN NGƯỜI CHƠI MỚI =====
+// Thẻ mẹo hiện đúng lúc gặp cơ chế mới (mỗi mẹo chỉ hiện 1 lần, nhớ trong trình duyệt) + sổ hướng dẫn (phím H)
+const TIP_KEY = 'phongkin_tips_v1';
+let tipsSeen = new Set(), tip = null, tipQ = [], helpOpen = false, tipDeny = 0;
+try { tipsSeen = new Set(JSON.parse(localStorage.getItem(TIP_KEY) || '[]')); } catch(e){}
+function saveTips(){ try { localStorage.setItem(TIP_KEY, JSON.stringify([...tipsSeen])); } catch(e){} }
+function showTip(id, keys, text, done, life=8){
+  if (tipsSeen.has(id) || (tip && tip.id===id) || tipQ.some(q=>q.id===id)) return;
+  tipQ.push({id, keys, text, done, life, t:0});
+}
+const nearT = (chars, r) => { const px = player.x+11, py = player.y+17; for (const c of chars) for (const t of tiles[c]||[]) if (Math.hypot(t.x*T+T/2-px, t.y*T+T/2-py) < r) return true; return false; };
+function updateTips(dt){
+  if (state!=='play' || reading || bossCS || leverAct) return;
+  const p = player, L = LEVELS[lvl], px = p.x+11;
+  // điều kiện xuất hiện
+  if (lvl===0){
+    showTip('move', ['←','→'], 'Đi sang trái / phải (hoặc A / D)', ()=>Math.abs(p.vx) > 60);
+    if (tipsSeen.has('move')) showTip('jump', ['↑','Space'], 'Nhảy. Giữ phím lâu thì nhảy cao hơn, thả sớm thì nhảy thấp.', ()=>!p.ground);
+    if (px > (INTRO+3)*T) showTip('dash', ['Q'], 'Lướt ngang. Đang ở trên không: lần lướt đầu miễn phí, lần sau tốn mực.', ()=>p.dashT > 0);
+    if (tipsSeen.has('jump')) showTip('help', ['H'], 'Quên cách chơi? Nhấn H để mở sổ hướng dẫn bất cứ lúc nào.', null, 5);
+  }
+  if (p.wall && !p.ground) showTip('wall', ['↑'], 'Đang bám tường: nhảy để bật lên. Bám liên tục hai bên tường để leo.', ()=>p.ground, 7);
+  if (p.inkDash && p.dashT > 0) showTip('ink', ['Q'], 'Lần lướt này tốn 35 MỰC (thanh góc trái). Đứng trên đất để mực hồi lại.', null, 7);
+  if (p.ground && !p.crouch && !p.dashT){ const fx = px + p.face*26, head = p.y + 4, foot = p.y + p.h - 4;
+    if (solidAt(fx, head) && !solidAt(fx, foot) && !solidAt(fx, foot-14)) showTip('crouch', ['↓'], 'Chỗ thấp: giữ ↓ (S) để cúi và chui qua. Cúi + Q = trượt nhanh (tốn mực).', ()=>p.crouch); }
+  if (p.ground && onShelf(p)) showTip('shelf', ['↓'], 'Đứng trên kệ mỏng: giữ ↓ để rơi xuống. Từ bên dưới có thể nhảy xuyên lên.', null, 6);
+  if (boxes.some(b=>!b.float && Math.abs(b.x+b.w/2-px) < 60 && Math.abs(b.y+b.h/2-(p.y+17)) < 40)) showTip('push', ['←','→'], 'Đi thẳng vào thùng để đẩy. Đẩy thì chậm và tốn mực.', ()=>p.pushing, 7);
+  if (nearT('S', 70)) showTip('spring', ['↑'], 'Lò xo: đáp xuống từ càng cao, bật lên càng cao.', null, 6);
+  if (crystals.some(c=>Math.hypot(c.x-px, c.y-p.y-17) < 120)) showTip('crystal', [], 'Hạt sáng: chạm vào giữa không trung để được thêm một lần nhảy và một lần lướt.', null, 7);
+  if (orbs.some(o=>Math.hypot(o.x-px, o.y-p.y-17) < 110)) showTip('orb', [], 'Giọt mực: chạm vào để hồi 30 mực.', null, 6);
+  if (diary.some(d=>!d.got && Math.hypot(d.x-px, d.y-p.y-17) < 120)) showTip('page', [], 'Trang nhật ký của Giáo sư: chạm để nhặt và đọc. Chúng kể phần còn thiếu của câu chuyện.', null, 7);
+  if (nearT('^', 80) || saws.some(s=>Math.hypot(s.x-px, s.y-p.y-17) < 100)) showTip('spike', [], 'Gai và lưỡi cưa: chạm vào là ngã, bạn quay về điểm lưu ở đầu đoạn. Cứ thử lại, không mất gì cả.', null, 6);
+  if (nearT('l', 90)) showTip('lever', ['E'], 'Cần gạt: nhấn E. Camera sẽ chỉ cho bạn thấy cơ quan nào vừa thay đổi.', ()=>!!leverAct, 7);
+  if (nearT('rR', 110)) showTip('mirror', ['E'], 'Gương: GIỮ E để xoay từ từ, giữ thêm ← để xoay ngược. Góc tới = góc phản xạ.', null, 9);
+  if (nearT('x', 120)) showTip('acid', [], 'Axit ăn mòn: đừng chạm vào. Hãy tìm cách trung hoà hoặc đi vòng.', null, 7);
+  if (p.inWater) showTip('water', ['↑'], 'Dưới nước: nhảy để ngoi lên. Lướt được liên tục.', null, 6);
+  if (nearT('><}{|', 100)) showTip('wind', [], 'Gió đẩy bạn theo chiều mũi tên. Gió giật thổi từng đợt: canh lúc lặng mà đi.', null, 7);
+  if (nearT('cC', 100)) showTip('belt', [], 'Băng chuyền kéo bạn đi. Nhảy khỏi băng vẫn giữ được đà.', null, 6);
+  if (ropes.some(r=>Math.hypot(r.ax-px, r.ay+r.L-p.y) < 160)) showTip('rope', ['↑'], 'Dây đu: nhảy vào để bám, ←/→ lấy đà, nhảy để buông người bay đi.', ()=>!!p.rope, 8);
+  if (L.combat) showTip('combat', ['F','X'], 'F (J): ném lọ hoá chất · X: đổi axit ⇄ bazơ. Axit phá giáp đá vôi, bazơ trị nhầy axit.', null, 10);
+  if (mana < MANA_DASH && !p.ground) showTip('lowink', [], 'Sắp hết mực! Hạ xuống đất để hồi, hoặc tìm giọt mực.', null, 6);
+  // hiển thị
+  if (!tip && tipQ.length){ tip = tipQ.shift(); tipsSeen.add(tip.id); saveTips(); SFX.play('page'); }
+  if (tip){ tip.t += dt; const ok = tip.done && tip.t > 1 && tip.done(); if (ok && !tip.ok){ tip.ok = true; tip.t = Math.max(tip.t, tip.life - .9); SFX.play('orb'); }
+    if (tip.t > tip.life) tip = null; }
+}
+function solidAt(x, y){ const c = tileAt(x, y); return c==='#' || c==='g' || c==='z'; }
+function keycap(x, y, label, big){
+  ctx.font = `700 ${big?14:12}px ${FONT}`; const w = Math.max(big?30:24, ctx.measureText(label).width + 14), h = big?28:24;
+  ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.fillRect(x, y-h/2, w, h); ctx.strokeRect(x, y-h/2, w, h); ctx.fillStyle=INK; ctx.fillRect(x, y+h/2, w, 3);
+  ctx.textAlign='center'; ctx.fillText(label, x+w/2, y+5); return w;
+}
+function drawTip(){
+  if (!tip || state!=='play') return;
+  const a = Math.min(1, tip.t*5, (tip.life - tip.t)*2.5); if (a <= 0) return;
+  const vw = viewW*S, x0 = OX, yb = OY + viewH*S - 14;
+  ctx.save(); ctx.globalAlpha = a;
+  ctx.font = `400 ${Math.max(13, Math.min(16, vw/52))}px ${FONT}`;
+  const kw = tip.keys.reduce((s,k)=>{ ctx.font=`700 12px ${FONT}`; return s + Math.max(24, ctx.measureText(k).width+14) + 6; }, 0);
+  ctx.font = `400 ${Math.max(13, Math.min(16, vw/52))}px ${FONT}`;
+  const maxW = Math.min(vw - 40, 640), lines = wrapText(tip.text, maxW - kw - 60), lh = 20, h = Math.max(46, lines.length*lh + 24), w = Math.min(maxW, kw + 56 + Math.max(...lines.map(l=>ctx.measureText(l).width)));
+  const x = x0 + (vw - w)/2, y = yb - h - (1-Math.min(1,tip.t*5))*12;
+  ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2.5; ctx.fillRect(x, y, w, h); ctx.strokeRect(x, y, w, h); ctx.fillStyle=INK; ctx.fillRect(x+4, y+h, w, 4);
+  ctx.font=`700 9px ${FONT}`; ctx.textAlign='left'; ctx.fillText(tip.ok ? 'ĐÚNG RỒI ✓' : 'MẸO', x+10, y+12);
+  let kx = x + 12; for (const k of tip.keys) kx += keycap(kx, y + h/2 + 3, k) + 6;
+  ctx.font = `400 ${Math.max(13, Math.min(16, vw/52))}px ${FONT}`; ctx.fillStyle=INK; ctx.textAlign='left';
+  lines.forEach((l,i)=> ctx.fillText(l, kx + 8, y + h/2 - (lines.length-1)*lh/2 + 8 + i*lh));
+  if (tip.done && !tip.ok){ ctx.globalAlpha = a*(.4+.3*Math.sin(clock*5)); ctx.font=`400 9px ${FONT}`; ctx.textAlign='right'; ctx.fillText('thử ngay', x+w-8, y+12); }
+  ctx.restore();
+}
+// Mũi tên chỉ hướng lối ra khi nó nằm ngoài màn hình
+function drawExitArrow(){
+  const ex = (tiles.E||[])[0]; if (!ex || state!=='play') return;
+  const tx = ex.x*T+T/2, ty = ex.y*T, sx = tx - camX, sy = ty - camY;
+  if (sx > 0 && sx < viewW && sy > 0 && sy < viewH) return;
+  const cx = clamp(sx, 26, viewW-26), cy = clamp(sy, 70, viewH-30), ang = Math.atan2(sy-cy, sx-cx);
+  ctx.save(); ctx.globalAlpha = .55 + .2*Math.sin(clock*3); ctx.translate(cx, cy); ctx.rotate(ang);
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(14,0); ctx.lineTo(-6,-9); ctx.lineTo(-2,0); ctx.lineTo(-6,9); ctx.closePath(); ctx.fill();
+  ctx.rotate(-ang); ctx.font=`700 8px ${FONT}`; ctx.textAlign = sx > viewW/2 ? 'right' : 'left'; ctx.fillText('LỐI RA', sx > viewW/2 ? -12 : 12, -12);
+  ctx.restore();
+}
+function toggleHelp(){ if (state!=='play' || reading || devMenu) return; helpOpen = !helpOpen; SFX.play('page'); if (helpOpen){ for (const k in inp) inp[k]=false; } }
+function drawHelp(){
+  const W = innerWidth, H = innerHeight;
+  ctx.save(); ctx.fillStyle='rgba(17,17,17,.55)'; ctx.fillRect(0,0,W,H);
+  const w = Math.min(860, W-24), h = Math.min(H-24, 600), x = (W-w)/2, y = (H-h)/2;
+  ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.fillRect(x,y,w,h); ctx.strokeRect(x,y,w,h); ctx.fillStyle=INK; ctx.fillRect(x+6,y+h,w,5);
+  ctx.textAlign='left'; ctx.font=`700 ${Math.min(22, w/30)}px ${FONT}`; ctx.fillText('SỔ HƯỚNG DẪN', x+20, y+34);
+  ctx.font=`400 11px ${FONT}`; ctx.textAlign='right'; ctx.fillText('H / Esc / Enter để đóng', x+w-16, y+30);
+  const L = LEVELS[lvl]; ctx.textAlign='left'; ctx.font=`700 12px ${FONT}`; ctx.fillText('MỤC TIÊU', x+20, y+60);
+  ctx.font=`400 13px ${FONT}`; const goal = wrapText(`Đi tới cửa LỐI RA ở cuối khu (mũi tên ở mép màn hình chỉ hướng). Gợi ý lúc này: ${L.hints[curSeg]}`, w-40); goal.forEach((l,i)=>ctx.fillText(l, x+20, y+78+i*17));
+  const two = w > 640, cw = two ? (w-60)/2 : w-40, top = y + 90 + goal.length*17;
+  const controls = [[['←','→'],'Đi (A / D)'],[['↑','Space'],'Nhảy · giữ lâu nhảy cao · nhảy vào tường để bám'],[['Q'],'Lướt · trên không: lần đầu miễn phí, sau đó tốn 35 mực'],[['↓'],'Cúi chui chỗ thấp · rơi khỏi kệ · ↓ + Q trượt (tốn mực)'],[['E'],'Gạt cần, van, thắp đèn · GIỮ E xoay gương'],[['F','X'],'Chương chiến đấu: ném lọ · đổi axit ⇄ bazơ'],[['R'],'Chơi lại cả khu'],[['M'],'Tắt / bật tiếng'],[['Esc'],'Bỏ qua cảnh phim']];
+  const mech = [['MỰC','Thanh góc trái. Lướt thêm, trượt, đẩy thùng đều tốn mực. Đứng trên đất để hồi.'],['ĐIỂM LƯU','Đầu mỗi đoạn (ô vuông trên cùng). Chết sẽ quay lại đây, máu hồi đầy.'],['HẠT SÁNG','Chạm giữa không trung: thêm 1 nhảy + 1 lướt.'],['GIỌT MỰC','Hồi 30 mực.'],['LÒ XO','Rơi càng cao, bật càng cao.'],['THÙNG','Đi vào để đẩy. Thùng gỗ xốp nổi trên nước.'],['CẦN GẠT','Đóng/mở các khối có vạch. Camera chỉ chỗ thay đổi.'],['GƯƠNG','Góc tới = góc phản xạ. Chiếu tia sáng vào cảm biến tròn.'],['GIÓ / DÂY ĐU','Gió đẩy theo mũi tên. Dây đu: lấy đà rồi buông.']];
+  let cy = top + 14; ctx.font=`700 12px ${FONT}`; ctx.fillText('ĐIỀU KHIỂN', x+20, cy); cy += 22;
+  for (const [ks, d] of controls){ let kx = x+20; for (const k of ks) kx += keycap(kx, cy, k) + 5; ctx.font=`400 12px ${FONT}`; ctx.fillStyle=INK; ctx.textAlign='left'; const ls = wrapText(d, cw - (kx-x-20) - 8); ls.forEach((l,i)=>ctx.fillText(l, kx+6, cy+4+i*14)); cy += Math.max(30, ls.length*14+16); }
+  let mx = two ? x+40+cw : x+20, my = two ? top+14 : cy+10; ctx.font=`700 12px ${FONT}`; ctx.fillText('CƠ CHẾ', mx, my); my += 20;
+  for (const [n, d] of mech){ if (my > y+h-20) break; ctx.font=`700 11px ${FONT}`; ctx.fillText(n, mx, my); ctx.font=`400 12px ${FONT}`; const ls = wrapText(d, cw); ls.forEach((l,i)=>ctx.fillText(l, mx, my+15+i*14)); my += 22 + ls.length*14; }
+  ctx.restore();
+}
+
 function drawStory(){
   if (!sceneHero) updateSceneHero(0);
   const P = story.q[story.i], W = innerWidth, H = innerHeight;
@@ -5426,6 +5536,7 @@ function draw(){
   drawGame();
   ctx.setTransform(DPR,0,0,DPR,0,0);
   if ((dev.god || dev.ink) && state==='play'){ ctx.fillStyle=INK; ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillText('DEV' + (dev.god?' · BẤT TỬ':'') + (dev.ink?' · MỰC ∞':''), OX, innerHeight-8); }
+  if (state==='play'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawTip(); if (helpOpen) drawHelp(); }
   drawDevMenu();
 }
 function drawGame(){
@@ -5451,7 +5562,7 @@ function drawGame(){
       text('PHÒNG KÍN', cx, cy+64, Math.min(52,w/6.5), 700);
       text(`Chương ${CHAPTER.no} · ${CHAPTER.title}`, cx, cy+98, Math.min(15,w/32), 600);
       text('←→ đi · ↑/Z nhảy · ↓/S cúi · Q lướt · F ném lọ · X đổi lọ', cx, cy+124, sm, 400);
-      text('E gạt cần · R chơi lại cả khu · M tắt/bật tiếng', cx, cy+144, sm, 400);
+      text('E tương tác · H sổ hướng dẫn · R chơi lại khu · M tiếng', cx, cy+144, sm, 400);
     } else {
       const m=Math.floor(endTime/60), s=Math.floor(endTime%60);
       text(LAST_CH.partial ? `CHƯƠNG ${LAST_CH.no} · CÒN TIẾP` : `HẾT CHƯƠNG ${LAST_CH.no}`, cx, cy+66, Math.min(40,w/11), 700);
@@ -5553,6 +5664,7 @@ function drawGame(){
   if (state==='dying'){ ctx.fillStyle=INK; ctx.globalAlpha=Math.max(0,tState-.35)*2; ctx.fillRect(0,0,viewW,viewH); ctx.globalAlpha=1; }
   ctx.restore();
   // thanh mực (góc trên trái khung nhìn) + sổ tay khoa học (góc phải)
+  drawExitArrow();
   if (reading) drawReading();
   drawBossCSOverlay();
   if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawBossLine(); }
