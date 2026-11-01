@@ -686,6 +686,7 @@ const SFX = (() => {
     tick:     ()=>{ tone({type:'square', f:R(1700,2000), t:.012, v:.025}); },
     turn:     ()=>{ noise({type:'highpass', f:2500, f2:4000, t:.14, v:.09}); },
     start:    ()=>{ [392,523,659].forEach((f,i)=>tone({type:'triangle', f, t:.4, v:.1, d:i*.1})); },
+    fanfare:  ()=>{ [523,659,784,1047].forEach((f,i)=>tone({type:'triangle', f, t:.2, v:.12, d:i*.1})); [523,659,784,1047].forEach(f=>tone({type:'triangle', f, t:1.3, v:.07, d:.45})); tone({type:'square', f:1568, f2:1568, t:.9, v:.025, d:.45}); },
     door:     ()=>{ tone({type:'sawtooth', f:210, f2:150, t:.35, v:.03, bp:500, q:5}); },
     boom:     ()=>{ tone({f:120, f2:30, t:.6, v:.45}); noise({type:'lowpass', f:1800, f2:120, t:.7, v:.35}); noise({type:'highpass', f:3000, t:.2, v:.12}); },
     portal:   ()=>{ tone({type:'sawtooth', f:90, f2:260, t:.9, v:.05, bp:500, q:2}); noise({f:300, f2:1200, t:.9, v:.06}); },
@@ -960,7 +961,7 @@ const FORGE_STEPS = [
   [5.9, 'SO₃ + H₂SO₄ → oleum · pha loãng → H₂SO₄ đặc'],
   [7.9, 'Có H₂SO₄ đặc nóng: háo nước, oxi hoá mạnh!'],
 ];
-const FORGE_DUR = 9.6;
+const FORGE_DUR = 8.4;
 function furnaceAct(f){
   const nO = ores.filter(o=>o.got).length, nC = ceramics.filter(c=>c.got).length;
   if (forgeDone){ popups.push({x:f.x*T+T/2, y:f.y*T-60, text:'Nồi đang nguội dần. Lọ H₂SO₄ đã ở trong ba lô.', life:2}); return; }
@@ -978,8 +979,7 @@ function updateForge(dt){
   if (F.t > 1.9 && F.t < 4 && Math.random() < dt*14) parts.push({x:fx+(Math.random()-.5)*30, y:fy-10, vx:(Math.random()-.5)*60, vy:-120-Math.random()*90, a:0, va:0, l:4, life:.6});
   if (F.t > 3.9 && Math.random() < dt*6) bubbles.push({x:fx+(Math.random()-.5)*50, y:fy-70, vy:-40, r:4+Math.random()*5, life:1.4});
   if (F.t >= FORGE_DUR){ forgeSeq = null; forgeDone = true; hasH2SO4 = true; ammo.h2so4 = Math.ceil(Math.max(1, ammoNeed.h2so4)*AMMO_MULT);
-    reagent = 'h2so4'; swapFx = {t:0, to:'h2so4', from:'base'}; SFX.play('key'); saveGame();
-    showTip('h2so4', ['X','F'], 'Đã có H₂SO₄ đặc nóng! Nó hoà tan đồng và sắt (thứ HCl bó tay), nhưng gặp đá vôi thì tạo lớp CaSO₄ ít tan và dừng lại.', null, 11); }
+    startItemGet('h2so4', f.x*T+T/2+70, f.y*T+T-28); }
 }
 function drawFurnace(t){
   const X = t.x*T+T/2, Y = t.y*T+T, run = forgeSeq ? forgeSeq.t : forgeDone ? FORGE_DUR : 0, k = run / FORGE_DUR;
@@ -1012,9 +1012,6 @@ function drawFurnace(t){
   // khói/hơi
   if (hot > 0){ ctx.globalAlpha=.4; ctx.lineWidth=2; for (let i=0;i<3;i++){ const p = (clock*.6 + i/3) % 1; ctx.beginPath(); ctx.arc(X-6+Math.sin(p*6+i)*8, Y-140 - p*60, 5+p*12, 0, Math.PI*2); ctx.stroke(); } ctx.globalAlpha=1; }
   ctx.font=`700 9px ${FONT}`; ctx.fillStyle=INK; ctx.fillText(forgeDone ? 'NỒI LUYỆN · XONG' : 'NỒI LUYỆN ÁP SUẤT', X, Y-150);
-  // lọ bay về phía Bấc ở bước cuối
-  if (forgeSeq && forgeSeq.t > 7.9){ const q = Math.min(1,(forgeSeq.t-7.9)/1.2), px = player.x+11, py = player.y+10, sx = X+70, sy = Y-30;
-    flaskIcon(sx+(px-sx)*q, sy+(py-sy)*q - Math.sin(q*Math.PI)*80, 'h2so4', q*Math.PI*4, 1.6-q*.6); }
   ctx.restore();
 }
 function drawOre(o){
@@ -1045,6 +1042,67 @@ function drawQuestHUD(){
   ctx.save(); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.fillRect(12,y-12,196,22); ctx.strokeRect(12,y-12,196,22);
   ctx.fillStyle=INK; ctx.font=`700 9px ${FONT}`; ctx.textAlign='left';
   ctx.fillText(forgeDone ? 'NỒI LUYỆN ✓  ·  CÓ H₂SO₄ ĐẶC NÓNG' : `QUẶNG FeS₂ ${nO}/${ores.length}  ·  GỐM Al₂O₃ ${nC}/${ceramics.length}`, 20, y+3);
+  ctx.restore();
+}
+
+// ===== NHẬN VŨ KHÍ MỚI: lọ bay lên, rơi vào hai tay, Bấc giơ cao — kiểu "đạt được vật phẩm" =====
+let itemGet = null;
+const ITEM_INFO = {
+  h2so4: {title:'H₂SO₄ ĐẶC NÓNG', sub:'háo nước · oxi hoá mạnh · hoà tan được đồng và sắt', keys:'X đổi lọ  ·  giữ F để ngắm  ·  thả F để ném'},
+};
+const IG = {fly:1.0, drop:1.25, hold:4.4, end:5.0};
+function startItemGet(kind, x, y){ itemGet = {t:0, kind, x0:x, y0:y, prev:reagent}; SFX.play('swoosh'); player.face = Math.sign(x-(player.x+11)) || player.face; }
+function itemHand(){ const p = player; return {x:p.x+11, y:p.y-12}; }
+function itemFlaskPos(g){
+  const h = itemHand(), top = {x:h.x, y:h.y-120};
+  if (g.t < IG.fly){ const q = easeOut(g.t/IG.fly), c = {x:(g.x0+top.x)/2, y:Math.min(g.y0, top.y)-120};
+    return {x:(1-q)*(1-q)*g.x0 + 2*(1-q)*q*c.x + q*q*top.x, y:(1-q)*(1-q)*g.y0 + 2*(1-q)*q*c.y + q*q*top.y, rot:q*Math.PI*6, k:1.2+q*.6}; }
+  const q = Math.min(1, (g.t-IG.fly)/(IG.drop-IG.fly)), e = q*q;
+  return {x:top.x, y:top.y + (h.y-top.y)*e, rot:(1-q)*Math.PI*.5, k:1.8};
+}
+function updateItemGet(dt){
+  const g = itemGet, p = player; g.t += dt; p.vx = 0;
+  if (g.t >= IG.drop && !g.caught){ g.caught = true; SFX.play('fanfare'); SFX.play('grab'); shakeT = Math.max(shakeT, .18);
+    const h = itemHand(); for (let i=0;i<24;i++){ const a = i/24*Math.PI*2; parts.push({x:h.x, y:h.y, vx:Math.cos(a)*260, vy:Math.sin(a)*260, a, va:0, l:4+Math.random()*4, life:.7}); } }
+  if (g.caught && g.t < IG.hold && Math.random() < dt*10){ const h = itemHand(), a = Math.random()*Math.PI*2, r = 30+Math.random()*50; popups.push({x:h.x+Math.cos(a)*r, y:h.y+Math.sin(a)*r*.7, text:'✦', life:.7}); }
+  if (g.t >= IG.hold && !g.stow){ g.stow = true; reagent = g.kind; swapFx = {t:.2, to:g.kind, from:g.prev}; SFX.play('swap'); }
+  if (g.t >= IG.end){ itemGet = null; saveGame();
+    showTip('h2so4', ['X','F'], 'Đã có H₂SO₄ đặc nóng! Nó hoà tan đồng và sắt (thứ HCl bó tay), nhưng gặp đá vôi thì tạo lớp CaSO₄ ít tan và dừng lại.', null, 11); }
+}
+function drawItemGetBack(){
+  const g = itemGet; if (!g) return;
+  const h = itemHand(), a = Math.min(1, g.t/.5) * (g.t > IG.hold ? Math.max(0, 1-(g.t-IG.hold)/.5) : 1);
+  // đèn sân khấu: tối xung quanh, sáng quanh Bấc
+  ctx.save(); ctx.globalAlpha = a*.85; const gr = ctx.createRadialGradient(h.x, h.y+10, 50, h.x, h.y+10, 330); gr.addColorStop(0,'rgba(17,17,17,0)'); gr.addColorStop(1,'rgba(17,17,17,.8)'); ctx.fillStyle = gr; ctx.fillRect(camX-50, camY-50, viewW+100, viewH+100); ctx.restore();
+  if (g.caught && g.t < IG.hold+.4){   // tia sáng xoay sau lưng
+    const k = Math.min(1, (g.t-IG.drop)/.35) * a;
+    ctx.save(); ctx.translate(h.x, h.y-4); ctx.rotate(clock*.6); ctx.fillStyle = INK;
+    for (let i=0;i<12;i++){ ctx.globalAlpha = k*(i%2 ? .12 : .22); ctx.beginPath(); ctx.moveTo(0,0); const a0 = i/12*Math.PI*2, R = 150 + Math.sin(clock*3+i)*12; ctx.arc(0,0,R*k, a0, a0+Math.PI/14); ctx.closePath(); ctx.fill(); }
+    ctx.globalAlpha = k; ctx.strokeStyle = INK; ctx.lineWidth = 2; for (let r=0;r<2;r++){ const q = ((clock*.8 + r/2) % 1); ctx.globalAlpha = k*(1-q)*.6; ctx.beginPath(); ctx.arc(0,0,20+q*90,0,Math.PI*2); ctx.stroke(); }
+    ctx.restore(); }
+}
+function drawItemGetFront(){
+  const g = itemGet; if (!g || g.t >= IG.drop) return;
+  const q = itemFlaskPos(g);
+  ctx.save(); ctx.fillStyle = INK; for (let i=1;i<8;i++){ const gg = {...g, t:Math.max(0, g.t - i*.035)}, o = itemFlaskPos(gg); ctx.globalAlpha = .35*(1-i/8); ctx.beginPath(); ctx.arc(o.x, o.y, 3.5-i*.3, 0, Math.PI*2); ctx.fill(); }
+  ctx.globalAlpha = 1; flaskIcon(q.x, q.y, g.kind, q.rot, q.k); ctx.restore();
+}
+function drawItemGetOverlay(){
+  const g = itemGet; if (!g) return;
+  const lb = Math.min(1, g.t/.4) * (g.t > IG.hold ? Math.max(0, 1-(g.t-IG.hold)/.6) : 1), bh = viewH*.1*lb;
+  ctx.fillStyle = INK; ctx.fillRect(0,0,viewW,bh); ctx.fillRect(0,viewH-bh,viewW,bh);
+  if (!g.caught) return;
+  const info = ITEM_INFO[g.kind] || {title:g.kind, sub:'', keys:''};
+  const tin = Math.min(1, (g.t-IG.drop-.15)/.35), tout = g.t > IG.hold-.3 ? Math.max(0, 1-(g.t-IG.hold+.3)/.4) : 1, s = easeOut(Math.max(0,tin))*tout; if (s <= 0) return;
+  const y = viewH*.66, h = 74, w = Math.min(viewW-40, 520), x = (viewW-w)/2 + (1-s)*-80;
+  ctx.save(); ctx.globalAlpha = s;
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(x-20, y); ctx.lineTo(x+w+20, y); ctx.lineTo(x+w, y+h); ctx.lineTo(x, y+h); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = PAPER; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x-8, y+5); ctx.lineTo(x+w+8, y+5); ctx.stroke();
+  ctx.fillStyle = PAPER; ctx.textAlign = 'center';
+  ctx.font = `700 10px ${FONT}`; ctx.fillText('✦  VŨ KHÍ MỚI  ✦', viewW/2 + (1-s)*-80, y+20);
+  ctx.font = `700 ${Math.min(26, w/16)}px ${FONT}`; ctx.fillText(info.title, viewW/2 + (1-s)*-80, y+46);
+  ctx.font = `400 10px ${FONT}`; ctx.fillText(info.sub, viewW/2 + (1-s)*-80, y+62);
+  ctx.fillStyle = PAPER; ctx.font = `700 10px ${FONT}`; ctx.fillText(info.keys, viewW/2, viewH - bh/2 + 4);
   ctx.restore();
 }
 
@@ -1091,14 +1149,16 @@ function drawSwapFx(){
     ctx.fillStyle = f.to!=='base' ? PAPER : INK; ctx.fillText(lab, p.x+11, ly); }
   ctx.restore();
 }
-function throwFlask(){
-  const p = player;
+const THROW_T = .3;
+function throwFlask(ch){
+  const p = player; if (ch === undefined) ch = p.charge;
   if (mana < FLASK_COST){ manaFlash=.5; SFX.play('denied'); return; }
   if (reagent!=='tnt'){ if ((ammo[reagent]||0) <= 0){ SFX.play('denied'); popups.push({x:p.x+11, y:p.y-26, text:`hết lọ ${REAGENT_NAME[reagent]}!`, life:1.4}); showTip('noammo', ['X'], 'Hết loại lọ này rồi. Nhấn X để đổi sang lọ khác. Nhấn R chơi lại khu để được cấp lại đầy đủ.', null, 8); return; } ammo[reagent]--; }
   mana -= FLASK_COST;
-  const s0 = flaskStart(p), v = flaskVel(p.charge, p.faceS>=0?1:-1);
+  const s0 = flaskStart(p), v = flaskVel(ch, p.faceS>=0?1:-1);
   flasks.push({x:s0.x, y:s0.y, vx:v.vx, vy:v.vy, kind:reagent, rot:0});
-  p.actT = .25; SFX.play('throw');
+  SFX.play('throw'); p.sx = 1.12; p.sy = .9;
+  for (let i=0;i<5;i++) parts.push({x:s0.x, y:s0.y, vx:v.vx*.25+(Math.random()-.5)*60, vy:v.vy*.25+(Math.random()-.5)*60, a:Math.atan2(v.vy,v.vx), va:0, l:4, life:.25});
 }
 // ---- SUPER ATTACK: thuốc nổ TNT (công cụ dev để thử màn/boss) ----
 const TNT_R = 170;
@@ -1148,6 +1208,9 @@ function splash(x, y, kind){
   if (kind==='tnt'){ tntBlast(x, y); return; }
   SFX.play('glass');
   for (let i=0;i<16;i++) parts.push({x,y,vx:(Math.random()-.5)*320,vy:-Math.random()*300,a:Math.random()*6,va:6,l:3+Math.random()*4,life:.6});
+  for (let i=0;i<10;i++) parts.push({x, y:y-4, vx:(Math.random()-.5)*300, vy:-140-Math.random()*240, a:Math.random()*6, va:0, l:1.5, life:.55});
+  ripples.push({x, y, r:14, life:.3});
+  if (kind==='h2so4'){ SFX.play('sizzle'); for (let i=0;i<10;i++) bubbles.push({x:x+(Math.random()-.5)*40, y:y-Math.random()*20, vy:-50-Math.random()*60, r:3+Math.random()*5, life:.9}); popups.push({x, y:y-26, text:'xèoo…', life:.8}); }
   ripples.push({x, y, r:6, life:.4});
   // tác dụng lên ô: bazơ trung hoà bể axit, axit hoà tan đá vôi
   let didTile = false;
@@ -1617,11 +1680,15 @@ function updateCombat(dt){
   updateWave(dt);
   p.invT -= dt; hurtFlash -= dt;
   // ngắm & ném: giữ F để nạp lực, thả để ném
-  if (inp.throw && state==='play'){ p.charging = true; p.charge = Math.min(1, p.charge + dt/.8); }
-  else if (p.charging){ p.charging = false; throwFlask(); p.charge = 0; }
+  p.throwT = Math.max(0, (p.throwT||0) - dt);
+  if (inp.throw && state==='play' && !itemGet && !forgeSeq){ if (!p.charging) SFX.play('grab'); p.charging = true; p.charge = Math.min(1, p.charge + dt/.8); }
+  else if (p.charging){ p.charging = false; p.throwT = THROW_T; p.throwCh = p.charge; p.throwPend = true; p.charge = 0; SFX.play('swoosh'); }
+  if (p.throwPend && p.throwT < THROW_T*.55){ p.throwPend = false; throwFlask(p.throwCh); }
   // lọ đang bay
   for (const f of flasks){
-    f.vy += FLASK_G*dt; f.vx += windAt(f.x, f.y)*420*dt; f.x += f.vx*dt; f.y += f.vy*dt; f.rot += dt*12;
+    (f.tr ||= []).push([f.x, f.y]); if (f.tr.length > 9) f.tr.shift();
+    f.vy += FLASK_G*dt; f.vx += windAt(f.x, f.y)*420*dt; f.x += f.vx*dt; f.y += f.vy*dt; f.rot += dt*(8 + Math.hypot(f.vx,f.vy)*.012)*Math.sign(f.vx||1);
+    if (f.kind==='h2so4' && Math.random() < dt*30) bubbles.push({x:f.x+(Math.random()-.5)*6, y:f.y-6, vy:-30-Math.random()*30, r:1.5+Math.random()*2, life:.5});
     if (f.y > RH || solid(Math.floor(f.x/T), Math.floor(f.y/T)) || 'xw'.includes(tileAt(f.x,f.y)) || hitsEnemy(f.x,f.y)){ f.dead = true; splash(f.x, f.y, f.kind); }
   }
   flasks = flasks.filter(f=>!f.dead);
@@ -2445,6 +2512,7 @@ function updateZoom(dt){
 }
 function updateCam(dt, snap, center){
   const px = player.x+11, py = player.y+17, mx = viewW*CAM_EDGE, my = viewH*CAM_EDGE;
+  if (itemGet && !snap){ const tx = clamp(px - viewW/2, 0, Math.max(0, RW - viewW)), ty = clamp(py - 30 - viewH/2, 0, Math.max(0, RH - viewH)), k = Math.min(1, dt*4); camX += (tx-camX)*k; camY += (ty-camY)*k; return; }
   if (leverAct && !snap){   // máy quay điện ảnh khi gạt cần: lia êm tới cơ quan rồi lia về Bấc
     const L = leverAct, look = L.tgt && L.look, fx = look ? L.tgt.x : px, fy = look ? L.tgt.y : py;
     const tx = clamp(fx - viewW/2, 0, Math.max(0, RW - viewW)), ty = clamp(fy - viewH/2, 0, Math.max(0, RH - viewH));
@@ -2815,7 +2883,7 @@ function updateMirrorHold(dt){
 function updatePlayer(dt){
   const p = player;
   updateMirrorHold(dt);
-  if (leverAct || forgeSeq){ p.vx = 0; jumpBuf = 0; dashBuf = 0; p.vy = Math.min(p.vy + G*dt, FALL_MAX); moveY(p, p.vy*dt); heroAnim(p, dt); return; }
+  if (leverAct || forgeSeq || itemGet){ p.vx = 0; jumpBuf = 0; dashBuf = 0; p.vy = Math.min(p.vy + G*dt, FALL_MAX); moveY(p, p.vy*dt); heroAnim(p, dt); return; }
   p.flingT = Math.max(0, (p.flingT||0) - dt);
   if (p.rope){ if (updateRopePlayer(p, dt)) return; }
   else if (!p.ground && !p.crouch) tryGrabRope(p);
@@ -3105,6 +3173,7 @@ function update(dt){
   // hoạt ảnh đồ vật
   mechA = Math.min(1, mechA + dt/.5);
   if (forgeSeq) updateForge(dt);
+  if (itemGet) updateItemGet(dt);
   if (leverAct) updateLever(dt);
   else leverA += ((leverOn?.7:-.7) - leverA)*Math.min(1,dt*14);
   const nearDoor = (tiles.E||[]).some(t=>Math.hypot(t.x*T+T/2-cx, t.y*T-cy)<140);
@@ -4269,12 +4338,9 @@ function drawCombatFX(){
   drawBossFX();
   // lọ hoá chất đang bay
   for (const f of flasks){
-    ctx.save(); ctx.translate(f.x,f.y); ctx.rotate(f.rot);
-    ctx.strokeStyle=INK; ctx.lineWidth=1.6; ctx.fillStyle=PAPER;
-    ctx.beginPath(); ctx.moveTo(-2,-8); ctx.lineTo(-2,-3); ctx.lineTo(-6,5); ctx.lineTo(6,5); ctx.lineTo(2,-3); ctx.lineTo(2,-8); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle=INK; if (f.kind==='tnt'){ ctx.beginPath(); ctx.moveTo(-2,-3); ctx.lineTo(-6,5); ctx.lineTo(6,5); ctx.lineTo(2,-3); ctx.closePath(); ctx.fill(); ctx.lineWidth=1; line(0,-8,3,-13); ctx.fillStyle=PAPER; for (let i=0;i<3;i++){ const a=clock*40+i*2; ctx.fillRect(3+Math.cos(a)*3, -14+Math.sin(a)*3, 1.5, 1.5); } }
-    else if (f.kind==='acid') ctx.fillRect(-5,1,10,4); else { ctx.beginPath(); ctx.arc(0,2.5,2.5,0,Math.PI*2); ctx.fill(); }
-    ctx.restore();
+    if (f.tr){ ctx.save(); ctx.strokeStyle=INK; ctx.lineCap='round'; for (let k=1;k<f.tr.length;k++){ ctx.globalAlpha = k/f.tr.length*.45; ctx.lineWidth = 1 + k/f.tr.length*3; line(f.tr[k-1][0], f.tr[k-1][1], f.tr[k][0], f.tr[k][1]); } ctx.restore(); }
+    if (f.kind==='acid' && Math.floor(clock*20)%3===0){ ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(f.x-f.vx*.02, f.y-f.vy*.02+4, 1.4, 0, Math.PI*2); ctx.fill(); }
+    flaskIcon(f.x, f.y, f.kind, f.rot, 1.15);
   }
   for (const b of blobs){ ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill(); if (b.acid){ ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(b.x-2,b.y-2,1.5,0,Math.PI*2); ctx.fill(); } }
   for (const d of drops){
@@ -4377,8 +4443,11 @@ function heroInit(p){
   p.scarf=[]; for (let i=0;i<8;i++) p.scarf.push({x:p.x+11-i*4, y:p.y+10+i, px:p.x+11-i*4, py:p.y+10+i});
 }
 function heroState(p){
+  if (p===player && itemGet && itemGet.caught && itemGet.t < IG.hold+.15) return 'hold';
   if (p.dashT>0) return 'dash';
   if (p.wall) return 'wall';
+  if (p===player && p.throwT > 0) return 'throw';
+  if (p===player && p.charging) return 'aim';
   if (!p.ground) return p.flipT>0 ? 'flip' : p.vy < -120 ? 'rise' : p.vy > 160 ? 'fall' : 'apex';
   if (leverAct && p===player && leverAct.pk > .02) return 'pull';
   if (p.rope) return 'swing';
@@ -4432,6 +4501,21 @@ function heroTarget(p, st){
       const f = p.runT*.6, s = Math.sin(f);
       q.lean=.45; q.bob=1; q.t1=.5+s*.25; q.s1=-.9; q.t2=-.55-s*.25; q.s2=-.1;
       q.a1=1.45; q.a1b=.2; q.a2=1.3; q.tipX=2;
+      break; }
+    case 'hold': {            // giơ cao vũ khí mới bằng hai tay
+      const k = Math.min(1, (itemGet.t-IG.drop)/.25);
+      q.lean = -.05; q.bob = -1.5 - k*1; q.t1 = .2; q.s1 = -.15; q.t2 = -.2; q.s2 = -.1;
+      q.a1 = 3.05; q.a1b = .05; q.a2 = 2.85; q.hem = -1; q.tipX = -1.5; q.tipY = 2 + Math.sin(clock*6)*.5; q.lookX = .3;
+      break; }
+    case 'aim': {             // nạp lực: ngả người, tay cầm lọ vòng ra sau đầu, chân trụ
+      const c = p.charge, tr = c >= 1 ? Math.sin(clock*45)*.05 : 0;
+      q.lean = -.12 - c*.14 + tr; q.bob = 1 + c*1.2; q.t1 = .55; q.s1 = -.35 - c*.2; q.t2 = -.5; q.s2 = -.25;
+      q.a1 = -2.0 - c*.55 + tr; q.a1b = -.55; q.a2 = .9 + c*.3; q.hem = 1.5; q.tipX = -2 - c*2; q.tipY = 1;
+      break; }
+    case 'throw': {           // vung tay ném: cánh tay quét qua đầu ra trước, người đổ theo
+      const k = 1 - p.throwT/THROW_T, e = 1 - (1-k)*(1-k);
+      q.lean = -.2 + e*.55; q.bob = 1.5 - e*.5; q.t1 = .55 + e*.25; q.s1 = -.5; q.t2 = -.5 - e*.25; q.s2 = -.4*e;
+      q.a1 = -2.5 + e*4.0; q.a1b = -.4 + e*.6; q.a2 = 1.1 - e*2.2; q.hem = -2*e; q.tipX = 3*e; q.tipY = 1;
       break; }
     case 'act': {             // gạt cần
       const k = 1 - p.actT/.3;
@@ -4545,6 +4629,9 @@ function heroBody(p, ghost){
   const sh = [3, -22+by];
   const el = limb(sh[0], sh[1], po.a1, 5.5); const hd = limb(el[0], el[1], po.a1+po.a1b, 5);
   ctx.beginPath(); ctx.arc(hd[0], hd[1], 1.8, 0, Math.PI*2); ctx.fill();
+  if (!ghost && p===player){ const hk = itemGet && itemGet.caught && itemGet.t < IG.hold ? itemGet.kind : (p.charging || (p.throwT > THROW_T*.55)) ? reagent : null;
+    if (hk){ const big = hk===(itemGet&&itemGet.kind) && itemGet && itemGet.caught, rot = big ? Math.sin(clock*3)*.08 : (po.a1+po.a1b) + Math.PI;
+      ctx.save(); ctx.translate(hd[0], hd[1]); if (big) ctx.translate(-3, -5); flaskIcon(0, big ? -4 : 0, hk, rot, big ? 1.25 : .75); ctx.restore(); } }
   ctx.restore();
 }
 function heroPack(p, ghost, by){
@@ -5894,11 +5981,13 @@ function drawGame(){
   if (LEVELS[lvl].combat){ ENEMY_LOOK = {x:player.x+11, y:player.y+17}; drawDecals(); drawSpawns(); const vis = e => e.x+e.w > camX-80 && e.x < camX+viewW+80 && e.y+e.h > camY-80 && e.y < camY+viewH+80; for (const e of enemies) if (vis(e)) contactShadow(e, e.fly ? .45 : .9); for (const e of enemies) if (vis(e)) drawEnemy(e); drawBoss(); }
   for (const g of ghosts){ ctx.globalAlpha=g.life*2.2; drawHero({x:g.x,y:g.y,h:34,faceS:g.faceS,sx:g.sx,sy:g.sy,pose:player.pose,st:'dash',scarf:[],pk:player.pk},{ghost:true,ink:g.ink}); }
   ctx.globalAlpha=1;
+  drawItemGetBack();
   if (state!=='dying'){
     // viền sáng (rim light) tách nhân vật khỏi nền tối
     ctx.save(); if (!PERF.low){ ctx.shadowColor='rgba(255,255,255,.95)'; ctx.shadowBlur=7*S*DPR; } if (player.invT>0 && Math.floor(clock*20)%2) ctx.globalAlpha=.35;
     if (player.rope){ const hx = player.x+11, hy = player.y+6; ctx.translate(hx, hy); ctx.rotate(-player.ropeTh); ctx.translate(-hx, -hy); }
     drawHero(player); ctx.restore();
+    drawItemGetFront();
     drawSwapFx();
   }
   ctx.save(); if (!PERF.low){ ctx.shadowColor='rgba(255,255,255,.9)'; ctx.shadowBlur=5*S*DPR; } drawCrow(); ctx.restore();
@@ -5944,6 +6033,7 @@ function drawGame(){
     ctx.font=`400 12px ${FONT}`; ctx.fillText('Làm lại trận Ngai Vua Mực', viewW/2, viewH/2+20);
     ctx.restore();
   }
+  drawItemGetOverlay();
   if (leverAct && leverAct.lb > 0){ const h = viewH*.09*leverAct.lb; ctx.fillStyle = INK; ctx.fillRect(0,0,viewW,h); ctx.fillRect(0,viewH-h,viewW,h); }
   // viền khung nhìn
   ctx.strokeStyle=INK; ctx.lineWidth=2/S; ctx.strokeRect(0,0,viewW,viewH);
