@@ -2014,11 +2014,20 @@ function drawBestiary(){
 // ===== CỐT TRUYỆN =====
 const STORY = {
   intro: [
+    {shots:[
+      cineShot('house',   [60,-40,.85,0],  [190,-10,1.5,0],  7,   'Trên ngọn đồi ấy, đêm nào cũng chỉ còn một ô cửa sáng đèn.', {tr:'fade'}),
+      cineShot('window',  [-40,0,.95,0],   [0,0,1.15,0],     6,   'Giáo sư Tịch viết. Về lò xo, ròng rọc, axit, hơi nước: về cách thế giới chuyển động.'),
+      cineShot('desk',    [-60,-40,1,-.08],[40,0,1.45,.02],  6.5, 'Ông viết rất nhiều. Nhưng có một trang ông chưa bao giờ viết xong.', {from:.1, to:.75}),
+      cineShot('nib',     [-200,-40,1.1,0],[60,40,1.5,.04],  6,   'Mỗi khi viết sai, ông gạch đi. Gạch thật kỹ, đến khi không ai còn đọc được nữa.', {mode:'cross'}),
+      cineShot('floor',   [0,-160,1.25,0], [0,420,1.15,0],   6.5, 'Mực gạch xoá thấm qua kẽ sàn. Xuống mãi. Ông chưa từng hỏi chúng đi đâu.'),
+      cineShot('study',   [-90,50,2.0,0],  [-60,55,2.4,0],   6.5, '“Một sợi bấc cháy chính nó để soi đường cho người khác,” ông lẩm bẩm. “Thật là một việc kỳ lạ.”', {mode:'think', prof:'look'}),
+      cineShot('study',   [150,60,3.2,0],  [150,60,3.8,0],   5,   'Rồi một đêm, ngọn đèn tắt.', {mode:'dying', prof:'look'}),
+      cineShot('study',   [-420,0,1.25,0], [180,10,1.25,0],  7,   'Sáng hôm sau, chiếc ghế trống. Mọi cánh cửa đều khoá từ bên trong.', {mode:'dawn', ease:'lin', tr:'fade'}),
+      cineShot('lampglass',[0,80,1,-.03],  [0,-30,1.15,0],   7,   'Trong đèn còn sót lại một sợi bấc, đẫm mực của ông. Và nó cử động.', {mode:'wake'}),
+      cineShot('door',    [-120,80,1,0],   [-60,40,1.12,0],  6.5, '“Nếu ông đã viết ra tớ… thì tớ phải đi tìm người viết.”'),
+      cineCard('Một ngọn đèn tắt. Một sợi bấc thức dậy.', 4.5),
+    ]},
     {scene:'chapter', title:`Chương ${CHAPTER.no} · ${CHAPTER.title}`, icon:'lamp', lines:['Câu chuyện về một sợi bấc đi tìm người đã thắp nó.']},
-    {scene:'desk',    lines:['Mỗi đêm, Giáo sư Tịch ngồi viết bên ngọn đèn dầu nhỏ.','Ông viết về lò xo, ròng rọc, axit và hơi nước, về cách thế giới chuyển động.']},
-    {scene:'lampout', lines:['Một đêm, ngọn đèn tắt. Sáng hôm sau, ông không còn ở đó.','Mọi cánh cửa trong nhà đều đã khoá.']},
-    {scene:'wick',    lines:['Trong đèn còn sót lại một sợi bấc, thấm đẫm mực của ông.','Sợi bấc đứng dậy, quàng khăn, đeo chiếc ba lô cũ của Giáo sư.']},
-    {scene:'door',    lines:['Tớ là Bấc.','Tớ sẽ đi qua từng căn phòng kín để tìm ông.']},
   ],
   // chapters[i]: các cảnh chiếu TRƯỚC khi vào LEVELS[i]
   chapters: [
@@ -2027,48 +2036,78 @@ const STORY = {
     [{scene:'chapter', title:'Phần 3 · Xưởng Đồng Hồ',    icon:'clock',    lines:['Nơi ông đo thời gian bằng con lắc và những chiếc thùng nổi.']}],
     [{scene:'chapter', title:'Phần 4 · Phòng thí nghiệm', icon:'lab',      lines:['Nơi ông thử biến mực thành ánh sáng.']}],
     [
-      {scene:'lab',     lines:['Sau cánh cửa cuối, Giáo sư Tịch ngủ gục bên bàn thí nghiệm.','Ngọn đèn trước mặt ông đã cạn dầu.']},
-      {scene:'relight', lines:['Bấc trèo lên bàn, thấm chút mực cuối cùng vào đèn.','Một đốm lửa nhỏ bùng lên.']},
-      {scene:'dawn',    lines:['Giáo sư mở mắt: “Ta cứ nghĩ ta đã viết ra con…”','“…hoá ra con là người thắp sáng ta.”']},
-      {scene:'rift',    lines:['Nhưng thí nghiệm cuối của ông đã để lọt ra một thứ: Mực Đen.','Sàn nhà rung lên. Một khe nứt mở ra, sâu hun hút.']},
-      {scene:'kit',     lines:['Giáo sư trao cho Bấc túi hoá chất hai ngăn: axit HCl và bazơ NaOH.','“Quái vật cũng là vật chất. Hiểu chúng, con sẽ thắng.”']},
-      {scene:'goodbye', lines:['“Ta phải ở lại giữ ngọn đèn. Đèn tắt, khe nứt sẽ nuốt cả ngôi nhà.”','“Quạ Giấy sẽ đi cùng con. Nhớ đường về nhé.”']},
+      {shots:[
+        cineShot('study',    [-300,0,.95,0],  [-60,40,1.5,0],   6,   'Sau cánh cửa cuối cùng, Giáo sư ngủ gục bên bàn thí nghiệm.', {lab:true, mode:'out', prof:'sleep', tr:'fade'}),
+        cineShot('study',    [-60,60,2.4,.05],[20,70,2.8,.03],  5.5, 'Ngọn đèn trước mặt ông đã cạn dầu từ lâu.', {lab:true, mode:'out', prof:'sleep'}),
+        cineShot('tablelow', [60,260,1,0],    [60,-40,1.1,0],   6,   'Bấc trèo lên. Trong người cậu chỉ còn lại một chút mực.', {hero:'climb'}),
+        cineShot('lampglass',[-60,40,1.05,0], [-30,0,1.2,0],    7.5, 'Cậu trao cho ngọn đèn chút mực ấy. Lửa bùng lên. Còn cậu thì ngắn đi một đốt.', {mode:'relight'}),
+        cineCard('Thắp sáng một người, bao giờ cũng tốn một phần của chính mình.', 4.5),
+        cineShot('face',     [0,-10,.95,0],   [0,-30,1.25,0],   6.5, 'Giáo sư mở mắt. “Ta viết ra con để giữ ngọn đèn…”', {mode:'wake', tr:'fade'}),
+        cineShot('study',    [-40,40,2.0,0],  [-30,40,2.2,0],   7,   '“…ta không ngờ con lại chọn thắp nó bằng chính mình.” Bấc không biết phải trả lời thế nào.', {lab:true, relit:-1, prof:'wake', hero:[60,104,1.3,-1]}),
+        cineShot('rift',     [0,0,1.1,.14],   [0,-60,1.35,.2],  7,   'Sàn nhà nứt toác. Từ dưới sâu, những dòng chữ bị gạch xoá trườn lên: “lẽ ra…”, “giá mà…”, “xin lỗi…”', {shake:6, sfx:'heart', tr:'flash'}),
+        cineShot('face',     [0,-20,1.2,-.04],[0,-20,1.45,-.08],5.5, '“Mực Đen,” ông thì thầm. “Là tất cả những gì ta từng muốn quên.”', {mode:'fear'}),
+        cineShot('kit',      [-40,0,1.1,0],   [-100,30,1.35,0], 7,   '“HCl và NaOH. Quái vật cũng là vật chất, con ạ. Hiểu chúng rồi, con sẽ không cần phải ghét chúng.”'),
+        cineShot('edge',     [-60,40,1.6,0],  [-60,0,.8,0],     8,   '“Ta ở lại giữ đèn. Quạ Giấy sẽ đi cùng con.” Rồi, rất khẽ: “Nhớ đường về.”'),
+      ]},
       {scene:'chapter', title:'Chương phụ · Khe Nứt', icon:'rift', lines:['Lối xuống, nơi ngôi nhà đang vỡ thành từng mảnh.']},
     ],
     [
-      {scene:'descent', lines:['Cuối khe nứt là một vực thẳm không đáy.','Bấc rơi giữa những mảnh nhà: khung tranh, đồng hồ, trang sách bay ngược lên trời.']},
-      {scene:'abyss',   lines:['Khi chạm đất, cậu thấy nó: cả một thế giới làm bằng mực đã khô.','Xa xa, một toà tháp đen đang đập thình thịch như một trái tim.']},
-      {scene:'crowmsg', lines:['Quạ Giấy mở cánh. Bên trong là nét chữ của Giáo sư:','“Axit gặp bazơ thành muối và nước. Không gì là không thể hoá giải.”']},
+      {shots:[
+        cineShot('fall',  [0,20,1.2,-.1],   [0,20,1.5,.1],     7,   'Khe nứt không có đáy. Quanh Bấc, những mảnh nhà rơi ngược lên trời: khung tranh, đồng hồ, trang sách.', {hero:'fall', tr:'fade'}),
+        cineShot('abyss', [-420,130,3,0],   [-40,-60,.85,0],   7.5, 'Bên dưới là cả một thế giới làm bằng mực đã khô. Mỗi ngọn núi là một trang bị gạch xoá.'),
+        cineShot('abyss', [320,-180,1.8,0], [320,-200,2.4,0],  6,   'Xa xa, một toà tháp đen đập thình thịch như một trái tim. Như thể nó đang chờ được ai đó đọc.', {sfx:'heart'}),
+        cineShot('wing',  [0,0,1.1,0],      [0,0,1.3,0],       8,   'Quạ Giấy mở cánh. Bên trong là nét chữ của Giáo sư.'),
+      ]},
       {scene:'chapter', title:'Phần 5 · Thế giới Sa Ngã', icon:'fallen', lines:['Nơi chỉ khoa học mới soi được đường.']},
     ],
     [
-      {scene:'deeper',  lines:['Phía sau Xưởng Sắt, một bậc thang mực dẫn xuống sâu hơn nữa.','Tiếng đập của toà tháp mỗi lúc một gần.']},
+      {shots:[
+        cineShot('stairs', [-300,40,1.4,0], [400,390,1.4,0],  7.5, 'Bậc thang mực dẫn xuống sâu hơn. Trên vách, những câu viết dở vẫn còn thở.', {hero:'walk', ease:'lin', tr:'fade'}),
+        cineShot('stairs', [20,70,2.6,0],   [80,70,2.8,0],    6,   '“Ta xin—” Phần còn lại đã bị gạch đến rách cả giấy. Bấc tự hỏi: ông muốn xin điều gì?', {hk:.12}),
+      ]},
       {scene:'chapter', title:'Phần 6 · Vực Mực', icon:'fallen', lines:['Nơi mọi đồ vật đều đã quên mình từng là gì.']},
     ],
     [{scene:'chapter', title:'Phần 7 · Hồ Nổi', icon:'fallen', lines:['Nơi hoá học và vật lý phải bắt tay nhau.']}],
     [{scene:'chapter', title:'Phần 8 · Ngai Vua Mực', icon:'fallen', lines:['Nơi Mực Đen bắt đầu, và phải kết thúc.']}],
     [
-      {scene:'cleanse', lines:['Vua Mực tan thành nước muối và khí CO₂.','Thế giới sa ngã lặng dần, như mặt nước sau cơn mưa.']},
-      {scene:'home',    lines:['Bấc trở về bên ngọn đèn của Giáo sư.','Từ nay, mỗi đêm, có hai người cùng ngồi viết.']},
-      {scene:'tbc',     title:`Hết Chương ${CHAPTER.no}`, lines:['Nhưng sáng hôm sau, một giọt Mực Đen đã lẻn qua ống khói…', 'Và bay ra thị trấn.']},
-      {scene:'window',  lines:['Lần đầu tiên, Giáo sư mở toang cửa sổ.','Ngoài kia, những mái nhà loang lổ vệt mực đen. Gió đang thổi chúng đi khắp nơi.']},
+      {shots:[
+        cineShot('dissolve', [0,160,1,0],    [0,-40,1.15,0],   7.5, 'Vua Mực tan thành nước muối và bọt khí CO₂. Không gào thét. Chỉ lặng lẽ, như một tiếng thở dài.', {tr:'flash'}),
+        cineShot('dissolve', [0,-40,1.8,0],  [0,260,2.2,0],    7,   'Ở chỗ trái tim nó từng đập, một trang giấy chầm chậm rơi xuống.', {page:true}),
+        cineShot('page',     [0,-30,.8,.02], [0,-20,.95,-.02],   8,   'Một lá thư. Mọi dòng đều bị gạch, trừ dòng đầu tiên. Bấc gấp nó lại. Có những điều chỉ người viết mới nên đọc.'),
+        cineShot('homeback', [-120,40,1.05,0],[-40,20,1.25,0], 7.5, 'Bấc trở về và đặt trang giấy lên bàn. Giáo sư đọc rất lâu. Vai ông khẽ run.', {tr:'fade'}),
+        cineShot('nib',      [-300,80,1.3,0], [200,120,1.5,0], 6.5, 'Rồi ông cầm bút. Lần đầu tiên, ông không gạch đi. Ông viết tiếp.', {mode:'write'}),
+        cineCard('Có những điều không thể xoá đi. Chỉ có thể viết tiếp.', 5),
+        cineCard(`Hết Chương ${CHAPTER.no}`, 3.5),
+        cineShot('house',    [280,-90,2.2,0], [520,-280,1.2,0], 7,  'Nhưng sáng hôm sau, một giọt Mực Đen đã lẻn ra theo ống khói…', {day:true, drop:.15, town:true, tr:'fade'}),
+        cineShot('town',     [0,0,1,0],       [0,-40,1.15,0],   7.5,'Lần đầu tiên sau nhiều năm, Giáo sư mở toang cửa sổ. Những mái nhà ngoài kia loang lổ vệt đen.'),
+      ]},
       {scene:'chapter', title:`Chương ${LAST_CH.no} · ${LAST_CH.title}`, icon:'sun', lines:['Phần 1 · Mái Nhà: lần đầu tiên Bấc bước ra ngoài.']},
     ],
     [{scene:'chapter', title:'Phần 2 · Phố Chợ', icon:'sun', lines:['Nơi người ta treo gương để đón nắng vào hẻm.']}],
     [{scene:'chapter', title:'Phần 3 · Bến Cảng', icon:'sun', lines:['Nơi mọi dòng chảy gặp nhau.']}],
     [
-      {scene:'lighthouse', lines:['Tia nắng chạy dọc mặt biển. Ngọn hải đăng bừng sáng lần đầu sau nhiều năm.','Mực Đen trên khắp thị trấn tan dần như sương sớm.']},
-      {scene:'tbc', title:'Hết Chương 2', lines:['Nhưng dưới đáy biển, giọt Mực Đen cuối cùng vẫn đập như tim…','Và nó đang lớn dần.']},
-      {scene:'secretlab', lines:['Giáo sư dẫn Bấc xuống một cửa sập dưới chân hải đăng.','“Phòng Thí Nghiệm Số 0. Nơi ta tạo ra con… và cũng là nơi Mực Đen ra đời.”']},
-      {scene:'core', lines:['“Con không phải mực thường, Bấc. Con là Mực Sáng: phần tốt đẹp nhất ta từng viết.”','“Ba phòng thử ở đây sẽ đánh thức ngọn lửa thứ hai trong con. Con sẽ cần nó.”']},
+      {shots:[
+        cineShot('coast', [-260,-200,1.3,-.06], [-200,-380,1.6,-.02], 6.5, 'Tia nắng chạy dọc mặt biển. Ngọn hải đăng bừng sáng lần đầu sau nhiều năm.', {beam:true, tr:'fade'}),
+        cineShot('coast', [200,-120,.85,0],     [300,-60,1,0],        7,   'Mực Đen trên những mái nhà tan dần như sương. Người trong thị trấn mở cửa, nheo mắt nhìn ánh sáng.', {beam:'sweep', clean:true}),
+        cineShot('coast', [300,0,1.2,0],        [300,560,1.8,0],      7,   'Nhưng dưới đáy biển, giọt mực cuối cùng vẫn đập. Chậm. Kiên nhẫn. Như đang cố nhớ lại một điều gì.', {sfx:'heart'}),
+        cineCard('Hết Chương 2', 3.5),
+        cineShot('hatch', [0,100,1,0],          [0,0,1.5,0],          6.5, 'Giáo sư dẫn Bấc xuống một cửa sập dưới chân hải đăng. “Phòng Thí Nghiệm Số 0.”', {tr:'fade'}),
+        cineShot('tank',  [0,40,.9,0],          [0,0,1.1,0],          7.5, '“Nơi ta viết ra con… và cũng là nơi Mực Đen ra đời. Cùng một lọ mực, con ạ.”'),
+        cineShot('tank',  [-120,60,1.4,0],      [-60,40,1.7,0],       8,   '“Mực Đen là những gì ta hối tiếc. Còn con là những gì ta vẫn còn hi vọng.” Bấc nhìn bóng mình trong kính.', {reflect:true}),
+        cineCard('Nếu cả hai sinh ra từ cùng một lọ mực… điều gì khiến chúng khác nhau?', 5.5),
+      ]},
       {scene:'chapter', title:`Chương ${LAST_CH.no} · ${LAST_CH.title}`, icon:'lab', lines:['Phần 1 · Sảnh Thí Nghiệm: nơi mọi thí nghiệm bắt đầu.']},
     ],
     [{scene:'chapter', title:'Phần 2 · Phòng Quang Học', icon:'lab', lines:['Nơi ánh sáng học cách rẽ hướng.']}],
     [{scene:'chapter', title:'Phần 3 · Phòng Áp Suất', icon:'lab', lines:['Nơi mọi thứ đều chịu một sức ép.']}],
   ],
   finale: [
-    {scene:'forge', lines:['Cuối Phòng Áp Suất là Lò Luyện: một ngọn lửa trắng cháy mà không cần dầu.','Bấc bước lại gần. Ngọn lửa nhỏ trong ngực cậu bừng lên, như đáp lại.']},
-    {scene:'tbc', title:`Chương ${LAST_CH.no} · Còn tiếp`, lines:['Sức mạnh mới của Bấc đang chờ được đánh thức…', 'Còn tiếp.']},
+    {shots:[
+      cineShot('forge', [0,140,.85,0], [0,-120,.85,0],  7.5, 'Cuối Phòng Áp Suất là Lò Luyện: một ngọn lửa trắng cháy mà không cần dầu, cũng không cần bấc.', {tr:'fade'}),
+      cineShot('forge', [0,200,1,0],   [0,120,1.4,0],7,   'Ngọn lửa nhỏ trong ngực Bấc bừng lên, như đáp lại. Lần đầu tiên, cậu cháy mà không thấy mình ngắn đi.', {chest:true}),
+      cineCard('Một sợi bấc cháy để soi đường cho người khác. Nếu một ngày nó không còn phải đốt chính mình… nó sẽ trở thành gì?', 6.5),
+      cineCard(`Chương ${LAST_CH.no} · Còn tiếp`, 4),
+    ]},
   ],
 };
 let wave = null, bossLoss = false, titleNewBtn = null;
@@ -2087,11 +2126,13 @@ const MIRROR_SPEED = .75;   // rad/giây khi giữ E (≈ 43°/s): chỉnh từ 
 const SECRET_TOTAL = LEVELS.reduce((n,L)=>n + L.map.join('').split('$').length - 1, 0);
 let story = null, reading = null, gotPages = new Set(), diary = [], crow = null, sceneHero = null;
 const CPS = 38;   // tốc độ gõ chữ (ký tự/giây)
-function startStory(panels, done){ story = {q:panels, i:0, t:0, done}; state = 'story'; }
+function startStory(panels, done){ const q = panels.flatMap(P => P.shots ? P.shots : [P]); story = {q, i:0, t:0, full:false, done}; state = 'story'; if (q[0].sfx) SFX.play(q[0].sfx); }
 function panelLen(P){ return (P.title||'').length + P.lines.join('').length; }
 function advanceStory(){
   if (!story) return;
-  if (story.t*CPS < panelLen(story.q[story.i])){ story.t = 999; return; }
+  const P0 = story.q[story.i];
+  if (P0.cine){ if (!story.full && cineTyped(P0) < P0.line.length){ story.full = true; return; } nextShot(); return; }
+  if (story.t*CPS < panelLen(P0)){ story.t = 999; return; }
   story.i++; story.t = 0; SFX.play('turn');
   if (story.i >= story.q.length) skipStory();
 }
@@ -2665,8 +2706,9 @@ function update(dt){
   for (const g of ghosts) g.life-=dt; ghosts = ghosts.filter(g=>g.life>0);
   if (state==='title' || state==='end') updateMenuHero(dt);
   if (state==='story'){
-    const c0 = Math.floor(story.t*CPS); story.t += dt; const c1 = Math.floor(story.t*CPS);
-    if (c1 > c0 && c1 <= panelLen(story.q[story.i]) && c1 % 2 === 0) SFX.play('tick');
+    const P = story.q[story.i], c0 = Math.floor(story.t*CPS); story.t += dt; const c1 = Math.floor(story.t*CPS);
+    if (P.cine){ if (story.t >= cineLen(P)) nextShot(); }
+    else if (c1 > c0 && c1 <= panelLen(P) && c1 % 2 === 0) SFX.play('tick');
     updateSceneHero(dt); return; }
   if (reading){ reading.t += dt; return; }
   if (bossCS && state==='play'){ shakeT -= dt; updateAmbience(dt); updateZoom(dt); updateBossCS(dt); updateCam(dt, false); updateCrow(dt);
@@ -4354,7 +4396,8 @@ function drawManaHUD(){
 // ===== CẢNH TRUYỆN =====
 function updateSceneHero(dt){
   if (!sceneHero){ sceneHero = makePlayer(-11,-34); sceneHero.spawnT = 0; }
-  const h = sceneHero; h.ground = true; h.vx = 0; h.vy = 0; h.wall = 0; h.dashT = 0; h.face = 1; h.canDash = true;
+  const P = story && story.q[story.i], m = P && P.o && P.o.hero;
+  const h = sceneHero; h.ground = m!=='fall' && m!=='climb'; h.vx = m==='walk' ? 110 : 0; h.vy = m==='fall' ? 420 : 0; h.wall = m==='climb' ? 1 : 0; h.dashT = 0; h.face = 1; h.canDash = true;
   heroAnim(h, dt);
 }
 function oilLamp(x, y, lit, k=1){
@@ -4611,9 +4654,722 @@ function drawChapterIcon(icon, cx, cy){
     ctx.save(); ctx.beginPath(); ctx.moveTo(cx-8,cy-14); ctx.lineTo(cx-30,cy+30); ctx.lineTo(cx+30,cy+30); ctx.lineTo(cx+8,cy-14); ctx.clip(); ctx.fillRect(cx-32, cy+6+Math.sin(clock*2)*2, 64, 30); ctx.restore();
     for (let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(cx+Math.sin(clock*3+i)*4, cy-20-((clock*25+i*12)%36), 3, 0, Math.PI*2); ctx.lineWidth=1.5; ctx.stroke(); } }
 }
+// ===== ĐIỆN ẢNH: cảnh truyện quay bằng nhiều góc máy =====
+// Mỗi cảnh (shot) = một "phim trường" (set) vẽ trong toạ độ riêng + máy quay {x,y,zoom,xoay} di chuyển từ đầu → cuối shot.
+// Góc máy: toàn cảnh, cận, đặc tả, từ trên xuống, từ dưới lên, qua vai, nghiêng (dutch), máy lia/theo/cẩu.
+const CINE = {};
+const crand = i => { const x = Math.sin(i*127.1+311.7)*43758.5453; return x - Math.floor(x); };
+const cl01 = v => Math.max(0, Math.min(1, v));
+const smooth = v => { v = cl01(v); return v*v*(3-2*v); };
+function bgc(col){ ctx.fillStyle = col; ctx.fillRect(-5000,-4000,10000,8000); }
+function glowC(x,y,r,a,col='255,255,255'){ const g=ctx.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,`rgba(${col},${a})`); g.addColorStop(1,`rgba(${col},0)`); ctx.fillStyle=g; ctx.fillRect(x-r,y-r,r*2,r*2); }
+function darkAround(x,y,r0,r1,a){ const g=ctx.createRadialGradient(x,y,r0,x,y,r1); g.addColorStop(0,'rgba(17,17,17,0)'); g.addColorStop(1,`rgba(17,17,17,${a})`); ctx.fillStyle=g; ctx.fillRect(x-5000,y-5000,10000,10000); }
+function rotP(o,a,p){ const c=Math.cos(a), s=Math.sin(a); return {x:o.x+p.x*c-p.y*s, y:o.y+p.x*s+p.y*c}; }
+// nét chữ viết tay (mô phỏng), trả về vị trí ngòi bút
+function scrib(x,y,w,seed,prog=1,lw=1.5){
+  if (prog <= 0) return x; const end = x + w*prog, a = lw/1.5;
+  ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x,y); let xx = x, i = 0;
+  while (xx < end - .5){ const s = Math.min((5+crand(seed+i)*7)*a, end-xx);
+    ctx.quadraticCurveTo(xx+s*.5, y-(2+crand(seed+i*3.7)*5)*a, xx+s, y+(crand(seed+i*7.3)-.5)*2*a); xx += s; i++;
+    if (crand(seed+i*1.9) > .85 && xx < end-8*a){ xx += 4*a; ctx.moveTo(xx,y); } }
+  ctx.stroke(); return xx;
+}
+function strikeOut(x,y,w,n,lw,seed=1){ ctx.lineWidth=lw; ctx.beginPath(); ctx.moveTo(x,y); for (let i=0;i<n;i++) ctx.lineTo(x+(i+1)/n*w, y+((i%2)?-1:1)*lw*1.4+(crand(seed+i)-.5)*lw); ctx.stroke(); }
+function flameD(x,y,h,col=INK,core=PAPER){
+  if (h <= .5) return; const f = 1+Math.sin(clock*13)*.07+Math.sin(clock*7.3)*.05, w = h*.36, sw = Math.sin(clock*5)*w*.35;
+  ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x,y); ctx.bezierCurveTo(x-w*1.3,y-h*.25, x-w*.35+sw*.5,y-h*.7*f, x+sw,y-h*f); ctx.bezierCurveTo(x+w*.35+sw*.5,y-h*.7*f, x+w*1.3,y-h*.25, x,y); ctx.fill();
+  if (core){ ctx.fillStyle=core; ctx.beginPath(); ctx.ellipse(x+sw*.2,y-h*.3,w*.32,h*.2,0,0,7); ctx.fill(); }
+}
+// vẽ bóng đen/trắng của bất kỳ hình nào (dùng canvas phụ, giữ nguyên phép biến đổi máy quay)
+let silCv = null, silCtx = null;
+function silhouette(fn, col){
+  if (!silCv){ silCv = document.createElement('canvas'); silCtx = silCv.getContext('2d'); }
+  if (silCv.width !== cv.width || silCv.height !== cv.height){ silCv.width = cv.width; silCv.height = cv.height; }
+  const m = ctx.getTransform(), main = ctx;
+  silCtx.setTransform(1,0,0,1,0,0); silCtx.clearRect(0,0,silCv.width,silCv.height); silCtx.setTransform(m);
+  ctx = silCtx; try { fn(); } finally { ctx = main; }
+  silCtx.setTransform(1,0,0,1,0,0); silCtx.globalCompositeOperation='source-in'; silCtx.fillStyle=col; silCtx.fillRect(0,0,silCv.width,silCv.height); silCtx.globalCompositeOperation='source-over';
+  main.save(); main.setTransform(1,0,0,1,0,0); main.drawImage(silCv,0,0); main.restore();
+}
+function heroIn(x,y,s,face=1,o={}){
+  if (o.glow) glowC(x, y-17*s, o.glow*s, o.ga ?? .95);
+  const fn = ()=>{ ctx.save(); ctx.translate(x,y); ctx.scale(s*face, s*(o.sy||1)); drawHero(sceneHero); ctx.restore(); };
+  if (o.sil) silhouette(fn, o.sil); else fn();
+}
+// ---- Giáo sư Tịch: đầu nhìn nghiêng (giữ nét khi quay cận) ----
+function profHeadSide(hx,hy,o={}){
+  ctx.save(); ctx.translate(hx,hy); if (o.tilt) ctx.rotate(o.tilt); ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  ctx.lineWidth=1.3;
+  for (let i=0;i<10;i++){ const a=-2.7+i*.21, r1=19+crand(i)*7; ctx.beginPath(); ctx.moveTo(Math.cos(a)*12-2, Math.sin(a)*12-2);
+    ctx.quadraticCurveTo(Math.cos(a)*r1-5, Math.sin(a)*r1-6+Math.sin(clock*2+i)*.7, Math.cos(a-.3)*r1-7, Math.sin(a-.3)*r1-2); ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(-13,5); ctx.bezierCurveTo(-17,-13, 1,-22, 11,-12); ctx.lineTo(13,-5); ctx.quadraticCurveTo(21,3,15,5); ctx.lineTo(15,8); ctx.lineTo(13,10); ctx.quadraticCurveTo(15,15,10,17); ctx.quadraticCurveTo(0,19,-7,13); ctx.closePath();
+  ctx.fillStyle=PAPER; ctx.fill(); ctx.lineWidth=1.8; ctx.stroke();
+  ctx.lineWidth=1.3; ctx.beginPath(); ctx.arc(-4,1,3.6,-1.2,1.9); ctx.stroke();
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(14.5,9); ctx.quadraticCurveTo(17,22,6,28); ctx.quadraticCurveTo(-3,25,-6,12); ctx.quadraticCurveTo(2,16,8,13); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle=PAPER; ctx.lineWidth=.7; for (let i=0;i<4;i++) line(1+i*3,15+i, i*2.6, 23+i*.8); ctx.strokeStyle=INK;
+  ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(15.5,7.5); ctx.quadraticCurveTo(11,7,9,10.5); ctx.stroke();
+  const ex = 8, ey = -3, wide = o.eye==='wide';
+  if (o.eye==='closed'){ ctx.lineWidth=1.3; ctx.beginPath(); ctx.arc(ex,ey-1,2.2,.3,Math.PI-.3); ctx.stroke(); }
+  else if (wide){ ctx.fillStyle=PAPER; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(ex,ey,2.7,0,7); ctx.fill(); ctx.stroke(); ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(ex+1,ey,1.1,0,7); ctx.fill(); }
+  else { ctx.fillStyle=INK; ctx.beginPath(); ctx.ellipse(ex+.6,ey,1.3,1.6,0,0,7); ctx.fill(); }
+  ctx.lineWidth=2.4; line(3.5,-8.5-(wide?2:0), 12,-7.5-(wide?3:0));
+  ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(ex+1.5,ey,4.7,0,7); ctx.stroke(); line(ex-3.2,ey-1,-3,-2.5);
+  if (o.glint){ ctx.save(); ctx.globalAlpha=.8; flameD(ex+3,ey+2.5,3.5*o.glint,INK,null); ctx.restore(); }
+  ctx.lineWidth=.7; line(-1,-14,6,-15.5); line(-2,-11,6,-12.5); line(3.5,0,2,2.5);
+  ctx.restore();
+}
+// ngồi trên ghế, quay sang phải. Gốc toạ độ = sàn dưới ghế. Mặt bàn ở y≈-96, mép bàn ở x≈+60
+function profSide(x,y,pose,s=1,o={}){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s); ctx.strokeStyle=INK; ctx.fillStyle=INK; ctx.lineCap='round'; ctx.lineJoin='round';
+  const br = Math.sin(clock*1.7)*1.2 + (o.sob ? Math.sin(clock*22)*.9 : 0);
+  ctx.lineWidth=5; line(-42,0,-42,-134); line(-46,-60,14,-60); ctx.lineWidth=4; line(10,-60,12,0); line(-42,-60,-40,0);
+  ctx.lineWidth=2; for (let i=0;i<3;i++) line(-42,-78-i*18,-33,-78-i*18);
+  const hip = {x:-14, y:-66}, lean = ({write:.32, look:.1, sleep:.95, wake:.05, fear:-.14})[pose] ?? 0;
+  ctx.lineWidth=11; line(hip.x+4,hip.y+4,34,-64); line(34,-64,36,-8);
+  ctx.beginPath(); ctx.moveTo(28,-10); ctx.lineTo(56,-8); ctx.quadraticCurveTo(58,0,50,0); ctx.lineTo(28,0); ctx.closePath(); ctx.fill();
+  ctx.save(); ctx.translate(hip.x, hip.y); ctx.rotate(lean);
+  ctx.beginPath(); ctx.moveTo(-17,6); ctx.lineTo(19,6); ctx.quadraticCurveTo(23,-40,14,-66+br); ctx.quadraticCurveTo(0,-75+br,-14,-64+br); ctx.quadraticCurveTo(-25,-30,-17,6); ctx.fill();
+  ctx.fillStyle=PAPER; ctx.beginPath(); ctx.moveTo(5,-67+br); ctx.lineTo(14,-66+br); ctx.lineTo(9,-52+br); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle=PAPER; ctx.lineWidth=1; line(2,-58+br,4,4); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  const hT = ({sleep:.75, write:.35, look:-.05, wake:-.12, fear:-.3})[pose] || 0;
+  profHeadSide(8, -84+br, {tilt:hT, eye: pose==='sleep' ? 'closed' : pose==='fear' ? 'wide' : (o.eye||'open'), glint:o.glint});
+  ctx.restore();
+  const sh = rotP(hip, lean, {x:10, y:-58+br});
+  const hand = o.hand || ({write:{x:92+Math.sin(clock*2.3)*5, y:-100+Math.sin(clock*9)*1.2}, look:{x:84,y:-99}, sleep:{x:74,y:-100}, wake:{x:78,y:-101}, fear:{x:62,y:-122}})[pose] || {x:60,y:-60};
+  const mx = (sh.x+hand.x)/2, my = (sh.y+hand.y)/2 + 22;
+  ctx.lineWidth=9; ctx.beginPath(); ctx.moveTo(sh.x,sh.y); ctx.quadraticCurveTo(mx-6,my+6, hand.x-5, hand.y+2); ctx.stroke();
+  ctx.fillStyle=PAPER; ctx.lineWidth=1.6; ctx.beginPath(); ctx.ellipse(hand.x,hand.y,6.5,5,-.3,0,7); ctx.fill(); ctx.stroke(); ctx.fillStyle=INK;
+  if (pose==='write'){ ctx.lineWidth=2.4; line(hand.x+2,hand.y-2,hand.x+12,hand.y-17); }
+  ctx.restore();
+}
+function profStand(x,y,s=1,o={}){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s*(o.face||1),s); ctx.fillStyle=INK; ctx.strokeStyle=INK; ctx.lineCap='round'; ctx.lineJoin='round';
+  const br = Math.sin(clock*1.6)*1.2;
+  ctx.lineWidth=10; line(-8,-58,-10,-4); line(8,-58,12,-4); ctx.fillRect(-24,-8,20,8); ctx.fillRect(4,-8,22,8);
+  ctx.beginPath(); ctx.moveTo(-28,-36); ctx.lineTo(28,-36); ctx.quadraticCurveTo(26,-110,16,-150+br); ctx.quadraticCurveTo(0,-158+br,-16,-150+br); ctx.quadraticCurveTo(-28,-110,-28,-36); ctx.fill();
+  ctx.strokeStyle=PAPER; ctx.lineWidth=1.2; line(4,-148+br,6,-38); ctx.strokeStyle=INK;
+  profHeadSide(7,-170+br,{eye:o.eye||'open', tilt:o.tilt||0});
+  ctx.lineWidth=9;
+  if (o.lamp){ line(10,-140+br,30,-112); line(30,-112,46,-140); oilLamp(48,-128,true,.75); }
+  else if (o.reach){ line(10,-140+br, 40,-118); line(40,-118, 70,-120); }
+  else line(8,-140+br,16,-88);
+  ctx.restore();
+}
+function profBack(x,y,s=1,o={}){   // phía sau lưng (qua vai): vai, gáy, tóc rối
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s); ctx.fillStyle=INK; ctx.strokeStyle=INK; ctx.lineCap='round';
+  const sh = o.sob ? Math.sin(clock*20)*1.6 : 0, br = Math.sin(clock*1.6)*1.5;
+  ctx.beginPath(); ctx.moveTo(-140,120); ctx.quadraticCurveTo(-130,10+br,-60,-10+sh+br); ctx.quadraticCurveTo(0,-26+sh+br,60,-10+sh+br); ctx.quadraticCurveTo(130,10+br,140,120); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0,-58+sh+br,40,48,0,0,7); ctx.fill();
+  ctx.lineWidth=2.2; for (let i=0;i<22;i++){ const a=-Math.PI*.95+i/21*Math.PI*.9, r1=44+crand(i)*16; ctx.beginPath(); ctx.moveTo(Math.cos(a)*36, -58+sh+br+Math.sin(a)*42); ctx.quadraticCurveTo(Math.cos(a+.1)*(r1+6), -58+sh+br+Math.sin(a+.1)*(r1+4)+Math.sin(clock*2+i)*1.2, Math.cos(a+.25)*r1, -58+sh+br+Math.sin(a+.25)*r1); ctx.stroke(); }
+  ctx.strokeStyle=PAPER; ctx.lineWidth=2; line(-32,-58+sh+br,-48,-56+sh+br); line(32,-58+sh+br,48,-56+sh+br);   // gọng kính sau tai
+  ctx.restore();
+}
+function profFace(o,k){   // cận mặt chính diện
+  const fear = o.mode==='fear', open = fear ? 1 : smooth((k-.18)/.45);
+  ctx.strokeStyle=INK; ctx.fillStyle=INK; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.lineWidth=3;
+  for (const sd of [-1,1]) for (let i=0;i<13;i++){ const yy=-170+i*15; ctx.beginPath(); ctx.moveTo(sd*128,yy); ctx.quadraticCurveTo(sd*(170+crand(i+sd*5)*30), yy-12, sd*(188+crand(i*3+sd+9)*46), yy+(crand(i+2)-.5)*34+Math.sin(clock*1.4+i)*2.5); ctx.stroke(); }
+  ctx.fillStyle=PAPER; ctx.lineWidth=4;
+  for (const sd of [-1,1]){ ctx.beginPath(); ctx.ellipse(sd*142,4,18,34,0,0,7); ctx.fill(); ctx.stroke(); }
+  ctx.beginPath(); ctx.ellipse(0,-20,140,176,0,0,7); ctx.fill(); ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0,-20,138,174,0,0,7); ctx.clip(); ctx.globalAlpha=.22; ctx.lineWidth=2; for (let i=0;i<26;i++) line(-150+i*4, 200, -100+i*4, -200); ctx.restore();   // gạch bóng phía tối
+  ctx.lineWidth=2; for (let i=0;i<3;i++){ const d = fear?10:0; ctx.beginPath(); ctx.moveTo(-70,-122+i*14-d); ctx.quadraticCurveTo(0,-130+i*14-d*1.6,70,-122+i*14-d); ctx.stroke(); }
+  for (const sd of [-1,1]){ const ex = sd*58, ey = -30, eh = 15*Math.max(.06,open) + (fear?7:0);
+    ctx.save(); ctx.beginPath(); ctx.ellipse(ex,ey,28,eh,0,0,7); ctx.fillStyle=PAPER; ctx.fill(); ctx.lineWidth=2.5; ctx.stroke(); ctx.clip();
+    ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(ex+(o.look||0)*7, ey, fear?6:11, 0,7); ctx.fill(); ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(ex-3+(o.look||0)*7,ey-4,3,0,7); ctx.fill(); ctx.restore();
+    if (open < .15){ ctx.lineWidth=3; ctx.beginPath(); ctx.arc(ex,ey-10,26,.45,Math.PI-.45); ctx.stroke(); }
+    ctx.lineWidth=10; ctx.beginPath(); ctx.moveTo(ex-sd*32, ey-34-(fear?16:0)); ctx.quadraticCurveTo(ex, ey-48-(fear?22:0), ex+sd*34, ey-30+(fear?6:0)); ctx.stroke();
+    ctx.lineWidth=4; ctx.beginPath(); ctx.arc(ex,ey,46,0,7); ctx.stroke();
+    if (o.flame){ ctx.save(); ctx.beginPath(); ctx.arc(ex,ey,44,0,7); ctx.clip(); const fh = 22*o.flame, fx = ex+22, fy = ey+10, sw = Math.sin(clock*5)*2;
+      ctx.lineWidth=2; ctx.strokeStyle=INK; ctx.globalAlpha=.7; ctx.beginPath(); ctx.moveTo(fx,fy); ctx.quadraticCurveTo(fx-9,fy-fh*.35,fx+sw,fy-fh); ctx.quadraticCurveTo(fx+9,fy-fh*.35,fx,fy); ctx.stroke(); ctx.globalAlpha=1; ctx.restore(); }
+    ctx.globalAlpha=.4; ctx.lineWidth=3; line(ex-30,ey-18,ex-17,ey-34); ctx.globalAlpha=1; }
+  ctx.lineWidth=4; line(-12,-32,12,-32); line(-104,-34,-140,-26); line(104,-34,140,-26);
+  ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-6,-8); ctx.quadraticCurveTo(-22,40,-4,50); ctx.quadraticCurveTo(10,57,22,46); ctx.stroke();
+  ctx.lineWidth=2; line(-72,28,-60,60); line(72,28,60,60);
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(-120,40); ctx.quadraticCurveTo(-112,180,-40,242); ctx.quadraticCurveTo(0,282+Math.sin(clock)*3,40,242); ctx.quadraticCurveTo(112,180,120,40); ctx.quadraticCurveTo(60,112,0,102); ctx.quadraticCurveTo(-60,112,-120,40); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-62,80); ctx.quadraticCurveTo(-30,52,0,66); ctx.quadraticCurveTo(30,52,62,80); ctx.quadraticCurveTo(30,74,0,82); ctx.quadraticCurveTo(-30,74,-62,80); ctx.fill();
+  ctx.fillStyle=PAPER; ctx.beginPath(); ctx.ellipse(0,96,fear?18:12,fear?11:2.5,0,0,7); ctx.fill();
+  ctx.strokeStyle=PAPER; ctx.lineWidth=1.5; ctx.globalAlpha=.55; for (let i=0;i<14;i++){ const xx=-90+i*14; line(xx,124+Math.abs(xx)*.12, xx*.7, 180+(1-Math.abs(xx)/100)*52); } ctx.globalAlpha=1; ctx.strokeStyle=INK;
+}
+// ---- đồ vật dùng chung ----
+function sheet(x,y,w,h,a,seed,o={}){
+  ctx.save(); ctx.translate(x,y); ctx.rotate(a); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.fillRect(-w/2,-h/2,w,h); ctx.strokeRect(-w/2,-h/2,w,h);
+  const n = Math.floor((h-30)/18); for (let i=0;i<n;i++){ const yy = -h/2+22+i*18; scrib(-w/2+14, yy, (w-28)*(.55+crand(seed+i)*.45), seed*10+i, 1, 1.2); if (crand(seed+i*5) > (o.cross ?? .7)) strikeOut(-w/2+12, yy-2, (w-26)*.8, 9, 2.5, seed+i); }
+  ctx.restore();
+}
+function rainLines(t, col, n=150, a=.35, area=[-900,-500,1800,1000]){
+  ctx.strokeStyle=col; ctx.lineWidth=1.2; ctx.globalAlpha=a;
+  for (let i=0;i<n;i++){ const x = area[0]+crand(i)*area[2], sp = 600+crand(i+3)*300, y = area[1] + ((crand(i+7)*area[3] + t*sp) % area[3]); line(x,y,x-7,y+24); }
+  ctx.globalAlpha=1;
+}
+function dropShape(x,y,r,fill,stroke){ ctx.beginPath(); ctx.moveTo(x,y-r*1.8); ctx.quadraticCurveTo(x+r*1.1,y-r*.2,x,y+r); ctx.quadraticCurveTo(x-r*1.1,y-r*.2,x,y-r*1.8); ctx.fillStyle=fill; ctx.fill(); if (stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=1.5; ctx.stroke(); } }
+
+// ================= PHIM TRƯỜNG =================
+CINE.black = ()=>{ bgc(INK); };
+// Ngôi nhà trên đồi (ngoại cảnh). Đêm: nền mực, nét trắng. Ngày (o.day): nền giấy.
+CINE.house = (o,k,t)=>{
+  const day = !!o.day, F = day ? INK : PAPER, B = day ? PAPER : INK;
+  bgc(B); ctx.strokeStyle=F; ctx.fillStyle=F; ctx.lineCap='round';
+  if (day){ ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(-420,-230,40,0,7); ctx.stroke(); ctx.setLineDash([4,7]); for (let i=0;i<12;i++){ const a=i/12*Math.PI*2+t*.05; line(-420+Math.cos(a)*54,-230+Math.sin(a)*54,-420+Math.cos(a)*76,-230+Math.sin(a)*76); } ctx.setLineDash([]); }
+  else { glowC(-420,-210,190,.18); ctx.beginPath(); ctx.arc(-420,-210,34,0,7); ctx.fill(); ctx.fillStyle=B; ctx.beginPath(); ctx.arc(-408,-218,30,0,7); ctx.fill(); ctx.fillStyle=F;
+    for (let i=0;i<50;i++){ const tw = .4+.6*Math.abs(Math.sin(clock*1.3+i)); ctx.globalAlpha=tw; ctx.fillRect(-800+crand(i)*1600, -420+crand(i+9)*300, 2,2); } ctx.globalAlpha=1; }
+  ctx.globalAlpha=.35; ctx.lineWidth=2; for (let i=0;i<5;i++){ const cx = -800 + ((i*360 + t*14) % 1700); ctx.beginPath(); ctx.ellipse(cx,-300+(i%2)*60,150,16,0,0,7); ctx.stroke(); } ctx.globalAlpha=1;
+  ctx.globalAlpha=.4; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(-900,120); for (let x=-900;x<=900;x+=30) ctx.lineTo(x, 100-Math.sin(x*.006)*34-Math.sin(x*.019)*10); ctx.stroke(); ctx.globalAlpha=1;
+  if (o.town){ ctx.lineWidth=1.5; for (let i=0;i<9;i++){ const x=520+i*44, h=30+crand(i)*40; ctx.strokeRect(x,100-h,34,h); ctx.beginPath(); ctx.moveTo(x-3,100-h); ctx.lineTo(x+17,100-h-16); ctx.lineTo(x+37,100-h); ctx.stroke(); } }
+  ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(-900,400); ctx.lineTo(-900,210); ctx.bezierCurveTo(-420,180,-120,62,190,62); ctx.bezierCurveTo(460,62,620,160,900,200); ctx.lineTo(900,400); ctx.closePath(); ctx.fillStyle=B; ctx.fill(); ctx.stroke(); ctx.fillStyle=F;
+  ctx.lineWidth=1; ctx.globalAlpha=.5; for (let i=0;i<60;i++){ const x=-800+crand(i+40)*1500, y=130+crand(i+80)*220; line(x,y,x+3,y-8); line(x+4,y,x+8,y-6); } ctx.globalAlpha=1;
+  // cây chết
+  ctx.lineWidth=5; line(-330,150,-338,40); ctx.lineWidth=3; line(-336,80,-380,30); line(-337,60,-300,10); ctx.lineWidth=2; line(-380,30,-400,20); line(-366,44,-372,14); line(-300,10,-290,-14); line(-312,26,-326,0);
+  // nhà
+  ctx.fillStyle=B; ctx.lineWidth=3; ctx.fillRect(100,-60,220,124); ctx.strokeRect(100,-60,220,124);
+  ctx.beginPath(); ctx.moveTo(80,-58); ctx.lineTo(210,-150); ctx.lineTo(340,-58); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillRect(268,-146,26,56); ctx.strokeRect(268,-146,26,56); ctx.lineWidth=1.2; for (let i=0;i<6;i++) line(84+i*20,-60-i*0,210,-150+i*0);
+  ctx.globalAlpha=.4; for (let i=1;i<6;i++){ const yy=-60-i*15; line(210-(i*15)*130/92,yy,210+(i*15)*130/92,yy); } ctx.globalAlpha=1;
+  ctx.lineWidth=3;
+  const lit = !day && !o.dark;
+  if (lit){ glowC(163,-2,170,.35); ctx.fillStyle=F; ctx.fillRect(140,-30,46,58); ctx.fillStyle=B; ctx.fillRect(161,-30,4,58); ctx.fillRect(140,-3,46,4); ctx.fillStyle=F;
+    ctx.globalAlpha=.12; ctx.beginPath(); ctx.moveTo(140,28); ctx.lineTo(186,28); ctx.lineTo(260,160); ctx.lineTo(90,160); ctx.closePath(); ctx.fill(); ctx.globalAlpha=1; }
+  else { ctx.strokeRect(140,-30,46,58); line(163,-30,163,28); line(140,-1,186,-1); }
+  ctx.strokeRect(244,-30,46,58); line(267,-30,267,28); line(244,-1,290,-1);
+  ctx.strokeRect(200,10,32,54); ctx.beginPath(); ctx.arc(226,38,2.5,0,7); ctx.fill();
+  // khói ống khói
+  ctx.lineWidth=2; for (let i=0;i<6;i++){ const p = ((t*.25 + i/6) % 1), sx = 281 + Math.sin(p*6+i)*14 + p*60, sy = -150 - p*200; ctx.globalAlpha = (1-p)*.5; ctx.beginPath(); ctx.arc(sx, sy, 8+p*26, 0, 7); ctx.stroke(); } ctx.globalAlpha=1;
+  if (o.drop != null){   // giọt Mực Đen lẻn theo ống khói bay ra thị trấn
+    const p = cl01((k - o.drop)/(1 - o.drop)), dx = 281 + p*p*520 + Math.sin(p*9)*30, dy = -150 - p*260 + p*p*140;
+    for (let i=1;i<8;i++){ const q = Math.max(0,p-i*.02); ctx.globalAlpha=.25*(1-i/8); ctx.beginPath(); ctx.arc(281+q*q*520+Math.sin(q*9)*30, -150-q*260+q*q*140, 7-i*.6, 0, 7); ctx.fillStyle=INK; ctx.fill(); } ctx.globalAlpha=1;
+    dropShape(dx, dy, 10, INK, null); ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(dx-2,dy-4,2.2,0,7); ctx.arc(dx+4,dy-4,2.2,0,7); ctx.fill();
+  }
+  if (!day && o.rain !== false) rainLines(t, PAPER, 170, .3);
+};
+// Ô cửa sổ sáng đèn nhìn từ ngoài mưa (cận ngoại cảnh)
+CINE.window = (o,k,t)=>{
+  bgc(INK); ctx.strokeStyle=PAPER; ctx.globalAlpha=.16; ctx.lineWidth=1.2;
+  for (let y=-400;y<400;y+=28){ line(-900,y,900,y); for (let x=-900+(Math.round(y/28)%2)*32;x<900;x+=64) line(x,y,x,y+28); } ctx.globalAlpha=1;
+  glowC(0,0,620,.22);
+  ctx.fillStyle=PAPER; ctx.fillRect(-210,-160,420,320);
+  ctx.save(); ctx.beginPath(); ctx.rect(-210,-160,420,320); ctx.clip();
+  const g = ctx.createRadialGradient(110,40,10,110,40,380); g.addColorStop(0,'rgba(17,17,17,0)'); g.addColorStop(1,'rgba(17,17,17,.35)'); ctx.fillStyle=g; ctx.fillRect(-210,-160,420,320);
+  // bóng giáo sư in trên kính (ngược sáng)
+  ctx.fillStyle=INK; const br = Math.sin(clock*1.6)*2;
+  ctx.beginPath(); ctx.moveTo(-210,160); ctx.lineTo(-210,40); ctx.quadraticCurveTo(-170,-10+br,-110,-10+br); ctx.quadraticCurveTo(-60,0,-30,60); ctx.lineTo(40,96); ctx.lineTo(40,110); ctx.lineTo(-40,110); ctx.lineTo(-30,160); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.arc(-92,-52+br,36,0,7); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-60,-60+br); ctx.lineTo(-48,-38+br); ctx.lineTo(-58,-30+br); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-70,-22+br); ctx.quadraticCurveTo(-56,10,-86,20+br); ctx.lineTo(-96,-12); ctx.closePath(); ctx.fill();
+  ctx.lineWidth=2; for (let i=0;i<12;i++){ const a=-2.4+i*.16; ctx.strokeStyle=INK; line(-92+Math.cos(a)*30,-52+br+Math.sin(a)*30,-92+Math.cos(a)*(46+crand(i)*12),-52+br+Math.sin(a)*(44+crand(i)*12)); }
+  const px = 30+Math.sin(clock*2.2)*12; ctx.lineWidth=9; line(-50,30,px-10,96); ctx.lineWidth=3; line(px-10,96,px+4,76);
+  ctx.fillRect(-210,110,420,8);
+  // đèn dầu (bóng) + ngọn lửa
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.ellipse(130,104,26,9,0,0,7); ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle=INK;
+  ctx.beginPath(); ctx.moveTo(122,96); ctx.quadraticCurveTo(110,64,122,32); ctx.moveTo(138,96); ctx.quadraticCurveTo(150,64,138,32); ctx.stroke(); flameD(130,84,26,INK,PAPER);
+  // giọt mưa chảy trên kính
+  ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.globalAlpha=.35;
+  for (let i=0;i<26;i++){ const x = -200+crand(i)*400, y = -160 + ((crand(i+4)*320 + t*(30+crand(i+8)*60)) % 340); ctx.beginPath(); ctx.moveTo(x,y-26); ctx.quadraticCurveTo(x+2,y-10,x,y); ctx.stroke(); ctx.beginPath(); ctx.arc(x,y+2,2.6,0,7); ctx.fill(); }
+  ctx.globalAlpha=1; ctx.restore();
+  ctx.fillStyle=INK; ctx.fillRect(-214,-164,428,10); ctx.fillRect(-214,154,428,12); ctx.fillRect(-214,-164,10,330); ctx.fillRect(204,-164,10,330); ctx.fillRect(-4,-160,8,320); ctx.fillRect(-210,-6,420,8);
+  ctx.strokeStyle=PAPER; ctx.lineWidth=2; ctx.strokeRect(-226,-176,452,352); ctx.fillStyle=INK; ctx.fillRect(-250,170,500,22); ctx.strokeRect(-250,170,500,22);
+  rainLines(t, PAPER, 140, .35);
+};
+// Mặt bàn nhìn thẳng từ trên xuống
+CINE.desk = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.globalAlpha=.16; ctx.lineWidth=1.2;
+  for (let i=0;i<34;i++){ const y=-380+i*24; ctx.beginPath(); ctx.moveTo(-900,y); for (let x=-900;x<=900;x+=50) ctx.lineTo(x, y+Math.sin(x*.01+i)*4+Math.sin(x*.003+i*2)*6); ctx.stroke(); } ctx.globalAlpha=1;
+  sheet(-360,-40,240,300,-.28,3,{cross:.45}); sheet(-300,140,220,260,.16,7,{cross:.4}); sheet(330,-150,230,300,.3,11,{cross:.5});
+  // trang chính đang viết
+  ctx.save(); ctx.rotate(-.04); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.fillRect(-150,-200,300,400); ctx.strokeRect(-150,-200,300,400);
+  ctx.globalAlpha=.25; ctx.lineWidth=1; line(-120,-200,-120,200); ctx.globalAlpha=1;
+  const N = 10, P = (o.from ?? .15)*N + k*((o.to ?? .8)-(o.from ?? .15))*N; let pen = {x:-110, y:-160};
+  for (let i=0;i<N;i++){ const yy = -160+i*34, w = i===N-1 ? 120 : 210 - crand(i+40)*60;
+    const prog = cl01(P - i); if (prog <= 0) break; const ex = scrib(-110, yy, w, 100+i, prog, 1.6); pen = {x:ex, y:yy};
+    if ((i===3 || i===6) && prog >= 1){ strikeOut(-114, yy-3, w+8, 12, 3, i); } }
+  ctx.font = `400 15px ${HAND}`; ctx.fillStyle=INK; ctx.textAlign='left'; ctx.globalAlpha=.85; ctx.fillText('Gửi', -110, -176); ctx.globalAlpha=1;
+  ctx.restore();
+  // lọ mực
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(-240,-170,36,0,7); ctx.fill(); ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(-240,-170,15,0,7); ctx.fill(); ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(-240,-170,11,0,7); ctx.fill(); ctx.strokeStyle=PAPER; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(-240,-170,28,-2.4,-1.6); ctx.stroke();
+  // đèn nhìn từ trên
+  const L = {x:250, y:110}; ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(L.x,L.y,62,0,7); ctx.stroke(); ctx.lineWidth=2; ctx.beginPath(); ctx.arc(L.x,L.y,34,0,7); ctx.stroke();
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(L.x,L.y,12+Math.sin(clock*13)*1.2,0,7); ctx.fill(); ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(L.x,L.y,5,0,7); ctx.fill();
+  // tay cầm bút từ góc dưới
+  const p = rotP({x:0,y:0}, -.04, pen), hx = p.x+26, hy = p.y+30;
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(hx+20,hy+18); ctx.lineTo(hx+60,hy-6); ctx.lineTo(700,300); ctx.lineTo(700,520); ctx.lineTo(560,520); ctx.closePath(); ctx.fill();
+  ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(hx+10,hy+4,26,18,-.6,0,7); ctx.fill(); ctx.stroke();
+  ctx.lineWidth=1.4; for (let i=0;i<3;i++) line(hx-4+i*7,hy-6+i*5,hx+2+i*7,hy-12+i*5);
+  ctx.lineWidth=5; ctx.strokeStyle=INK; line(p.x, p.y, hx+30, hy-34); ctx.lineWidth=2; line(p.x,p.y,p.x+6,p.y-8);
+  darkAround(L.x-80, L.y-40, 200, 720, .9);
+};
+// Ngòi bút đặc tả: gạch xoá (o.mode='cross') hoặc viết tiếp (o.mode='write')
+CINE.nib = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.globalAlpha=.08; ctx.lineWidth=1; for (let i=0;i<120;i++){ const x=-800+crand(i)*1600, y=-400+crand(i+5)*800; line(x,y,x+20+crand(i+9)*30,y+(crand(i+2)-.5)*6); }
+  ctx.globalAlpha=.18; for (let y=-300;y<=300;y+=90) line(-900,y+20,900,y+20); ctx.globalAlpha=1;
+  scrib(-520, -160, 900, 7, 1, 5);
+  scrib(-520, -70, 780, 19, 1, 5);
+  const write = o.mode==='write';
+  const crossN = write ? 16 : Math.floor(k*18);
+  let nx = -400, ny = 20;
+  scrib(-520, 20, 900, 31, 1, 5);
+  if (crossN > 0){ ctx.lineWidth=9; ctx.beginPath(); ctx.moveTo(-500,20); for (let i=0;i<crossN;i++){ const x = -500 + (i+1)*56 + Math.sin(i*1.7)*10, y = 20 + ((i%2)?-26:26); ctx.lineTo(x,y); nx = x; ny = y; } ctx.stroke();
+    const blob = write ? 1 : cl01((k-.45)/.4); if (blob > 0){ ctx.fillStyle=INK; ctx.beginPath(); for (let i=0;i<=24;i++){ const a=i/24*Math.PI*2, r=(40+crand(i)*30)*blob; ctx.lineTo(60+Math.cos(a)*r*1.6, 26+Math.sin(a)*r); } ctx.fill(); }
+    const drip = write ? 1.2 : cl01((k-.62)/.38); if (drip > 0){ const dy = 70 + drip*400; ctx.lineWidth=7; line(70,60,70,Math.min(dy,330)); dropShape(70, dy, 9, INK); } }
+  if (write){ nx = scrib(-520, 140, 900, 77, cl01(k*1.1), 5); ny = 140; }
+  // ngòi bút
+  ctx.save(); ctx.translate(nx, ny + (write ? 0 : Math.sin(clock*16)*3)); ctx.rotate(-.55);
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-20,-64); ctx.quadraticCurveTo(-28,-118,0,-150); ctx.quadraticCurveTo(28,-118,20,-64); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle=PAPER; ctx.lineWidth=2; line(0,-4,0,-70); ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(0,-76,6,0,7); ctx.fill();
+  ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(-14,-100); ctx.quadraticCurveTo(0,-110,14,-100); ctx.stroke(); ctx.globalAlpha=.5; line(-12,-60,-18,-120); ctx.globalAlpha=1;
+  ctx.fillStyle=INK; ctx.fillRect(-26,-480,52,320); ctx.strokeStyle=PAPER; ctx.lineWidth=3; line(-14,-470,-14,-180);
+  ctx.restore();
+};
+// Mặt cắt sàn nhà: giọt mực gạch xoá thấm xuống bóng tối
+CINE.floor = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.globalAlpha=.12; ctx.lineWidth=1.2; for (let x=-900;x<900;x+=36) line(x,-600,x,-20); ctx.globalAlpha=1;
+  ctx.lineWidth=12; line(-420,-600,-420,-30); line(-300,-600,-300,-30); ctx.lineWidth=5; line(-436,-140,-284,-140);
+  ctx.fillRect(-120,-60,90,30); ctx.beginPath(); ctx.moveTo(-120,-60); ctx.quadraticCurveTo(-130,-150,-60,-160); ctx.lineTo(-40,-60); ctx.fill();
+  ctx.fillStyle=PAPER; ctx.fillRect(-900,-30,1800,42); ctx.fillStyle=INK; ctx.lineWidth=3; line(-900,-30,900,-30); line(-900,12,900,12);
+  ctx.lineWidth=2; for (let x=-900;x<900;x+=150) if (Math.abs(x) > 4) line(x,-30,x,12); ctx.globalAlpha=.35; ctx.lineWidth=1; for (let x=-880;x<900;x+=40) line(x,-18,x+30,-20); ctx.globalAlpha=1;
+  ctx.fillRect(-2,-30,4,42);
+  ctx.fillStyle=INK; ctx.fillRect(-900,12,1800,2000);
+  // các giọt mực rơi qua kẽ sàn
+  for (let i=0;i<6;i++){ const p = ((t*.32 + i/6) % 1); const y = -40 + p*560; if (y < 12){ dropShape(0,y,6,INK); } else { dropShape(0,y,6,INK,PAPER); } }
+  // vũng mực bên dưới: chữ trôi xoay vòng
+  ctx.strokeStyle=PAPER; ctx.lineWidth=1.5; ctx.globalAlpha=.6; ctx.beginPath(); ctx.ellipse(0,540,260,34,0,0,7); ctx.stroke(); ctx.globalAlpha=1;
+  ctx.fillStyle=PAPER; ctx.font=`400 26px ${HAND}`; ctx.textAlign='center';
+  const words = ['lẽ ra','xin lỗi','giá mà','đừng','quên','ta đã'];
+  for (let i=0;i<words.length;i++){ const a = t*.35 + i/words.length*Math.PI*2; ctx.globalAlpha = .25 + .35*(Math.sin(a)+1)/2; ctx.fillText(words[i], Math.cos(a)*220, 545+Math.sin(a)*26); }
+  ctx.globalAlpha=1;
+  const e = cl01((k-.72)/.15); if (e > 0){ for (const sx of [-34,34]){ ctx.beginPath(); ctx.ellipse(sx, 470, 14, 6*e, 0, 0, 7); ctx.fill(); } ctx.fillStyle=INK; for (const sx of [-34,34]){ ctx.beginPath(); ctx.ellipse(sx+3, 470, 3.5, 5*e, 0, 0, 7); ctx.fill(); } }
+};
+// Phòng làm việc (nhìn ngang): toàn cảnh / cận mặt / cận đèn tuỳ máy quay
+CINE.study = (o,k,t)=>{
+  const mode = o.mode || 'night', lab = !!o.lab, dawn = mode==='dawn';
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK; ctx.lineCap='round';
+  ctx.globalAlpha=.1; ctx.lineWidth=1; for (let x=-900;x<900;x+=46){ line(x,-500,x,120); } ctx.globalAlpha=1;
+  ctx.lineWidth=3; line(-900,120,900,120); ctx.lineWidth=4; line(-900,200,900,200);
+  ctx.globalAlpha=.25; ctx.lineWidth=1.2; for (let x=-900;x<900;x+=70) line(x,200,x-40,400); ctx.globalAlpha=1;
+  const W = {x:260, y:-230, w:170, h:220};
+  if (dawn){ ctx.globalAlpha=.08; ctx.fillRect(-900,-500,1800,900); ctx.globalAlpha=1; ctx.fillStyle=PAPER; ctx.globalAlpha=.8; ctx.beginPath(); ctx.moveTo(W.x,W.y); ctx.lineTo(W.x+W.w,W.y); ctx.lineTo(W.x+W.w-120,200); ctx.lineTo(W.x-330,200); ctx.closePath(); ctx.fill(); ctx.globalAlpha=1; ctx.fillStyle=INK;
+    for (let i=0;i<24;i++){ const x = W.x-200+crand(i)*300 + Math.sin(t*.5+i)*10, y = -150+crand(i+3)*320 + Math.cos(t*.4+i)*8; ctx.globalAlpha=.5; ctx.fillRect(x,y,2,2); } ctx.globalAlpha=1; }
+  // giá sách / kệ hoá chất
+  ctx.lineWidth=4; ctx.strokeRect(-640,-260,190,460); for (let i=1;i<5;i++) line(-640,-260+i*92,-450,-260+i*92);
+  for (let s=0;s<5;s++) for (let b=0;b<9;b++){ const bx=-634+b*20+crand(s*9+b)*4, h=48+crand(s*9+b+50)*34, by=-260+(s+1)*92; if (crand(s*7+b)>.86) continue;
+    if (lab){ ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(bx+4,by); ctx.lineTo(bx+4,by-h*.5); ctx.lineTo(bx+9,by-h*.5); ctx.lineTo(bx+9,by); ctx.stroke(); if (b%2){ ctx.beginPath(); ctx.arc(bx+7,by-8,8,0,7); ctx.stroke(); } }
+    else { ctx.lineWidth=1.5; ctx.strokeRect(bx,by-h,15,h); if (crand(b+s)>.5) ctx.fillRect(bx,by-h,15,h); } }
+  // cửa ra vào (khoá)
+  ctx.lineWidth=4; ctx.strokeRect(-380,-180,120,380); ctx.lineWidth=2; ctx.strokeRect(-366,-160,92,130); ctx.strokeRect(-366,-10,92,190); ctx.beginPath(); ctx.arc(-282,30,6,0,7); ctx.fill();
+  if (dawn){ ctx.lineWidth=3; ctx.beginPath(); ctx.arc(-282,58,9,Math.PI,0); ctx.stroke(); ctx.fillRect(-292,58,20,16); }
+  // bàn
+  ctx.lineWidth=6; line(-100,104,240,104); ctx.lineWidth=4; line(-80,104,-80,200); line(220,104,220,200); ctx.lineWidth=2; ctx.strokeRect(-70,112,280,22);
+  // đồ trên bàn
+  if (lab){ ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(20,104); ctx.lineTo(20,60); ctx.lineTo(10,60); ctx.moveTo(34,104); ctx.lineTo(34,60); ctx.lineTo(44,60); ctx.stroke(); ctx.beginPath(); ctx.moveTo(14,104); ctx.lineTo(40,104); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(196,104); ctx.lineTo(176,104); ctx.lineTo(186,70); ctx.lineTo(186,46); ctx.moveTo(196,104); ctx.lineTo(206,104); ctx.lineTo(196,70); ctx.lineTo(196,46); ctx.stroke(); line(60,60,186,52); }
+  else { ctx.fillStyle=PAPER; ctx.lineWidth=1.5; for (let i=0;i<4;i++){ ctx.save(); ctx.translate(50+i*9, 101-i*2); ctx.rotate(-.08+i*.05); ctx.fillRect(-26,-3,52,3); ctx.strokeRect(-26,-3,52,3); ctx.restore(); } ctx.fillStyle=INK;
+    ctx.beginPath(); ctx.moveTo(96,104); ctx.lineTo(96,88); ctx.lineTo(102,84); ctx.lineTo(112,84); ctx.lineTo(118,88); ctx.lineTo(118,104); ctx.fill(); }
+  // đèn
+  const LX = 150, LY = 104;
+  let flame = 0; if (mode==='night' || mode==='think') flame = 1; if (mode==='dying') flame = k < .5 ? (1 - k*1.3) * (.75 + .25*Math.sin(clock*40)) : 0;
+  if (o.relit != null) flame = smooth((k - o.relit)/.3);
+  oilLamp(LX, LY, false, 1.15);
+  if (flame > 0){ flameD(LX, LY-22, 22*flame, INK, PAPER); }
+  else if (mode==='dying' && k > .5){ ctx.lineWidth=1.5; ctx.globalAlpha = cl01(1.4-k); ctx.beginPath(); for (let i=0;i<26;i++){ const yy = LY-26-i*6, xx = LX + Math.sin(t*2+i*.5)*6*(i/26); i ? ctx.lineTo(xx,yy) : ctx.moveTo(xx,yy); } ctx.stroke(); ctx.globalAlpha=1; }
+  // người
+  if (o.prof) profSide(-150, 200, o.prof, 1, {glint: flame>0 ? flame : 0, sob:o.sob});
+  else if (!lab){ ctx.lineWidth=5; line(-192,200,-192,66); line(-196,140,-136,140); ctx.lineWidth=4; line(-140,140,-138,200); line(-192,140,-190,200); }
+  if (o.hero) heroIn(o.hero[0], o.hero[1], o.hero[2], o.hero[3]||1, {sy:o.hero[4]});
+  if (o.crow) drawCrowBody(o.crow[0], o.crow[1]+Math.sin(clock*3)*4, o.crow[2]||1, clock*12, false, o.crow[3]||1.4);
+  // ánh sáng
+  if (!dawn){
+    const dark = mode==='dying' ? .9 + .08*smooth((k-.45)/.2) : lab && flame<=0 ? .78 : .86;
+    const r1 = (mode==='dying' ? 520*(1 - .75*smooth((k-.3)/.3)) : 540) * (o.relit != null ? (.45 + .55*flame) : 1);
+    darkAround(LX, LY-40, 40 + 80*flame, r1, dark);
+  }
+  // cửa sổ (vẽ sau bóng tối: ánh trăng/ánh ngày)
+  ctx.lineWidth=4; ctx.strokeStyle=INK;
+  if (!lab){
+    if (dawn){ ctx.fillStyle=PAPER; ctx.fillRect(W.x,W.y,W.w,W.h); ctx.strokeRect(W.x,W.y,W.w,W.h); ctx.lineWidth=2; ctx.beginPath(); ctx.arc(W.x+120,W.y+150,18,0,7); ctx.stroke(); }
+    else { ctx.fillStyle=INK; ctx.fillRect(W.x,W.y,W.w,W.h); ctx.save(); ctx.beginPath(); ctx.rect(W.x,W.y,W.w,W.h); ctx.clip(); ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(W.x+120,W.y+60,16,0,7); ctx.fill(); ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(W.x+127,W.y+55,14,0,7); ctx.fill();
+      rainLines(t, PAPER, 30, .45, [W.x-20,W.y-30,W.w+40,W.h+60]); ctx.restore(); ctx.strokeStyle=PAPER; ctx.lineWidth=1.5; ctx.strokeRect(W.x-6,W.y-6,W.w+12,W.h+12); }
+    ctx.fillStyle = dawn ? INK : INK; ctx.fillRect(W.x+W.w/2-3,W.y,6,W.h); ctx.fillRect(W.x,W.y+W.h/2-3,W.w,6);
+  }
+};
+// Lòng đèn dầu đặc tả: sợi bấc thức dậy (wake) / Bấc thắp lại đèn (relight)
+CINE.lampglass = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK; ctx.lineCap='round';
+  ctx.globalAlpha=.1; ctx.lineWidth=1; for (let x=-900;x<900;x+=46) line(x,-600,x,600); ctx.globalAlpha=1;
+  // thân đèn
+  ctx.beginPath(); ctx.ellipse(0,250,330,90,0,0,7); ctx.fill();
+  ctx.fillRect(-90,140,180,70); ctx.fillStyle=PAPER; ctx.fillRect(-70,150,140,6); ctx.fillStyle=INK;
+  ctx.beginPath(); ctx.moveTo(-110,140); for (let i=0;i<=11;i++) ctx.lineTo(-110+i*20, 140 - (i%2?0:16)); ctx.lineTo(110,140); ctx.fill();
+  // ống khói thuỷ tinh
+  ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(-120,124); ctx.bezierCurveTo(-260,40,-200,-200,-110,-420); ctx.moveTo(120,124); ctx.bezierCurveTo(260,40,200,-200,110,-420); ctx.stroke();
+  ctx.globalAlpha=.3; ctx.lineWidth=10; ctx.beginPath(); ctx.moveTo(-150,60); ctx.bezierCurveTo(-200,-30,-170,-160,-130,-260); ctx.stroke(); ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(150,40); ctx.bezierCurveTo(190,-30,170,-140,140,-220); ctx.stroke(); ctx.globalAlpha=1;
+  const relight = o.mode==='relight';
+  let light = .0;
+  if (!relight){
+    const rise = smooth((k-.42)/.3), tw = k > .26 && k < .5 ? Math.sin(t*34)*.25*(1-Math.abs(k-.38)/.12) : 0;
+    if (rise < 1){ ctx.globalAlpha = 1-rise; ctx.lineWidth=12; ctx.beginPath(); ctx.moveTo(0,126); ctx.quadraticCurveTo(10,60+tw*40,70+tw*30,90); ctx.stroke(); ctx.globalAlpha=1; }
+    if (rise > 0){ ctx.globalAlpha = rise; heroIn(0, 126, 4.2, 1, {sy: .5 + .5*rise}); ctx.globalAlpha=1; }
+    if (k > .7){ ctx.fillStyle=INK; ctx.font=`400 30px ${HAND}`; ctx.textAlign='center'; ctx.globalAlpha=cl01((k-.7)/.1)*(1-cl01((k-.92)/.08)); ctx.fillText('…!', 90, -40); ctx.globalAlpha=1; }
+    light = .25 + .25*rise;
+  } else {
+    // bấc cũ cháy sém + Bấc đứng bên, nghiêng người trao mực
+    ctx.lineWidth=10; line(0,126,0,96); ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(0,92,7,0,7); ctx.fill();
+    const give = smooth((k-.15)/.25), fl = smooth((k-.32)/.35), shrink = 1 - .12*smooth((k-.45)/.3);
+    ctx.save(); ctx.translate(-150, 126); ctx.rotate(.22*give - .05); heroIn(0,0,3.2,1,{sy:shrink}); ctx.restore();
+    if (give > 0 && fl < 1){ ctx.lineWidth=3; ctx.globalAlpha=give*(1-fl); ctx.beginPath(); ctx.moveTo(-70,40); ctx.quadraticCurveTo(-30,20+Math.sin(t*9)*6,-4,88); ctx.stroke(); ctx.globalAlpha=1;
+      for (let i=0;i<5;i++){ const p=((t*1.4+i/5)%1); dropShape(-70+p*66, 40+p*p*48 - Math.sin(p*3)*20, 3, INK); } }
+    if (k > .3 && k < .42){ for (let i=0;i<10;i++){ const a=crand(i+Math.floor(t*20))*Math.PI*2, r=20+crand(i*3+Math.floor(t*20))*50; line(Math.cos(a)*r*.3, 90+Math.sin(a)*r*.3, Math.cos(a)*r, 90+Math.sin(a)*r); } }
+    if (fl > 0){ flameD(0, 92, 150*fl, INK, PAPER); }
+    if (k > .55){ const p = cl01((k-.55)/.4); dropShape(-150, 126 + p*180, 5, INK); }
+    light = .2 + .8*fl;
+  }
+  darkAround(0, relight ? 20 : 60, 60 + 160*light, 300 + 500*light, relight ? .92 - .3*light : .8);
+};
+// Qua vai Bấc nhìn cánh cửa khoá khổng lồ
+CINE.door = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.globalAlpha=.12; ctx.lineWidth=1; for (let x=-900;x<900;x+=40) line(x,-600,x,120); ctx.globalAlpha=1;
+  ctx.lineWidth=2; for (let i=-12;i<=12;i++) line(i*30, 120, i*150, 600); for (let j=0;j<8;j++){ const y = 120 + Math.pow(j/8,1.8)*480; line(-900,y,900,y); }
+  ctx.lineWidth=3; line(-900,120,900,120);
+  ctx.fillRect(-130,-330,260,450);
+  ctx.strokeStyle=PAPER; ctx.lineWidth=3; ctx.strokeRect(-104,-300,208,170); ctx.strokeRect(-104,-100,208,190);
+  ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(80,-20,10,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(80,10,7,0,7); ctx.fill(); ctx.fillRect(77,10,6,16);
+  ctx.fillRect(-130,116,260,4); ctx.globalAlpha=.4; ctx.beginPath(); ctx.moveTo(-130,120); ctx.lineTo(130,120); ctx.lineTo(260,300); ctx.lineTo(-260,300); ctx.closePath(); ctx.fill(); ctx.globalAlpha=1;
+  ctx.strokeStyle=INK; ctx.lineWidth=5; ctx.strokeRect(-150,-350,300,470);
+  darkAround(0, 160, 60, 760, .82);
+  for (let i=0;i<20;i++){ const x = -400+crand(i)*800 + Math.sin(t*.6+i)*20, y = -300+((crand(i+6)*600 + t*12) % 600); glowC(x,y,4,.8); }
+  heroIn(-330, 420, 8, 1, {sil:INK});
+};
+// Cận mặt Giáo sư (chính diện)
+CINE.face = (o,k,t)=>{
+  bgc(PAPER); ctx.globalAlpha=.1; ctx.strokeStyle=INK; ctx.lineWidth=1; for (let x=-900;x<900;x+=46) line(x,-600,x,600); ctx.globalAlpha=1;
+  profFace({mode:o.mode, flame: o.mode==='fear' ? 0 : smooth((k-.05)/.3), look:o.look}, k);
+  if (o.mode==='fear'){ ctx.save(); ctx.globalAlpha=.6; for (let i=0;i<4;i++){ const y = 260 - k*120 - i*40; ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(-600+i*40, 600); ctx.quadraticCurveTo(-300+Math.sin(t*2+i)*40, y, -500+i*90, y-60); ctx.lineTo(-480+i*90, y-40); ctx.quadraticCurveTo(-260, y+40, -560+i*40, 600); ctx.fill(); } ctx.restore(); }
+  darkAround(60, 260, 120, 640, o.mode==='fear' ? .9 : .82);
+};
+// Góc máy thấp: chân bàn khổng lồ, Bấc đang leo
+CINE.tablelow = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.globalAlpha=.12; ctx.lineWidth=1; for (let i=-20;i<=20;i++) line(i*60,600,i*14,-600); ctx.globalAlpha=1;
+  ctx.beginPath(); ctx.moveTo(-900,-210); ctx.lineTo(900,-210); ctx.lineTo(900,-170); ctx.lineTo(-900,-130); ctx.closePath(); ctx.fill();
+  ctx.lineWidth=3; for (const [x,h,w] of [[-420,300,60],[-250,220,40],[180,340,70],[360,240,50]]){ ctx.beginPath(); ctx.moveTo(x-w/2,-210); ctx.lineTo(x-w/2,-210-h*.6); ctx.quadraticCurveTo(x-w*1.4,-210-h*.7,x-w*.3,-210-h); ctx.lineTo(x+w*.3,-210-h); ctx.quadraticCurveTo(x+w*1.4,-210-h*.7,x+w/2,-210-h*.6); ctx.lineTo(x+w/2,-210); ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(40,-160); ctx.lineTo(120,-160); ctx.lineTo(150,700); ctx.lineTo(10,700); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle=PAPER; ctx.lineWidth=1.5; for (let i=0;i<5;i++){ ctx.beginPath(); ctx.moveTo(56+i*12,-150); ctx.quadraticCurveTo(60+i*14+Math.sin(i)*10,250,46+i*20,700); ctx.stroke(); }
+  ctx.strokeStyle=INK; ctx.lineWidth=3; line(-900,420,900,420);
+  const y = 380 - smooth(k)*480; heroIn(26, y, 2.6, 1);
+  darkAround(80,-260,120,900,.7);
+};
+// Sàn nứt — góc nghiêng (dutch): những dòng chữ bị gạch xoá trườn lên
+CINE.rift = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.lineWidth=2; for (let j=0;j<10;j++){ const y = -60 + Math.pow(j/10,1.6)*520; line(-1200,y,1200,y); } for (let i=-14;i<=14;i++) line(i*20,-60,i*170,500);
+  const g = smooth(k*1.4);
+  ctx.beginPath(); for (let i=0;i<=40;i++){ const a=i/40*Math.PI*2, r = (60 + crand(i)*70)*g; ctx.lineTo(Math.cos(a)*r*3.2, 120+Math.sin(a)*r*.7); } ctx.fill();
+  ctx.lineWidth=2.5; for (let i=0;i<12;i++){ const a = crand(i+20)*Math.PI*2, L = (200+crand(i+30)*300)*g; ctx.beginPath(); ctx.moveTo(0,120); let x=0,y=120; for (let s=1;s<=6;s++){ x += Math.cos(a+(crand(i*6+s)-.5)*.9)*L/6*3; y += Math.sin(a+(crand(i*6+s)-.5)*.9)*L/6*.6; ctx.lineTo(x,y); } ctx.stroke(); }
+  const words = ['lẽ ra…','giá mà…','xin lỗi','đáng lẽ ta','đừng đi','quên đi'];
+  for (let i=0;i<words.length;i++){
+    const bx = (i-2.5)*120, h = (260+crand(i)*200)*smooth((k-.15-i*.05)*1.6); if (h <= 2) continue;
+    const pts = []; for (let s=0;s<=16;s++){ const q=s/16; pts.push([bx*(1-q*.3) + Math.sin(t*1.8+i+q*5)*30*q, 120 - h*q]); }
+    ctx.fillStyle=INK; ctx.beginPath(); pts.forEach((p,s)=>{ const w=(1-s/16)*26+3; ctx.lineTo(p[0]-w,p[1]); }); for (let s=16;s>=0;s--){ const w=(1-s/16)*26+3; ctx.lineTo(pts[s][0]+w,pts[s][1]); } ctx.fill();
+    const top = pts[Math.floor(16*.7)]; ctx.save(); ctx.translate(top[0], top[1]); ctx.rotate(Math.sin(t+i)*.15);
+    ctx.restore(); const tip = pts[16]; ctx.save(); ctx.translate(tip[0], tip[1]-34); ctx.rotate(Math.sin(t+i)*.12);
+    ctx.fillStyle=INK; ctx.font=`400 36px ${HAND}`; ctx.textAlign='center'; ctx.fillText(words[i], 0, 0); const tw = ctx.measureText(words[i]).width; ctx.strokeStyle=INK; ctx.lineWidth=3; line(-tw/2-4,-10,tw/2+4,-12); ctx.restore();
+    ctx.fillStyle=INK; if (crand(i+Math.floor(t*3))>.5) dropShape(pts[16][0], pts[16][1]+ (t*200 % 200), 5, INK);
+  }
+  for (let i=0;i<30;i++){ const x=-600+crand(i)*1200, y=-200+((crand(i+5)*500 + t*60*(1+crand(i))) % 500); ctx.fillRect(x,y,3,3); }
+};
+// Từ trên xuống: tay Giáo sư trao túi hoá chất
+CINE.kit = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.globalAlpha=.16; ctx.lineWidth=1.2; for (let i=0;i<30;i++){ const y=-380+i*26; ctx.beginPath(); ctx.moveTo(-900,y); for (let x=-900;x<=900;x+=50) ctx.lineTo(x,y+Math.sin(x*.012+i)*5); ctx.stroke(); } ctx.globalAlpha=1;
+  const m = smooth(k*1.3), px = 120 - m*240, py = -40 + m*80;
+  ctx.save(); ctx.translate(px,py); ctx.rotate(-.12);
+  ctx.fillStyle=PAPER; ctx.lineWidth=4; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-170,-110,340,220,40) : ctx.rect(-170,-110,340,220); ctx.fill(); ctx.stroke();
+  ctx.setLineDash([6,8]); ctx.lineWidth=2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-155,-95,310,190,30) : ctx.rect(-155,-95,310,190); ctx.stroke(); ctx.setLineDash([]);
+  ctx.lineWidth=3; line(0,-110,0,110);
+  // bình HCl (cầu) & NaOH (nón)
+  ctx.lineWidth=3; ctx.beginPath(); ctx.arc(-80,10,52,0,7); ctx.stroke(); ctx.strokeRect(-92,-90,24,48); ctx.globalAlpha=.25; ctx.beginPath(); ctx.arc(-80,10,48,.2,Math.PI-.2); ctx.fill(); ctx.globalAlpha=1;
+  ctx.beginPath(); ctx.moveTo(56,-88); ctx.lineTo(56,-40); ctx.lineTo(20,62); ctx.lineTo(140,62); ctx.lineTo(104,-40); ctx.lineTo(104,-88); ctx.stroke(); ctx.globalAlpha=.25; ctx.beginPath(); ctx.moveTo(30,34); ctx.lineTo(130,34); ctx.lineTo(140,62); ctx.lineTo(20,62); ctx.fill(); ctx.globalAlpha=1;
+  ctx.fillStyle=PAPER; ctx.fillRect(-116,0,72,30); ctx.strokeRect(-116,0,72,30); ctx.fillRect(44,0,72,30); ctx.strokeRect(44,0,72,30);
+  ctx.fillStyle=INK; ctx.font=`700 20px ${FONT}`; ctx.textAlign='center'; ctx.fillText('HCl',-80,22); ctx.fillText('NaOH',80,22);
+  ctx.restore();
+  // tay Giáo sư (từ phải trên)
+  const hx = px+150, hy = py-40;
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(hx+30,hy-50); ctx.lineTo(hx+80,hy+30); ctx.lineTo(900,-100); ctx.lineTo(900,-420); ctx.lineTo(700,-420); ctx.closePath(); ctx.fill();
+  ctx.fillStyle=PAPER; ctx.lineWidth=3; ctx.beginPath(); ctx.ellipse(hx+10,hy,62,44,.5,0,7); ctx.fill(); ctx.stroke();
+  for (let i=0;i<4;i++){ ctx.beginPath(); ctx.ellipse(hx-44+i*10, hy+28+i*12, 30, 11, .5, 0, 7); ctx.fill(); ctx.stroke(); }
+  ctx.lineWidth=1.5; for (let i=0;i<3;i++) line(hx+10+i*10,hy-20+i*6,hx+24+i*10,hy-14+i*6);
+  // khăn quàng & tay nhỏ của Bấc (góc trái dưới)
+  ctx.strokeStyle=INK; ctx.lineWidth=14; ctx.beginPath(); ctx.moveTo(-700,360); ctx.quadraticCurveTo(-520,300+Math.sin(t*2)*10,-430,330); ctx.stroke();
+  ctx.lineWidth=10; const r = smooth((k-.4)/.4); line(-600,420,-360+r*60,240-r*40); line(-560,440,-330+r*60,280-r*40);
+  darkAround(80,-120,160,800,.75);
+};
+// Góc cao toàn cảnh (máy cẩu lùi lên): mép khe nứt, Giáo sư cầm đèn, Bấc, Quạ Giấy
+CINE.edge = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.lineWidth=1.5; ctx.globalAlpha=.4; for (let j=0;j<22;j++){ const y=-400+j*44; line(-1200,y,1200,y); for (let i=-12;i<12;i++){ const x=i*110+(j%2)*55; line(x,y,x,y+44); } } ctx.globalAlpha=1;
+  ctx.beginPath(); for (let i=0;i<=48;i++){ const a=i/48*Math.PI*2, r=1+(crand(i)-.5)*.35; ctx.lineTo(60+Math.cos(a)*560*r, 230+Math.sin(a)*120*r); } ctx.fill();
+  ctx.fillStyle=PAPER; for (let i=0;i<40;i++){ const a=crand(i)*Math.PI*2, r=crand(i+3)*.8; ctx.globalAlpha=.2+crand(i+7)*.5; ctx.fillRect(60+Math.cos(a)*500*r, 230+Math.sin(a)*100*r, 2, 2); } ctx.globalAlpha=1; ctx.fillStyle=INK;
+  ctx.strokeStyle=PAPER; ctx.lineWidth=2; for (let i=0;i<5;i++){ const x = -200+i*140; ctx.globalAlpha=.4; ctx.beginPath(); ctx.moveTo(x,260); ctx.quadraticCurveTo(x+Math.sin(t+i)*40, 200, x+20, 140+Math.sin(t*1.3+i)*10); ctx.stroke(); } ctx.globalAlpha=1; ctx.strokeStyle=INK;
+  profStand(-280, 40, 1.3, {lamp:true, face:1});
+  heroIn(40, 110, 1.6, 1);
+  drawCrowBody(150+Math.sin(t)*30, -60+Math.sin(t*2)*14, 1, clock*12, false, 2.2);
+  darkAround(-180, -120, 160, 900, .78);
+};
+// Rơi tự do qua khe nứt: máy quay rơi theo Bấc, đồ đạc bay ngược lên
+CINE.fall = (o,k,t)=>{
+  bgc(INK); ctx.strokeStyle=PAPER; ctx.fillStyle=PAPER;
+  ctx.globalAlpha=.18; ctx.lineWidth=2; for (let i=0;i<40;i++){ const x=-900+crand(i)*1800, y = ((crand(i+3)*1400 - t*900*(.6+crand(i+5))) % 1400 + 1400) % 1400 - 700; line(x,y,x,y+80+crand(i)*80); } ctx.globalAlpha=1;
+  const items = 14;
+  for (let i=0;i<items;i++){
+    const depth = .4 + crand(i)*1.2, x = -700 + crand(i+11)*1400, sp = 160*depth, y = ((crand(i+21)*1600 - t*sp) % 1600 + 1600) % 1600 - 800, rot = t*(crand(i+31)-.5)*2 + i;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(rot); ctx.scale(depth,depth); ctx.globalAlpha = .35 + depth*.4; ctx.lineWidth=3;
+    const kind = i % 4;
+    if (kind===0){ ctx.strokeRect(-50,-36,100,72); ctx.strokeRect(-38,-24,76,48); line(-30,16,-6,-10); line(-6,-10,10,6); line(10,6,30,-12); }
+    else if (kind===1){ ctx.beginPath(); ctx.arc(0,0,40,0,7); ctx.stroke(); line(0,0,0,-28); line(0,0,18,8); for (let h=0;h<12;h++){ const a=h/12*Math.PI*2; line(Math.cos(a)*32,Math.sin(a)*32,Math.cos(a)*38,Math.sin(a)*38); } }
+    else if (kind===2){ ctx.fillRect(-34,-44,68,88); ctx.strokeStyle=INK; for (let l=0;l<5;l++) scrib(-26,-30+l*16,50,i*7+l,1,1.5); ctx.strokeStyle=PAPER; }
+    else { ctx.strokeRect(-40,-10,80,14); line(-34,4,-34,50); line(34,4,34,50); line(-34,-10,-34,-60); line(34,-10,34,-60); line(-34,-40,34,-40); }
+    ctx.restore();
+  }
+  ctx.globalAlpha=1;
+  ctx.save(); ctx.rotate(Math.sin(t*1.2)*.25); heroIn(0, 60, 3.4, 1, {glow:40}); ctx.restore();
+  drawCrowBody(-160+Math.sin(t*1.5)*20, -120+Math.cos(t)*16, 1, clock*16, false, 3);
+};
+// Thế giới Sa Ngã: toàn cảnh núi mực khô, toà tháp đập như tim
+CINE.abyss = (o,k,t)=>{
+  bgc(PAPER); ctx.fillStyle=INK; ctx.strokeStyle=INK;
+  ctx.globalAlpha=.06; ctx.fillRect(-1200,-600,2400,700); ctx.globalAlpha=1;
+  const beat = Math.pow(Math.max(0, Math.sin(t*2.6)), 8);
+  const TX = 320, TY = 60;
+  ctx.lineWidth=2; for (let r=0;r<4;r++){ const p = ((t*.5 + r/4) % 1); ctx.globalAlpha = (1-p)*.4; ctx.beginPath(); ctx.ellipse(TX, TY-260, 40+p*420, 20+p*140, 0, 0, 7); ctx.stroke(); } ctx.globalAlpha=1;
+  const layers = [[.22, 40, 140, 3], [.45, 110, 90, 5], [.8, 190, 60, 8]];
+  for (const [a, base, amp, seed] of layers){ ctx.globalAlpha = a; ctx.beginPath(); ctx.moveTo(-1200,600); for (let x=-1200;x<=1200;x+=40){ const y = base - Math.abs(Math.sin(x*.004+seed))*amp - crand(Math.floor(x/40)+seed*99)*amp*.4; ctx.lineTo(x,y); } ctx.lineTo(1200,600); ctx.closePath(); ctx.fill();
+    ctx.globalAlpha = a*.8; for (let i=0;i<10;i++){ const x=-1100+crand(i+seed)*2200; ctx.fillRect(x, base-amp*.2, 6, 30+crand(i+seed*7)*80); } }
+  ctx.globalAlpha=1;
+  // toà tháp
+  const s = 1 + beat*.04; ctx.save(); ctx.translate(TX, TY); ctx.scale(s, s);
+  ctx.beginPath(); ctx.moveTo(-60,40); ctx.lineTo(-34,-300); ctx.lineTo(-10,-330); ctx.lineTo(0,-420); ctx.lineTo(10,-330); ctx.lineTo(34,-300); ctx.lineTo(60,40); ctx.closePath(); ctx.fill();
+  ctx.fillStyle=PAPER; ctx.globalAlpha=.3+beat*.7; ctx.beginPath(); ctx.arc(0,-250,10+beat*8,0,7); ctx.fill(); ctx.globalAlpha=1;
+  ctx.strokeStyle=PAPER; ctx.lineWidth=1.2; for (let i=0;i<6;i++) line(-40+i*12,-200+i*30,-20+i*8,20); ctx.restore();
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(-1200,600); ctx.lineTo(-1200,170); ctx.lineTo(-560,180); ctx.quadraticCurveTo(-400,190,-330,230); ctx.lineTo(-300,600); ctx.closePath(); ctx.fill();
+  for (let i=0;i<6;i++){ const x=-1150+i*140; ctx.fillRect(x,180,8,60+crand(i)*80); }
+  heroIn(-420, 182, 1.5, 1, {glow:30});
+  drawCrowBody(-370+Math.sin(t)*20, 100+Math.sin(t*2)*8, 1, clock*12, false, 1.6);
+  for (let i=0;i<10;i++){ const x = -200+crand(i)*1000, y = -300 + ((crand(i+3)*600 - t*20) % 600 + 600) % 600 - 300; ctx.save(); ctx.translate(x,y); ctx.rotate(t*.3+i); ctx.globalAlpha=.4; ctx.strokeRect(-8,-10,16,20); ctx.restore(); }
+  ctx.globalAlpha=1;
+};
+// Đặc tả: cánh Quạ Giấy mở ra, bên trong là nét chữ Giáo sư
+CINE.wing = (o,k,t)=>{
+  bgc(INK); glowC(0,0,520,.12);
+  const u = smooth((k-.08)/.45);
+  const P = [[-300,-180],[300,-180],[300,180],[-300,180]], C = [[-20,-30],[60,-60],[30,40],[-50,20]];
+  ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.beginPath(); for (let i=0;i<4;i++){ const x = C[i][0]+(P[i][0]-C[i][0])*u, y = C[i][1]+(P[i][1]-C[i][1])*u; ctx.lineTo(x,y); } ctx.closePath(); ctx.fill();
+  ctx.strokeStyle=INK; ctx.globalAlpha=.12; ctx.lineWidth=2; line(0,-180*u,0,180*u); line(-300*u,0,-40*u,-60*u); ctx.globalAlpha=1; ctx.lineWidth=3; ctx.strokeRect(-300*u,-180*u,600*u,360*u);
+  if (u < .98){ ctx.fillStyle=INK; ctx.globalAlpha=(1-u)*.5; ctx.beginPath(); ctx.moveTo(-40,0); ctx.lineTo(80*(1-u)+20,-40); ctx.lineTo(60,40*(1-u)); ctx.closePath(); ctx.fill(); ctx.globalAlpha=1; }
+  const lines = ['Axit gặp bazơ', 'thành muối và nước.', 'Không có gì', 'là không thể hoá giải.', '— T.'];
+  ctx.fillStyle=INK; ctx.font=`400 38px ${HAND}`; ctx.textAlign='left';
+  const tp = cl01((k-.45)/.45) * lines.join('').length; let used = 0;
+  lines.forEach((ln,i)=>{ const n = Math.max(0, Math.min(ln.length, Math.floor(tp - used))); used += ln.length; ctx.fillText(ln.slice(0,n), -230 + (i===4?260:0), -96 + i*52); });
+};
+// Cầu thang mực: máy quay đi theo Bấc, vách đầy câu viết dở
+CINE.stairs = (o,k,t)=>{
+  bgc(INK); ctx.fillStyle=PAPER; ctx.strokeStyle=PAPER;
+  const sent = [['Lẽ ra ta nên ở nhà hôm ấy.', ''], ['Con có lạnh không?', ''], ['Ta xin—', ' lỗi con, ta đã không'], ['Giá mà ', 'ta nói sớm hơn.'], ['Đừng đi.', ''], ['Ta vẫn để đèn cho con.', ''], ['', 'Lỗi là ở ta.']];
+  ctx.font=`400 30px ${HAND}`; ctx.textAlign='left';
+  sent.forEach(([a,c],i)=>{ const x = -520+i*230, y = (x+600)/2 - 190 - (i%2)*55; ctx.globalAlpha = .6 + .2*Math.sin(t*1.5+i); ctx.fillText(a+c, x, y); const wa = ctx.measureText(a).width, wc = ctx.measureText(c).width;
+    if (c){ ctx.globalAlpha=.95; strikeOut(x+wa-2, y-10, wc+6, Math.floor(wc/9), 6, i); } });
+  ctx.globalAlpha=1;
+  ctx.fillStyle=INK; ctx.strokeStyle=PAPER; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(-900,-10); for (let i=0;i<30;i++){ const x=-600+i*60, y=-10+i*30; ctx.lineTo(x,y); ctx.lineTo(x,y+30); } ctx.lineTo(1300,1200); ctx.lineTo(-900,1200); ctx.closePath(); ctx.fillStyle=INK; ctx.fill(); ctx.stroke();
+  ctx.fillStyle=PAPER; ctx.globalAlpha=.6; for (let i=0;i<30;i++){ const x=-600+i*60, y=20+i*30; ctx.fillRect(x-2,y,3,30*(crand(i)>.5?1:.4)); } ctx.globalAlpha=1;
+  const hx = -300 + (o.hk ?? k)*700, hy = -10 + ((hx+600)/60)*30 + 4;
+  heroIn(hx, hy, 1.8, 1, {glow:34});
+  drawCrowBody(hx+70, hy-110+Math.sin(t*3)*6, 1, clock*12, false, 1.5);
+};
+// Vua Mực tan thành nước muối & CO₂; một trang giấy rơi ra từ tim nó
+CINE.dissolve = (o,k,t)=>{
+  bgc(INK); ctx.fillStyle=PAPER; ctx.globalAlpha=.08; for (let i=0;i<6;i++){ ctx.beginPath(); ctx.moveTo(-300+i*120,-700); ctx.lineTo(-200+i*120,-700); ctx.lineTo(-60+i*140,600); ctx.lineTo(-260+i*140,600); ctx.closePath(); ctx.fill(); } ctx.globalAlpha=1;
+  const d = smooth(k*1.2), sc = 1 - d*.55;
+  ctx.save(); ctx.translate(0, 20 + d*120); ctx.scale(sc, sc); ctx.globalAlpha = 1 - d*.85;
+  ctx.fillStyle=INK; ctx.strokeStyle=PAPER; ctx.lineWidth=3;
+  for (let i=0;i<8;i++){ const a = -.7 + i*.2; ctx.beginPath(); ctx.moveTo(-60+i*17, 60); ctx.quadraticCurveTo(-90+i*26+Math.sin(t*2+i)*30, 200, (-120+i*34)+Math.sin(t*1.5+i)*50, 300 - d*200); ctx.lineWidth = 14 - i%3*3; ctx.strokeStyle=PAPER; ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(-120,60); ctx.bezierCurveTo(-150,-120,-90,-220,0,-230); ctx.bezierCurveTo(90,-220,150,-120,120,60); ctx.closePath(); ctx.fill(); ctx.lineWidth=4; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-60,-220); for (let i=0;i<=5;i++) ctx.lineTo(-60+i*24, -220 - (i%2?20:50)); ctx.lineTo(60,-220); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle=PAPER; for (const sx of [-40,40]){ ctx.beginPath(); ctx.ellipse(sx,-80,18,6*(1-d),0,0,7); ctx.fill(); }
+  ctx.restore(); ctx.globalAlpha=1;
+  for (let i=0;i<60;i++){ const p = ((t*.25 + crand(i)) % 1), x = (crand(i+4)-.5)*500*(1+p) + Math.sin(t*2+i)*14, y = 200 - p*700; ctx.strokeStyle=PAPER; ctx.lineWidth=1.5; ctx.globalAlpha = (1-p)*.8*Math.min(1, d*3); ctx.beginPath(); ctx.arc(x,y,3+crand(i+8)*9,0,7); ctx.stroke();
+    if (i%9===0){ ctx.fillStyle=PAPER; ctx.font=`400 14px ${FONT}`; ctx.textAlign='center'; ctx.fillText('CO₂', x, y-14); } }
+  ctx.globalAlpha=1;
+  ctx.fillStyle=PAPER; ctx.globalAlpha=.25*d; ctx.font=`400 22px ${FONT}`; ctx.textAlign='center'; ctx.fillText('HCl + NaOH → NaCl + H₂O', 0, 330); ctx.globalAlpha=1;
+  if (o.page){ const p = cl01((k-.25)/.75), px = Math.sin(p*7)*120, py = -80 + p*420, a = Math.sin(p*7+1)*.5;
+    glowC(px,py,120,.25); ctx.save(); ctx.translate(px,py); ctx.rotate(a); ctx.scale(1, .6+.4*Math.abs(Math.cos(p*7))); ctx.fillStyle=PAPER; ctx.fillRect(-46,-60,92,120); ctx.strokeStyle=INK; for (let l=0;l<5;l++){ scrib(-36,-38+l*20,70,300+l,1,1.4); strikeOut(-38,-40+l*20,72,8,2.2,l); } ctx.restore(); }
+};
+// Đặc tả trang thư: mọi dòng bị gạch, trừ dòng đầu — rồi Bấc gấp lại
+CINE.page = (o,k,t)=>{
+  bgc(INK); glowC(0,0,560,.2);
+  const fold = smooth((k-.62)/.3);
+  ctx.save(); ctx.scale(1-fold*.5, 1); ctx.rotate(-.03);
+  ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.fillRect(-260,-320,520,640); ctx.lineWidth=2; ctx.strokeRect(-260,-320,520,640);
+  ctx.globalAlpha=.2; ctx.lineWidth=1; for (let y=-240;y<300;y+=46) line(-230,y+8,230,y+8); ctx.globalAlpha=1;
+  ctx.fillStyle=INK; ctx.font=`400 46px ${HAND}`; ctx.textAlign='left'; ctx.fillText('Gửi con,', -220, -246);
+  for (let i=0;i<11;i++){ const y = -190 + i*46, w = 380 - crand(i)*120; scrib(-220, y, w, 500+i, 1, 2.2); strikeOut(-226, y-4, w+12, 14, 4+crand(i)*3, i); }
+  if (fold > 0){ ctx.globalAlpha = fold*.6; ctx.fillStyle=INK; ctx.fillRect(0,-320,260,640); ctx.globalAlpha=1; }
+  ctx.restore();
+  ctx.strokeStyle=INK; ctx.lineWidth=12; const r = smooth((k-.5)/.3); ctx.beginPath(); ctx.moveTo(-700,480); ctx.quadraticCurveTo(-520,330,-280+r*120,300-r*40); ctx.stroke();
+  ctx.strokeStyle=PAPER; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-700,480); ctx.quadraticCurveTo(-520,330,-280+r*120,300-r*40); ctx.stroke();
+};
+// Qua vai Giáo sư: ông đọc trang thư, Bấc đứng trên bàn
+CINE.homeback = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.globalAlpha=.1; ctx.lineWidth=1; for (let x=-900;x<900;x+=46) line(x,-600,x,40); ctx.globalAlpha=1;
+  ctx.lineWidth=6; line(-900,60,900,60);
+  oilLamp(200,60,true,1.6);
+  ctx.save(); ctx.translate(-10,48); ctx.rotate(-.06); ctx.fillStyle=PAPER; ctx.fillRect(-60,-10,120,16); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.strokeRect(-60,-10,120,16); ctx.restore();
+  heroIn(80, 60, 2.2, -1);
+  darkAround(160, 0, 120, 640, .9);
+  profBack(-300, 260, 2.2, {sob: k > .45});
+};
+// Cửa sổ mở toang: thị trấn loang vệt mực
+CINE.town = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.lineWidth=2; ctx.beginPath(); ctx.arc(380,-260,36,0,7); ctx.stroke();
+  for (let i=0;i<14;i++){ const x=-640+i*96, h=120+crand(i)*160, y=360; ctx.lineWidth=2.5; ctx.strokeRect(x,y-h,82,h); ctx.beginPath(); ctx.moveTo(x-8,y-h); ctx.lineTo(x+41,y-h-50); ctx.lineTo(x+90,y-h); ctx.stroke();
+    ctx.lineWidth=1.5; for (let w=0;w<3;w++) ctx.strokeRect(x+10+w*24, y-h+20, 14, 18);
+    if (crand(i+3) > .35){ ctx.beginPath(); for (let a=0;a<=20;a++){ const an=a/20*Math.PI*2, r=(18+crand(i*20+a)*16); ctx.lineTo(x+41+Math.cos(an)*r*1.3, y-h-14+Math.sin(an)*r*.6); } ctx.fill(); ctx.fillRect(x+30, y-h-8, 6, 30+crand(i)*30); } }
+  ctx.globalAlpha=.4; ctx.lineWidth=2; for (let i=0;i<10;i++){ const y=-200+i*40, x = ((t*240 + i*170) % 1600) - 800; ctx.beginPath(); ctx.moveTo(x,y); ctx.quadraticCurveTo(x+60,y-14,x+140,y); ctx.stroke(); dropShape(x+150, y, 4, INK); } ctx.globalAlpha=1;
+  const op = smooth(k*1.5);
+  ctx.fillStyle=INK; ctx.fillRect(-900,-600,260,1200); ctx.fillRect(640,-600,260,1200); ctx.fillRect(-900,-600,1800,90); ctx.fillRect(-900,420,1800,200);
+  for (const sd of [-1,1]){ const w = 320*(1-op*.82); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=4; const x0 = sd<0 ? -640 : 640-w; ctx.fillRect(x0,-510,w,930); ctx.strokeRect(x0,-510,w,930); ctx.lineWidth=2; for (let j=0;j<6;j++) line(x0, -510+j*155, x0+w, -510+j*155); }
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(-900,620); ctx.lineTo(-900,300); ctx.quadraticCurveTo(-760,240,-600+op*60,110); ctx.lineTo(-560+op*60,140); ctx.quadraticCurveTo(-700,320,-640,620); ctx.closePath(); ctx.fill();
+  ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.beginPath(); ctx.ellipse(-578+op*60,118,28,20,-.6,0,7); ctx.fill(); ctx.stroke();
+};
+// Bờ biển: hải đăng (góc thấp), tia sáng quét qua thị trấn, rồi lặn xuống đáy biển
+CINE.coast = (o,k,t)=>{
+  bgc(INK); ctx.strokeStyle=PAPER; ctx.fillStyle=PAPER; const SEA = 60;
+  for (let i=0;i<40;i++){ ctx.globalAlpha=.3+.5*Math.abs(Math.sin(clock+i)); ctx.fillRect(-900+crand(i)*1800, -600+crand(i+9)*560, 2, 2); } ctx.globalAlpha=1;
+  const clean = o.clean ? smooth(k*1.2) : 0;
+  for (let i=0;i<11;i++){ const x = 120+i*70, h = 40+crand(i+2)*70; ctx.lineWidth=2; ctx.strokeRect(x, SEA-h, 56, h); ctx.beginPath(); ctx.moveTo(x-6,SEA-h); ctx.lineTo(x+28,SEA-h-30); ctx.lineTo(x+62,SEA-h); ctx.stroke();
+    if (crand(i)>.3){ const r = (16+crand(i+5)*10)*(1-clean); if (r>1){ ctx.fillStyle=INK; ctx.strokeStyle=PAPER; ctx.beginPath(); ctx.ellipse(x+28,SEA-h-6,r*1.3,r*.6,0,0,7); ctx.fill(); ctx.stroke(); ctx.fillStyle=PAPER; } }
+    if (clean > .4){ ctx.globalAlpha = (clean-.4); ctx.fillRect(x+20, SEA-h+18, 14, 16); ctx.globalAlpha=1; } }
+  // hải đăng
+  const LX = -260, top = -470;
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.moveTo(LX-70,SEA+10); ctx.lineTo(LX-34,top); ctx.lineTo(LX+34,top); ctx.lineTo(LX+70,SEA+10); ctx.closePath(); ctx.fill(); ctx.lineWidth=3; ctx.stroke();
+  ctx.save(); ctx.clip(); ctx.fillStyle=PAPER; for (let i=0;i<5;i++) ctx.fillRect(LX-80, top+40+i*110, 160, 50); ctx.restore();
+  ctx.strokeRect(LX-40, top-70, 80, 70); line(LX-50,top,LX+50,top); ctx.beginPath(); ctx.moveTo(LX-46,top-70); ctx.lineTo(LX,top-110); ctx.lineTo(LX+46,top-70); ctx.stroke();
+  const a = o.beam === 'sweep' ? -.15 + Math.sin(t*.7)*.25 : .12;
+  if (o.beam){ ctx.save(); ctx.translate(LX, top-36); ctx.rotate(a); const g = ctx.createLinearGradient(0,0,1500,0); g.addColorStop(0,'rgba(255,255,255,.75)'); g.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(0,-14); ctx.lineTo(1600,-150); ctx.lineTo(1600,170); ctx.lineTo(0,14); ctx.closePath(); ctx.fill(); ctx.restore(); glowC(LX,top-36,120,.8); }
+  ctx.fillStyle=INK; ctx.strokeStyle=PAPER; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-900,SEA+400); ctx.lineTo(-900,SEA); for (let i=0;i<10;i++) ctx.lineTo(-900+i*70, SEA-10-crand(i)*30); ctx.lineTo(-180,SEA); ctx.lineTo(-180,SEA+400); ctx.fill(); ctx.stroke();
+  // mặt biển
+  ctx.strokeStyle=PAPER; ctx.lineWidth=1.5; line(-900,SEA,1200,SEA);
+  for (let j=0;j<8;j++){ ctx.globalAlpha=.5-j*.05; for (let i=0;i<14;i++){ const x = -700 + i*140 + ((t*30*(j%2?1:-1)) % 140), y = SEA + 14 + j*18; line(x,y,x+40+j*4,y); } } ctx.globalAlpha=1;
+  // dưới đáy biển
+  ctx.fillStyle=PAPER; ctx.globalAlpha=.05; for (let i=0;i<5;i++){ ctx.beginPath(); ctx.moveTo(100+i*100,SEA); ctx.lineTo(160+i*100,SEA); ctx.lineTo(260+i*80,SEA+700); ctx.lineTo(180+i*80,SEA+700); ctx.closePath(); ctx.fill(); } ctx.globalAlpha=1;
+  for (let i=0;i<40;i++){ const x = -200+crand(i)*1000, y = SEA+60 + ((crand(i+3)*700 - t*20*(1+crand(i))) % 700 + 700) % 700; ctx.globalAlpha=.4; ctx.fillRect(x,y,2,2); } ctx.globalAlpha=1;
+  const HX = 300, HY = 600, beat = Math.pow(Math.max(0, Math.sin(t*2.4)), 10);
+  ctx.strokeStyle=PAPER; ctx.lineWidth=2; for (let r=0;r<3;r++){ const p = ((t*.4+r/3)%1); ctx.globalAlpha=(1-p)*.5; ctx.beginPath(); ctx.arc(HX,HY,30+p*200,0,7); ctx.stroke(); } ctx.globalAlpha=1;
+  ctx.lineWidth=2; for (let i=0;i<7;i++){ const a = i/7*Math.PI*2; ctx.beginPath(); ctx.moveTo(HX,HY); ctx.quadraticCurveTo(HX+Math.cos(a+.5)*80, HY+Math.sin(a+.5)*60, HX+Math.cos(a)*(150+crand(i)*60), HY+Math.sin(a)*(100+crand(i)*40)); ctx.globalAlpha=.4; ctx.stroke(); } ctx.globalAlpha=1;
+  dropShape(HX, HY, 22*(1+beat*.25), INK, PAPER);
+  ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(HX-7,HY-6,3,0,7); ctx.arc(HX+7,HY-6,3,0,7); ctx.fill();
+};
+// Từ trên xuống: cửa sập mở, hai cái bóng đổ dài
+CINE.hatch = (o,k,t)=>{
+  bgc(PAPER); ctx.strokeStyle=INK; ctx.fillStyle=INK;
+  ctx.lineWidth=2; ctx.globalAlpha=.5; for (let y=-600;y<600;y+=90) for (let x=-900+((y/90)%2)*60;x<900;x+=120){ ctx.strokeRect(x,y,120,90); if (crand(x*.1+y)>.8) line(x+20,y+30,x+60,y+50); } ctx.globalAlpha=1;
+  const op = smooth((k-.1)/.5), h = 240*Math.cos(op*Math.PI*.48);
+  ctx.fillRect(-130,-130,260,260);
+  ctx.fillStyle=PAPER; ctx.globalAlpha=.7; for (let i=0;i<6;i++){ const s = 1-i*.14; ctx.fillRect(-120*s, -120*s+i*6, 240*s, 6); } ctx.globalAlpha=1; ctx.fillStyle=INK;
+  ctx.save(); ctx.translate(0,-130); ctx.fillStyle=PAPER; ctx.lineWidth=4; ctx.fillRect(-130,-(240-h)*0-h*0, 260, 0); ctx.fillRect(-130, -0, 260, h); ctx.strokeRect(-130,0,260,h); ctx.lineWidth=2; for (let i=1;i<5;i++) line(-130+i*52,0,-130+i*52,h); ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(0,h-20,8,0,7); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.translate(0,-130); ctx.scale(1,-1); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=3; const up = 240*Math.sin(op*Math.PI*.48)*.35; ctx.fillRect(-130,0,260,up); ctx.strokeRect(-130,0,260,up); ctx.restore();
+  ctx.globalAlpha=.55; ctx.save(); ctx.translate(-110, 640); ctx.scale(1, 2.2); silhouette(()=>profStand(0,0,1.6,{}), INK); ctx.restore(); ctx.save(); ctx.translate(90, 640); ctx.scale(1,2.2); heroIn(0,0,2.4,1,{sil:INK}); ctx.restore(); ctx.globalAlpha=1;
+  darkAround(0, 560, 200, 1100, .7);
+};
+// Bể Mực Sáng trong Phòng Thí Nghiệm Số 0
+CINE.tank = (o,k,t)=>{
+  bgc(INK); const TX = 0, TY = -40;
+  glowC(TX,TY,560,.35);
+  ctx.fillStyle=PAPER; ctx.globalAlpha=.9; ctx.beginPath(); ctx.ellipse(TX,TY-240,170,40,0,0,7); ctx.fill(); ctx.fillRect(TX-170,TY-240,340,420); ctx.beginPath(); ctx.ellipse(TX,TY+180,170,40,0,0,7); ctx.fill(); ctx.globalAlpha=1;
+  ctx.save(); ctx.beginPath(); ctx.rect(TX-170,TY-240,340,420); ctx.clip(); ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.globalAlpha=.35;
+  for (let i=0;i<8;i++){ ctx.beginPath(); for (let s=0;s<=20;s++){ const y = TY+180 - s*22, x = TX - 140 + i*40 + Math.sin(t*1.2 + s*.4 + i)*18; s ? ctx.lineTo(x,y) : ctx.moveTo(x,y); } ctx.stroke(); }
+  ctx.globalAlpha=1; ctx.fillStyle=INK; for (let i=0;i<14;i++){ const y = TY+170 - ((t*40 + i*40) % 420); ctx.globalAlpha=.4; ctx.beginPath(); ctx.arc(TX-120+crand(i)*240, y, 3+crand(i+3)*5, 0, 7); ctx.fill(); }
+  ctx.globalAlpha=1;
+  if (o.reflect){ ctx.globalAlpha=.35; heroIn(TX+40, TY+100, 4.2, -1); ctx.globalAlpha=1; }
+  ctx.restore();
+  ctx.strokeStyle=INK; ctx.lineWidth=6; ctx.beginPath(); ctx.ellipse(TX,TY-240,172,42,0,0,7); ctx.stroke(); ctx.fillStyle=INK; ctx.fillRect(TX-190,TY+170,380,90); ctx.fillRect(TX-200,TY-300,400,50);
+  ctx.strokeStyle=PAPER; ctx.lineWidth=2; for (let i=0;i<4;i++) line(TX-180+i*120, TY+190, TX-120+i*120, TY+190);
+  for (let s=0;s<3;s++) for (let b=0;b<6;b++){ const x = -700 + b*40 + s*14, y = 260 - s*28; ctx.strokeStyle=PAPER; ctx.globalAlpha=.4; ctx.strokeRect(x, y, 34, 24); }
+  ctx.globalAlpha=1;
+  if (!o.reflect){ silhouette(()=>profStand(-240, 130, 1.5, {face:1}), INK); heroIn(100, 130, 2.6, -1, {sil:INK}); }
+  else { heroIn(-190, 230, 4, 1, {glow:46}); }
+};
+// Lò Luyện: ngọn lửa trắng không cần dầu (góc thấp) / đặc tả ngọn lửa trong ngực Bấc
+CINE.forge = (o,k,t)=>{
+  bgc(INK); ctx.strokeStyle=PAPER; ctx.fillStyle=PAPER;
+  ctx.lineWidth=2; for (let i=-10;i<=10;i++) line(i*40, -60, i*200, 600); for (let j=0;j<8;j++){ const y = -60 + Math.pow(j/8,1.7)*660; ctx.globalAlpha=.5; line(-1200,y,1200,y); } ctx.globalAlpha=1;
+  if (o.chest){
+    glowC(0,120,620,.75); heroIn(0, 330, 13, 1, {sil:INK}); const g = .5 + .5*smooth(k*1.5);
+    glowC(10, 110, 200*g, .95); flameD(10, 160, 120*g, PAPER, null);
+    ctx.strokeStyle=PAPER; ctx.lineWidth=2; for (let i=0;i<10;i++){ const a = i/10*Math.PI*2 + t*.3; ctx.globalAlpha=.5*g; line(10+Math.cos(a)*180, 80+Math.sin(a)*180, 10+Math.cos(a)*(220+g*80), 80+Math.sin(a)*(220+g*80)); } ctx.globalAlpha=1;
+    return; }
+  ctx.lineWidth=8; ctx.beginPath(); ctx.moveTo(-320,-60); ctx.lineTo(-320,-360); ctx.arc(0,-360,320,Math.PI,0); ctx.lineTo(320,-60); ctx.stroke();
+  ctx.lineWidth=2; for (let i=0;i<14;i++){ const a = Math.PI + i/13*Math.PI; line(Math.cos(a)*320, -360+Math.sin(a)*320, Math.cos(a)*370, -360+Math.sin(a)*370); }
+  glowC(0,-260,520,.55);
+  const h = 380 + Math.sin(clock*3)*20; flameD(0,-60,h,PAPER,null); ctx.strokeStyle=INK; ctx.globalAlpha=.25; ctx.lineWidth=3; for (let j=1;j<4;j++){ const q = 1-j*.22; ctx.beginPath(); ctx.moveTo(0,-60); ctx.quadraticCurveTo(-60*q,-60-h*.4*q, Math.sin(clock*4+j)*10,-60-h*q); ctx.quadraticCurveTo(60*q,-60-h*.4*q,0,-60); ctx.stroke(); } ctx.globalAlpha=1; ctx.strokeStyle=PAPER;
+  for (let i=0;i<30;i++){ const p = ((t*.3+crand(i))%1); ctx.globalAlpha=(1-p); ctx.fillRect(-200+crand(i+2)*400 + Math.sin(t+i)*20, -60 - p*600, 3, 3); } ctx.globalAlpha=1;
+  const w = smooth(k*1.1); heroIn(-60 + w*40, 330, 5, 1, {sil:INK});
+};
+
+// ================= MÁY QUAY & DỰNG PHIM =================
+function cineShot(set, a, b, dur, line, o={}){ return {cine:true, set, a, b, dur, line:line||'', o, tr:o.tr||'cut', sfx:o.sfx}; }
+function cineCard(text, dur=5, tr='fade'){ return {cine:true, set:'black', a:[0,0,1,0], b:[0,0,1,0], dur, line:text, o:{card:true}, tr}; }
+const CINE_CPS = 24, CINE_DARK = new Set(['black','window','fall','wing','stairs','dissolve','page','coast','tank','forge']);
+function cineTyped(P){ return story.full ? P.line.length : Math.max(0, Math.floor((story.t - .45)*CINE_CPS)); }
+function cineLen(P){ return Math.max(P.dur, .45 + P.line.length/CINE_CPS + (P.o.card ? 2.4 : 2.0)); }
+function nextShot(){
+  if (!story) return; story.i++; story.t = 0; story.full = false;
+  if (story.i >= story.q.length){ skipStory(); return; }
+  const P = story.q[story.i]; if (P.sfx) SFX.play(P.sfx); if (!P.cine) SFX.play('turn');
+}
+function drawCine(P){
+  const W = innerWidth, H = innerHeight, ti = story.t;
+  ctx.fillStyle = INK; ctx.fillRect(0,0,W,H);
+  const fh = Math.min(H*.78, W/1.85), fy = Math.max(8, (H - fh)/2 - Math.min(20, H*.035)), barB = H - fy - fh;
+  const k = cl01(ti / P.dur), e = P.o.ease==='lin' ? k : P.o.ease==='out' ? 1-(1-k)*(1-k) : smooth(k);
+  const c = P.a.map((v,i)=> v + (P.b[i]-v)*e);
+  const whip = P.tr==='whip' && ti < .4 ? Math.pow(1-ti/.4, 3) : 0;
+  ctx.save(); ctx.beginPath(); ctx.rect(0,fy,W,fh); ctx.clip();
+  const s = fh/540*c[2], sh = (P.o.shake||0);
+  ctx.translate(W/2 + (Math.random()-.5)*sh*s + whip*W*.9, fy+fh/2 + (Math.random()-.5)*sh*s); ctx.rotate(c[3]||0); ctx.scale(s,s); ctx.translate(-c[0],-c[1]);
+  ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle=INK; ctx.fillStyle=INK; ctx.globalAlpha=1;
+  (CINE[P.set] || CINE.black)(P.o, k, ti);
+  ctx.restore();
+  // hậu kỳ: tối viền, hạt phim, vết xước, chuyển cảnh
+  ctx.save(); ctx.beginPath(); ctx.rect(0,fy,W,fh); ctx.clip(); ctx.globalAlpha=1;
+  const vg = ctx.createRadialGradient(W/2,fy+fh/2,fh*.42,W/2,fy+fh/2,Math.hypot(W,fh)*.55); vg.addColorStop(0,'rgba(17,17,17,0)'); vg.addColorStop(1,'rgba(17,17,17,.5)'); ctx.fillStyle=vg; ctx.fillRect(0,fy,W,fh);
+  const dark = CINE_DARK.has(P.set) || (P.set==='house' && !P.o.day);
+  ctx.fillStyle = dark ? 'rgba(255,255,255,.07)' : 'rgba(17,17,17,.08)'; for (let i=0;i<110;i++) ctx.fillRect(Math.random()*W, fy+Math.random()*fh, 1.6, 1.6);
+  if (Math.random() < .05){ ctx.fillStyle = dark ? 'rgba(255,255,255,.12)' : 'rgba(17,17,17,.2)'; ctx.fillRect(Math.random()*W, fy, 1, fh); }
+  if (whip > 0){ ctx.fillStyle=`rgba(17,17,17,${whip*.6})`; for (let i=0;i<40;i++){ const y = fy+Math.random()*fh; ctx.fillRect(0, y, W, 1+Math.random()*3); } }
+  if (P.tr==='fade' && ti < .9){ ctx.fillStyle=`rgba(17,17,17,${1-ti/.9})`; ctx.fillRect(0,fy,W,fh); }
+  if (P.tr==='flash' && ti < .4){ ctx.fillStyle=`rgba(255,255,255,${1-ti/.4})`; ctx.fillRect(0,fy,W,fh); }
+  const end = cineLen(P), nx = story.q[story.i+1]; if (nx && nx.tr==='fade' && ti > end - .5){ ctx.fillStyle=`rgba(17,17,17,${cl01((ti-(end-.5))/.5)})`; ctx.fillRect(0,fy,W,fh); }
+  ctx.restore();
+  // chữ: thẻ chữ giữa khung (card) hoặc phụ đề trong dải đen dưới
+  const n = cineTyped(P), txt = P.line.slice(0, n);
+  if (P.o.card){
+    ctx.font = `400 ${Math.max(22, Math.min(34, W/30))}px ${HAND}`; ctx.fillStyle=PAPER; ctx.textAlign='center';
+    const ls = wrapText(txt, Math.min(W*.7, 760)); const lh = Math.max(30, Math.min(44, W/24)); ls.forEach((l,i)=> ctx.fillText(l, W/2, fy+fh/2 - (ls.length-1)*lh/2 + i*lh + 10));
+  } else if (txt){
+    const fs = Math.max(17, Math.min(24, W/46)); ctx.font = `400 ${fs}px ${HAND}`; ctx.textAlign='center';
+    const ls = wrapText(txt, Math.min(W*.84, 900)), lh = fs*1.3, inBar = barB >= ls.length*lh + 18;
+    let y0 = inBar ? fy + fh + 12 + fs : fy + fh - ls.length*lh - 6 + fs*.2;
+    if (!inBar){ const g = ctx.createLinearGradient(0, fy+fh-ls.length*lh-40, 0, fy+fh); g.addColorStop(0,'rgba(17,17,17,0)'); g.addColorStop(1,'rgba(17,17,17,.85)'); ctx.fillStyle=g; ctx.fillRect(0, fy+fh-ls.length*lh-40, W, ls.length*lh+40); }
+    ctx.fillStyle=PAPER; ls.forEach((l,i)=> ctx.fillText(l, W/2, y0 + i*lh));
+  }
+  ctx.font = `400 11px ${FONT}`; ctx.textAlign='right'; ctx.fillStyle=PAPER; ctx.globalAlpha=.35;
+  ctx.fillText('Enter / chạm: tiếp  ·  Esc: bỏ qua', W-12, Math.max(14, fy-6)); ctx.globalAlpha=1;
+}
+
 function drawStory(){
   if (!sceneHero) updateSceneHero(0);
   const P = story.q[story.i], W = innerWidth, H = innerHeight;
+  if (P.cine){ drawCine(P); return; }
   ctx.fillStyle=PAPER; ctx.fillRect(0,0,W,H);
   const bw = Math.min(680, W-32), sc = bw/600, sh = 240*sc, bx = (W-bw)/2;
   const textH = 120, total = sh + textH + 40, by = Math.max(16, (H-total)/2);
