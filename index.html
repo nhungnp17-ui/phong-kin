@@ -1133,12 +1133,19 @@ const ENEMY = {
   spitter:   {w:30, h:32, hp:2, mass:9,   speed:0, static:true},
   jelly:     {w:26, h:26, hp:1, mass:.3,  speed:30, fly:true},
   iron:      {w:42, h:30, hp:2, mass:6,   speed:28},
+  // quái phấn của các chương toán (phấn = CaCO₃: HCl làm tan)
+  compass:   {w:28, h:38, hp:2, mass:1.2, speed:48},
+  digit:     {w:26, h:28, hp:2, mass:1,   speed:0},
+  setsq:     {w:34, h:28, hp:1, mass:.6,  speed:110, fly:true},
 };
+const CHALK = new Set(['compass','digit','setsq']);
+const MATH_REMAP = {slime:'digit', limestone:'compass', slug:'compass', jelly:'setsq', shade:'setsq'};
+let spawnMath = false;
 function spawnEnemy(c, tx, ty){
   if (c==='9'){ boss = {home:{x:tx*T+T/2, y:ty*T+T/2}}; resetBoss(); return; }
-  const type = {1:'slime', 2:'limestone', 3:'shade', 4:'slug', 5:'spitter', 6:'jelly', 7:'iron'}[c], D = ENEMY[type];
+  let type = {1:'slime', 2:'limestone', 3:'shade', 4:'slug', 5:'spitter', 6:'jelly', 7:'iron'}[c]; if (spawnMath && MATH_REMAP[type]) type = MATH_REMAP[type]; const D = ENEMY[type];
   enemies.push({type, x:tx*T+T/2-D.w/2, y:(ty+1)*T-D.h, w:D.w, h:D.h, vx:0, vy:0, hp:D.hp, armor:D.armor||0, mass:D.mass,
-    dir:-1, t:Math.random()*3, hurtT:0, ground:false, home:{x:tx*T+T/2, y:ty*T+T/2}, fly:!!D.fly});
+    dir:-1, t:Math.random()*3, hurtT:0, ground:false, home:{x:tx*T+T/2, y:ty*T+T/2}, fly:!!D.fly, n:3, turnT:0});
 }
 // Độ khó Vua Mực (kiểu Dark Souls): máu dày, ra đòn nhanh, đánh liên hoàn, đòn nặng ở pha cuối, giữ nhịp giả
 const BOSS_HP = {armor:7, body:6, core:5, heart:4};
@@ -1239,7 +1246,7 @@ function computeAmmo(L){
   const cnt = t => types.filter(x=>x===t).length;
   ammoNeed = {
     base:  tileComps('x') + cnt('slime') + cnt('spitter')*ENEMY.spitter.hp + (boss ? BOSS_HP.body : 0),
-    acid:  tileComps('z') + cnt('limestone')*(ENEMY.limestone.armor + ENEMY.limestone.hp) + cnt('slug') + (boss ? BOSS_HP.armor : 0),
+    acid:  tileComps('z') + cnt('limestone')*(ENEMY.limestone.armor + ENEMY.limestone.hp) + cnt('slug') + cnt('compass')+cnt('digit')+cnt('setsq') + (boss ? BOSS_HP.armor : 0),
     h2so4: tileComps('K') + cnt('iron') };
   for (const k in ammoNeed) ammo[k] = ammoNeed[k] ? Math.ceil(ammoNeed[k]*AMMO_MULT) : 4;
 }
@@ -1637,32 +1644,56 @@ function spawnMathBoss(def, cell){
 }
 function mbAsk(){
   const b = mboss, q = b.def.qs[b.qi % b.def.qs.length]; b.st = 'ask'; b.t = 0; b.q = q; SFX.play('bosstalk');
-  b.orbs = b.def.orbs.map((c,i)=>({x:c[0]*T+T/2, y:c[1]*T+T/2, k:i, cd:0}));
+  b.orbs = b.def.orbs.map((c,i)=>({x:c[0]*T+T/2, x0:c[0]*T+T/2, y:c[1]*T+T/2, k:i, cd:0}));
   popups.push({x:b.x, y:b.y-90, text:'CÂU HỎI!', life:1.2, big:true});
 }
+const mbAskTime = b => [14, 12, 10][(b.phase||1)-1];
 function mbAttack(){ const b = mboss; b.st = 'attack'; b.t = 0; b.orbs = []; b.k = 1 + (b.max - b.hp)*.12; }
 function updateMathBoss(dt){
   const b = mboss; if (!b) return; const p = player, px = p.x+11, py = p.y+17;
   const ar = b.def.arena; if (!b.engaged){ if (px > ar[0]*T && px < ar[1]*T){ b.engaged = true; SFX.play('roar'); mbAttack(); popups.push({x:b.x, y:b.y-80, text:b.def.name, life:2.2, big:true}); } else return; }
   if (b.dead){ b.dieT += dt; if (b.dieT > 2.6 && !b.opened){ b.opened = true; for (const c of q_bossDoors) openCells(c); } return; }
   b.t += dt; b.hurtT -= dt;
-  b.x += (b.hx + Math.sin(clock*.7)*T*4 - b.x)*Math.min(1, dt*1.5); b.y += (b.hy + Math.sin(clock*1.3)*20 - b.y)*Math.min(1, dt*1.5);
-  const atkLen = 5.5;
-  if (b.st==='attack'){
-    const plot = b.def.kind==='plotter';
-    b.cd = (b.cd||0) - dt;
-    if (b.cd <= 0){ b.cd = (plot ? 1.5 : 1.15)/b.k; const r = Math.random();
+  // 3 giai đoạn theo máu: càng về sau càng nhanh, nhiều chiêu hơn, vừa hỏi vừa đánh
+  const ph = b.hp > b.max*2/3 ? 1 : b.hp > b.max/3 ? 2 : 3;
+  if (ph !== (b.phase||1)){ b.phase = ph; SFX.play('roar'); shakeT = Math.max(shakeT, .4); popups.push({x:b.x, y:b.y-110, text: ph===2 ? 'GIAI ĐOẠN 2 · thêm chiêu mới!' : 'GIAI ĐOẠN CUỐI · vừa hỏi vừa đánh!', life:2.4, big:true}); }
+  b.phase ||= 1;
+  if (b.dive){ const d = b.dive; d.t += dt; const fy = ar[2]*T - 50;
+    if (d.t < .6){ b.x += (d.tx - b.x)*Math.min(1, dt*3); }
+    else if (d.t < .9){ b.y += (fy - b.y)*Math.min(1, dt*14); if (!d.land && d.t > .8){ d.land = true; shakeT = .3; SFX.play('stomp'); dust(b.x, ar[2]*T, 12); b.shots.push({kind:'ring', x:b.x, y:ar[2]*T, r:10, life:2.2}); } }
+    else if (d.t < 1.4){ }
+    else { b.y += (b.hy - b.y)*Math.min(1, dt*4); if (d.t > 2.1) b.dive = null; }
+    if (d.t > .6 && d.t < 1.5 && Math.abs(b.x - px) < 52 && Math.abs(b.y - py) < 60) hurtPlayer(1, b.x); }
+  else { b.x += (b.hx + Math.sin(clock*.7)*T*4 - b.x)*Math.min(1, dt*1.5); b.y += (b.hy + Math.sin(clock*1.3)*20 - b.y)*Math.min(1, dt*1.5); }
+  const atkLen = 5.5 + (b.phase-1)*1.2;
+  const fireMove = (plot, r)=>{
+      const P = b.phase;
       if (!plot){
+        if (P >= 2 && r < .16){ const n = 10 + P*2; b.spin = (b.spin||0) + .35; for (let i=0;i<n;i++){ const a = b.spin + i/n*Math.PI*2; b.shots.push({kind:'pi', x:b.x, y:b.y, vx:Math.cos(a)*190, vy:Math.sin(a)*190, life:3.2}); } SFX.play('pulse'); return; }
+        if (P >= 2 && r < .30 && !b.dive){ b.dive = {t:0, tx:clamp(px, ar[0]*T+80, ar[1]*T-80)}; popups.push({x:px, y:py-60, text:'⇩', life:.6, big:true}); SFX.play('swoosh'); return; }
+        if (P >= 3 && r < .44){ const off = Math.floor(Math.random()*3); for (let x = ar[0]+1+off; x < ar[1]; x += 3) b.shots.push({kind:'pillar', x:x*T+T/2, t:0, life:1.5}); SFX.play('chain'); return; }
+        r = Math.random();
         if (r < .45){ const dx = px - b.x; b.shots.push({kind:'tri', x:b.x, y:b.y, vx:clamp(dx*1.1, -420, 420), vy:-420, rot:0, life:4}); SFX.play('throw'); }
         else if (r < .75){ b.shots.push({kind:'ring', x:b.x, y:ar[2]*T, r:10, life:2.2}); SFX.play('stomp'); shakeT = Math.max(shakeT, .1); }
         else { for (let i=0;i<3;i++) b.shots.push({kind:'sq', x:px + (i-1)*90 + (Math.random()-.5)*30, y:camY - 20 - i*40, vx:0, vy:120, rot:0, life:4}); SFX.play('swoosh'); }
       } else {
+        if (P >= 2 && r < .17){ const a = (Math.random()-.5)*1.1; b.shots.push({kind:'line', a, x0:px, y0:py, t:0, life:1.4}); SFX.play('pulse'); return; }
+        if (P >= 2 && r < .32){ b.shots.push({kind:'circ', cx:px, cy:py, R:180, t:0, life:1.9}); SFX.play('swoosh'); return; }
+        if (P >= 3 && r < .46){ const c0 = px + (Math.random()-.5)*T*2; for (const k of [-2,-1,0,1,2]) { const x = c0 + k*T*3.2; if (x > ar[0]*T && x < ar[1]*T) b.shots.push({kind:'asym', x, t:0, life:1.5}); } SFX.play('chain'); return; }
+        r = Math.random();
         if (r < .4){ b.shots.push({kind:'sine', t:0, life:3.4, y0:b.y+40, dir:Math.random()<.5?1:-1}); SFX.play('pulse'); }
         else if (r < .75){ const a = .5 + Math.random()*.3, dx = px - b.x; b.shots.push({kind:'par', x:b.x, y:b.y, vx:clamp(dx*1.2,-460,460), vy:-520*a-160, rot:0, life:4}); SFX.play('throw'); }
         else { const ang = Math.atan2(py - b.y, px - b.x); b.shots.push({kind:'vec', x:b.x, y:b.y, vx:Math.cos(ang)*520, vy:Math.sin(ang)*520, ang, life:2.4, tell:.45}); SFX.play('swoosh'); }
-      } }
-    if (b.t > atkLen) mbAsk();
+      } };
+  if (b.st==='attack'){
+    const plot = b.def.kind==='plotter';
+    b.cd = (b.cd||0) - dt;
+    if (b.cd <= 0){ b.cd = (plot ? 1.3 : 1.0)/b.k; fireMove(plot, Math.random());
+      if (b.phase >= 3 && Math.random() < .35) fireMove(plot, .5 + Math.random()*.5); }   // giai đoạn cuối: ra 2 chiêu cùng lúc
+    if (b.t > atkLen && !b.dive) mbAsk();
   } else if (b.st==='ask'){
+    if (b.phase >= 2){ b.cd = (b.cd||0) - dt; if (b.cd <= 0){ b.cd = b.phase >= 3 ? 1.6 : 2.4; fireMove(b.def.kind==='plotter', .5 + Math.random()*.5); } }
+    if (b.phase >= 3) for (const o of b.orbs){ o.x = o.x0 + Math.sin(clock*1.3 + o.k*2.1)*T*1.5; }   // quả cầu trôi qua lại
     for (const o of b.orbs){ o.cd = Math.max(0, o.cd - dt); if (o.cd > 0) continue;
       if (Math.hypot(o.x-px, o.y-py) < ORB_R+14){
         if (o.k === b.q.ans){ b.hp--; b.hurtT = .8; b.qi++; SFX.play('bosshit'); SFX.play('key'); shakeT = .3; popups.push({x:b.x, y:b.y-70, text:'ĐÚNG! ' + (b.q.why||''), life:2.4, big:true});
@@ -1671,7 +1702,7 @@ function updateMathBoss(dt){
           mbAttack(); return; }
         else { o.cd = 99; SFX.play('denied'); hurtPlayer(1, o.x); popups.push({x:o.x, y:o.y-26, text:'SAI: ' + (b.q.hint||''), life:2.4}); b.shots.push({kind:'ring', x:b.x, y:ar[2]*T, r:10, life:2.2}); }
       } }
-    if (b.t > 14){ b.qi++; mbAttack(); popups.push({x:b.x, y:b.y-60, text:'Hết giờ! Câu khác nhé…', life:1.6}); }
+    if (b.t > mbAskTime(b)){ b.qi++; mbAttack(); popups.push({x:b.x, y:b.y-60, text:'Hết giờ! Câu khác nhé…', life:1.6}); }
   }
   // đạn
   for (const s of b.shots){ s.life -= dt;
@@ -1679,6 +1710,10 @@ function updateMathBoss(dt){
     else if (s.kind==='sq'){ s.vy += 600*dt; s.y += s.vy*dt; s.rot += dt*3; if (solid(Math.floor(s.x/T), Math.floor((s.y+12)/T))){ s.life = 0; dust(s.x, s.y+12, 6); SFX.play('boxland'); } if (Math.abs(s.x-px) < 22 && Math.abs(s.y-py) < 26){ s.life = 0; hurtPlayer(1, s.x); } }
     else if (s.kind==='ring'){ s.r += 330*dt; if (p.ground && Math.abs(Math.abs(px - s.x) - s.r) < 16 && Math.abs((p.y+p.h) - s.y) < 10) hurtPlayer(1, s.x); }
     else if (s.kind==='sine'){ s.t += dt; const yy = s.y0 + Math.sin(px/T*1.2 - s.t*4*s.dir)*T*1.6 + (s.t-1.7)*0; if (s.t > .6 && Math.abs(py - yy) < 12) hurtPlayer(1, px); }
+    else if (s.kind==='pi'){ s.x += s.vx*dt; s.y += s.vy*dt; if (Math.hypot(s.x-px, s.y-py) < 14){ s.life = 0; hurtPlayer(1, s.x); } }
+    else if (s.kind==='pillar' || s.kind==='asym'){ s.t += dt; if (s.t > .8 && s.t < 1.25 && Math.abs(px - s.x) < 15) hurtPlayer(1, s.x); }
+    else if (s.kind==='line'){ s.t += dt; if (s.t > .9 && s.t < 1.3){ const dd = Math.abs(s.a*(px - s.x0) - (py - s.y0))/Math.hypot(s.a, 1); if (dd < 14) hurtPlayer(1, px); } }
+    else if (s.kind==='circ'){ s.t += dt; if (s.t > .6){ const R = s.R*(1 - (s.t-.6)/1.3); for (let i=0;i<14;i++){ const a = i/14*Math.PI*2 + s.t*.8, xx = s.cx + Math.cos(a)*R, yy = s.cy + Math.sin(a)*R; if (Math.hypot(xx-px, yy-py) < 11){ hurtPlayer(1, xx); break; } } } }
     else if (s.kind==='vec'){ if (s.tell > 0){ s.tell -= dt; } else { s.x += s.vx*dt; s.y += s.vy*dt; if (Math.hypot(s.x-px, s.y-py) < 18){ s.life = 0; hurtPlayer(1, s.x); } } }
   }
   b.shots = b.shots.filter(s=>s.life > 0);
@@ -1695,6 +1730,19 @@ function drawMathBoss(){
     else if (s.kind==='sine'){ const a = Math.min(1, s.t/.6, s.life); ctx.globalAlpha = s.t < .6 ? .3 : a; ctx.lineWidth = s.t < .6 ? 1.5 : 5; if (s.t < .6) ctx.setLineDash([6,6]); ctx.beginPath();
       for (let x = ar[0]*T; x <= ar[1]*T; x += 8){ const yy = s.y0 + Math.sin(x/T*1.2 - s.t*4*s.dir)*T*1.6; x===ar[0]*T ? ctx.moveTo(x,yy) : ctx.lineTo(x,yy); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=1;
       ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillText('y = 1,6·sin(1,2x − 4t)', ar[0]*T+10, s.y0-80); }
+    else if (s.kind==='pi'){ ctx.beginPath(); ctx.arc(s.x, s.y, 9, 0, Math.PI*2); ctx.fill(); ctx.fillStyle=PAPER; ctx.font=`700 10px ${FONT}`; ctx.textAlign='center'; ctx.fillText('π', s.x, s.y+3.5); ctx.fillStyle=INK; }
+    else if (s.kind==='pillar' || s.kind==='asym'){ const y0 = ar[2]*T - 9*T, y1 = ar[2]*T, on = s.t > .8 && s.t < 1.25;
+      if (!on){ ctx.globalAlpha = s.t > 1.25 ? Math.max(0, 1-(s.t-1.25)*4)*.6 : .35 + .3*Math.sin(clock*30)*(s.t>.5); ctx.lineWidth = 1.5; ctx.setLineDash([5,6]); line(s.x, y0, s.x, y1); ctx.setLineDash([]); }
+      else { ctx.globalAlpha = 1; ctx.fillStyle = INK; ctx.fillRect(s.x-9, y0, 18, y1-y0); ctx.fillStyle = PAPER; for (let y=y0+10;y<y1;y+=22) ctx.fillRect(s.x-1, y, 2, 10); ctx.fillStyle = INK; }
+      ctx.globalAlpha = 1; ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; ctx.fillText(s.kind==='asym' ? 'x = π/2 + kπ' : 'x ⋮ 3', s.x, y0 - 6);
+      if (s.kind==='asym' && !on){ ctx.lineWidth = 1.2; ctx.globalAlpha = .4; ctx.beginPath(); for (let k=0;k<=20;k++){ const u = -1.4 + k*.14, xx = s.x - 40 + (u+1.4)/2.8*36, yy = y1 - 3*T + Math.tan(u)*12; k ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke(); ctx.globalAlpha = 1; } }
+    else if (s.kind==='line'){ const on = s.t > .9 && s.t < 1.3, X0 = ar[0]*T, X1 = ar[1]*T, f = x => s.y0 + s.a*(x - s.x0);
+      ctx.globalAlpha = on ? 1 : .4; ctx.lineWidth = on ? 9 : 1.5; if (!on) ctx.setLineDash([7,6]); line(X0, f(X0), X1, f(X1)); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillText(`y = ${s.a.toFixed(1).replace('.',',')}x + b`, X0 + 12, f(X0 + 12) - 12); }
+    else if (s.kind==='circ'){ const R = s.t > .6 ? s.R*(1 - (s.t-.6)/1.3) : s.R;
+      if (s.t < .6){ ctx.globalAlpha = .4; ctx.lineWidth = 1.5; ctx.setLineDash([5,6]); ctx.beginPath(); ctx.arc(s.cx, s.cy, R, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      for (let i=0;i<14;i++){ const a = i/14*Math.PI*2 + s.t*.8; ctx.beginPath(); ctx.arc(s.cx + Math.cos(a)*R, s.cy + Math.sin(a)*R, s.t < .6 ? 3 : 7, 0, Math.PI*2); ctx.fill(); }
+      ctx.font=`700 10px ${FONT}`; ctx.textAlign='center'; ctx.fillText('x² + y² = r²', s.cx, s.cy - R - 10); }
     else if (s.kind==='vec'){ ctx.save(); ctx.translate(s.x,s.y); ctx.rotate(s.ang); if (s.tell > 0){ ctx.globalAlpha=.4; ctx.setLineDash([6,6]); ctx.lineWidth=1.5; line(0,0,900,0); ctx.setLineDash([]); ctx.globalAlpha=1; }
       ctx.lineWidth=4; line(-26,0,10,0); ctx.beginPath(); ctx.moveTo(18,0); ctx.lineTo(4,-8); ctx.lineTo(4,8); ctx.closePath(); ctx.fill(); ctx.restore(); }
   }
@@ -1729,7 +1777,7 @@ function drawMathBossHUD(){
   if (b.st==='ask'){ ctx.font=`700 15px ${FONT}`; const tw = Math.min(viewW-30, Math.max(300, ctx.measureText(b.q.q).width + 50)), bx = (viewW-tw)/2, by = 66;
     ctx.fillStyle=INK; ctx.fillRect(bx, by, tw, 40); ctx.strokeStyle=PAPER; ctx.lineWidth=1; ctx.strokeRect(bx+4, by+4, tw-8, 32);
     ctx.fillStyle=PAPER; ctx.textAlign='center'; ctx.fillText(b.q.q, viewW/2, by+26);
-    ctx.fillStyle=INK; ctx.font=`700 10px ${FONT}`; ctx.fillText(`CÂU HỎI · chạm quả cầu đúng · còn ${Math.max(0, Math.ceil(14 - b.t))}s`, viewW/2, by+54); }
+    ctx.fillStyle=INK; ctx.font=`700 10px ${FONT}`; ctx.fillText(`CÂU HỎI · chạm quả cầu đúng · còn ${Math.max(0, Math.ceil(mbAskTime(b) - b.t))}s`, viewW/2, by+54); }
   ctx.restore();
 }
 
@@ -1949,6 +1997,12 @@ function splash(x, y, kind){
   // tác dụng lên quái
   for (const e of enemies){
     if (e.dead || Math.hypot(e.x+e.w/2-x, e.y+e.h/2-y) > SPLASH_R + e.w/2) continue;
+    if (CHALK.has(e.type)){
+      if (kind==='acid'){ SFX.play('fizz'); co2(e.x+e.w/2, e.y); killEnemy(e, 'CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑ (phấn sủi bọt tan)'); }
+      else if (kind==='h2so4'){ e.hp--; e.hurtT=.3; co2(e.x+e.w/2, e.y); popups.push({x:e.x+e.w/2, y:e.y-14, text:'CaSO₄ ít tan phủ ngoài: chỉ ăn được một lớp', life:2}); if (e.hp<=0) killEnemy(e, 'phấn vỡ vụn'); }
+      else popups.push({x:e.x+e.w/2, y:e.y-10, text:'phấn (CaCO₃) không phản ứng với bazơ: cần HCl', life:1.8});
+      continue;
+    }
     if (kind==='h2so4'){
       if (e.type==='iron'){ SFX.play('fizz'); co2(e.x+e.w/2, e.y); killEnemy(e, '2Fe + 6H₂SO₄ đặc → Fe₂(SO₄)₃ + 3SO₂↑ + 6H₂O'); }
       else if (e.type==='slug'){ SFX.play('fizz'); killEnemy(e, '2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O'); }
@@ -2416,9 +2470,14 @@ function updateCombat(dt){
   for (const e of enemies){
     if (e.dead) continue;
     e.t += dt; e.hurtT -= dt; e.knock = (e.knock||0) - dt; updateEnemyAnim(e, dt);
-    const ex = e.x+e.w/2, ey = e.y+e.h/2, dx = p.x+11-ex, dist = Math.hypot(dx, p.y+17-ey);
-    if (e.type==='jelly'){ // sứa hydro: nổi nhờ lực đẩy Archimedes, trôi chậm về phía Bấc
-      e.vx += (Math.sign(dx)*ENEMY.jelly.speed*(dist<320?1:0) - e.vx)*Math.min(1,dt*1.2);
+    const ex = e.x+e.w/2, ey = e.y+e.h/2, dx = p.x+11-ex, dy = p.y+17-ey, dist = Math.hypot(dx, dy);
+    e.turnT = (e.turnT||0) - dt;
+    // chỉ đuổi khi Bấc ở gần cùng độ cao; quay đầu có độ trễ và vùng chết → hết lắc qua lắc lại khi Bấc đứng trên cao
+    const reach = Math.abs(dy) < 70, face = (want)=>{ if (Math.abs(dx) > 26 && want !== e.dir && e.turnT <= 0){ e.dir = want; e.turnT = .55; } };
+    if (CHALK.has(e.type) && dist < 320) showTip('chalk', ['X','F'], 'Quái phấn: phấn là CaCO₃ nên ném HCl là tan. Hoặc giẫm lên đầu, hoặc lướt xuyên qua.', null, 8);
+    if (e.type==='setsq'){ updateSetSquare(e, dt, dx, dy, dist); if (e.dead) continue; }
+    else if (e.type==='jelly'){ // sứa hydro: nổi nhờ lực đẩy Archimedes, trôi chậm về phía Bấc
+      e.vx += (clamp(dx*1.5, -1, 1)*ENEMY.jelly.speed*(dist<320?1:0) - e.vx)*Math.min(1,dt*1.2);
       e.vy = Math.sin(e.t*1.6)*22 + (e.y > e.home.y ? -18 : 6);
       e.x += e.vx*dt; e.y += e.vy*dt; e.dir = Math.sign(e.vx)||1;
       for (const k of litLamps){ const [lx,ly] = k.split(',').map(Number); if (Math.hypot(lx*T+T/2-ex, ly*T-ey) < LIGHT_R*.75){ explodeJelly(e); break; } }
@@ -2432,8 +2491,8 @@ function updateCombat(dt){
       e.tell = dist < 420 && e.t > 1.95;
     } else if (e.fly){ // bóng mực: bay lượn, đuổi theo, xuyên tường
       const sp = ENEMY.shade.speed * (dist < 300 ? 1 : .3);
-      e.vx += (Math.sign(dx)*sp - e.vx)*Math.min(1,dt*2); e.vy = Math.sin(e.t*2.4)*40 + Math.sign(p.y+10-ey)*sp*.5*(dist<300?1:0);
-      e.x += e.vx*dt; e.y += e.vy*dt; e.dir = Math.sign(e.vx)||1;
+      e.vx += (clamp(dx/60, -1, 1)*sp - e.vx)*Math.min(1,dt*2); e.vy = Math.sin(e.t*2.4)*40 + clamp((p.y+10-ey)/60, -1, 1)*sp*.5*(dist<300?1:0);
+      e.x += e.vx*dt; e.y += e.vy*dt; if (Math.abs(e.vx) > 15) e.dir = Math.sign(e.vx);
       // ánh sáng đèn dầu làm tan bóng mực
       for (const k of litLamps){ const [lx,ly] = k.split(',').map(Number); if (Math.hypot(lx*T+T/2-ex, ly*T-ey) < LIGHT_R){ e.burn = (e.burn||0) + dt; e.vx -= Math.sign(lx*T+T/2-ex)*300*dt; } }
       if (e.burn > .45){ killEnemy(e, 'ánh sáng xua tan bóng mực'); continue; }
@@ -2441,15 +2500,18 @@ function updateCombat(dt){
       e.vy = Math.min(FALL_MAX, e.vy + G*dt);
       if (e.knock <= 0){
         const D = ENEMY[e.type];
-        if (e.type==='slime' && e.ground && dist < 180 && e.t > 1.1){ e.t = 0; e.dir = Math.sign(dx)||1; e.vy = -430; e.vx = e.dir*150; SFX.play('squish'); }
-        else if ((e.type==='limestone'||e.type==='iron') && e.ground && dist < 210 && e.t > 3){ e.t = 0; e.dir = Math.sign(dx)||1; e.charging = 1; }
-        else if (e.type==='slug' && e.ground && dist < 220){ e.dir = Math.sign(dx)||1; }
+        if (e.type==='slime' && e.ground && dist < 180 && e.t > 1.1 && Math.abs(dy) < 110){ e.t = 0; face(Math.sign(dx)||e.dir); e.vy = -430; e.vx = e.dir*150; SFX.play('squish'); }
+        else if ((e.type==='limestone'||e.type==='iron') && e.ground && dist < 210 && e.t > 3 && reach){ e.t = 0; face(Math.sign(dx)||e.dir); e.charging = 1; }
+        else if (e.type==='slug' && e.ground && dist < 220 && reach){ face(Math.sign(dx)||e.dir); }
+        else if (e.type==='compass' && e.ground){ updateCompass(e, dt, dx, dy, reach, face); }
+        else if (e.type==='digit' && e.ground && e.vy >= 0){ updateDigit(e, dt, dx, dy, dist, face); }
         e.charging = Math.max(0, (e.charging||0) - dt);
-        if (e.ground && !(e.type==='slime' && e.vy<0)){
+        if (e.swing && e.ground) e.vx = 0;
+        if (e.ground && !(e.type==='slime' && e.vy<0) && !(e.type==='digit') && !(e.swing)){
           const spd = e.charging>0 ? 120 : D.speed;
           // quay đầu khi gặp tường hoặc mép vực
           const ahead = e.dir>0 ? e.x+e.w+2 : e.x-2, below = Math.floor((e.y+e.h+4)/T);
-          if (!solid(Math.floor(ahead/T), below) || solid(Math.floor(ahead/T), Math.floor((e.y+e.h/2)/T))) e.dir *= -1;
+          if (!solid(Math.floor(ahead/T), below) || solid(Math.floor(ahead/T), Math.floor((e.y+e.h/2)/T))){ e.dir *= -1; e.turnT = .8; }
           e.vx = e.dir*spd;
         }
       } else e.vx *= Math.pow(.2, dt);
@@ -2918,7 +2980,90 @@ function drawIron(e, hit){
   ctx.scale(d,1); ctx.fillStyle=INK; ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; ctx.globalAlpha=.7; ctx.fillText('Fe', 0, -46);
   ctx.restore();
 }
-const ENEMY_DRAW = {slime:drawSlime, limestone:drawLimestone, shade:drawShade, slug:drawSlug, spitter:drawSpitter, jelly:drawJelly, iron:drawIron};
+// ===== QUÁI PHẤN (chương toán) =====
+// Com-pa: cắm kim, quét đầu bút chì thành cung tròn bán kính r; nét phấn còn lại một lúc
+function updateCompass(e, dt, dx, dy, reach, face){
+  const S0 = .5, S1 = .55, R = 66;
+  if (!e.swing && reach && Math.abs(dx) < R+20 && e.t > 1.6){ face(Math.sign(dx)||e.dir); e.swing = {t:0, dir:e.dir}; e.t = 0; SFX.play('swoosh'); }
+  if (e.swing){ const w = e.swing; w.t += dt;
+    if (w.t > S0){ const q = Math.min(1, (w.t-S0)/S1), a = Math.PI + q*Math.PI;   // từ sau lưng, vòng qua đỉnh, xuống phía trước
+      const px0 = e.x+e.w/2, py0 = e.y+e.h-4, tx = px0 + Math.cos(a)*R*w.dir, ty = py0 + Math.sin(a)*R;
+      w.tip = {x:tx, y:ty}; w.a = a;
+      if (Math.hypot(tx-(player.x+11), ty-(player.y+17)) < 18 && player.invT<=0 && player.dashT<=0) hurtPlayer(1, tx); }
+    if (w.t > S0+S1+.35){ e.chalk = {x:e.x+e.w/2, y:e.y+e.h-4, dir:w.dir, life:1.2}; e.swing = null; } }
+  if (e.chalk){ e.chalk.life -= dt; if (e.chalk.life <= 0) e.chalk = null; }
+}
+// Số Nhảy: đếm ngược 3·2·1, mỗi lần nhảy xa hơn (cấp số cộng), tới 0 thì lao mạnh
+function updateDigit(e, dt, dx, dy, dist, face){
+  e.vx *= Math.pow(.001, dt);
+  if (e.t < .85) return;
+  const chase = dist < 340 && Math.abs(dy) < 160;
+  if (chase) face(Math.sign(dx)||e.dir); else if (Math.random() < .3) e.dir = -e.dir;
+  const ahead = e.x + e.w/2 + e.dir*T;
+  if (!solid(Math.floor(ahead/T), Math.floor((e.y+e.h+4)/T)) && e.n > 0) e.dir = -e.dir;   // không tự nhảy xuống vực khi chưa tới cú lao
+  e.t = 0;
+  if (e.n <= 0){ e.vy = -560; e.vx = e.dir*(chase ? 330 : 160); e.n = 3; SFX.play('jump'); popups.push({x:e.x+e.w/2, y:e.y-12, text:'0!', life:.6}); }
+  else { e.vy = -360; e.vx = e.dir*(chase ? 70 + (4-e.n)*55 : 60); e.n--; SFX.play('squish'); }
+  e.sq = 1;
+}
+// Ê-ke bay: lượn phía trên, canh đường chéo 45° rồi bổ nhào
+function updateSetSquare(e, dt, dx, dy, dist){
+  const sp = ENEMY.setsq.speed;
+  if (!e.dive){
+    const hx = player.x+11 - Math.sign(dx||1)*150, hy = player.y - 130;   // điểm canh: lệch ngang ≈ cao → góc 45°
+    const tx = dist < 420 ? hx : e.home.x + Math.sin(e.t*.6)*80, ty = dist < 420 ? hy : e.home.y - 40 + Math.sin(e.t*1.4)*12;
+    e.vx += (clamp((tx-e.x-e.w/2)/50, -1, 1)*sp - e.vx)*Math.min(1, dt*2.5); e.vy += (clamp((ty-e.y-e.h/2)/50, -1, 1)*sp*.8 - e.vy)*Math.min(1, dt*2.5);
+    if (Math.abs(e.vx) > 20) e.dir = Math.sign(e.vx);
+    if (dist < 330 && dy > 60 && Math.abs(Math.abs(dx) - dy) < 70 && e.t > 2){ e.dive = {t:0, dir:Math.sign(dx)||1}; e.dir = e.dive.dir; e.vx = e.vy = 0; SFX.play('pulse'); }
+  } else { const d = e.dive; d.t += dt;
+    if (d.t < .55){ e.vx = -d.dir*20; e.vy = -30; }                     // giật lùi lấy đà (báo trước)
+    else if (d.t < 1.25 && !d.hit){ e.vx = d.dir*420; e.vy = 420; if (solid(Math.floor((e.x+e.w/2)/T), Math.floor((e.y+e.h)/T))){ d.hit = true; dust(e.x+e.w/2, e.y+e.h, 6); SFX.play('boxland'); } }
+    else { e.vx *= .9; e.vy = -150; if (d.t > 2){ e.dive = null; e.t = 0; } } }
+  e.x += e.vx*dt; e.y += e.vy*dt;
+}
+function drawCompass(e, hit){
+  const bx = e.x+e.w/2, by = e.y+e.h, d = e.dir||1, w = e.swing, R = 66;
+  ctx.save(); ctx.lineCap='round';
+  if (e.chalk){ ctx.globalAlpha = Math.min(1, e.chalk.life)*.5; ctx.lineWidth = 3; ctx.setLineDash([2,5]); ctx.beginPath(); ctx.arc(e.chalk.x, e.chalk.y, R, Math.PI, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+  if (w && w.t <= .5){ ctx.globalAlpha = .45; ctx.lineWidth = 1.2; ctx.setLineDash([4,5]); ctx.beginPath(); ctx.arc(bx, by-4, R, Math.PI, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; ctx.fillText('r = ' + R, bx, by-R-10); }
+  // thân com-pa: khớp tròn trên, chân kim + chân bút chì
+  let hx = bx, hy = by - 34, legA, legB;
+  if (w && w.tip){ legA = {x:bx, y:by-2}; legB = w.tip; hx = (legA.x + legB.x)/2; hy = Math.min(legA.y, legB.y) - 28; }
+  else { const st = Math.sin((e.walk||0)*.9)*7; legA = {x:bx - 8 + st, y:by}; legB = {x:bx + 8 - st, y:by}; }
+  ctx.strokeStyle = INK; ctx.lineWidth = 3.2; line(hx, hy, legA.x, legA.y); line(hx, hy, legB.x, legB.y);
+  ctx.lineWidth = 1.5; line(legA.x, legA.y, legA.x, legA.y+2);
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(legB.x, legB.y); ctx.lineTo(legB.x - 3, legB.y - 8); ctx.lineTo(legB.x + 3, legB.y - 8); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = hit ? INK : PAPER; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(hx, hy, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke(); line(hx, hy-6, hx, hy-12);
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(hx + d*1.5, hy, 1.8, 0, Math.PI*2); ctx.fill();
+  if (w && w.tip){ ctx.globalAlpha = .9; ctx.lineWidth = 4; ctx.beginPath(); const a0 = Math.PI, a1 = w.a; for (let k=0;k<=16;k++){ const a = a0 + (a1-a0)*k/16, xx = bx + Math.cos(a)*R*w.dir, yy = by-4 + Math.sin(a)*R; k ? ctx.lineTo(xx,yy) : ctx.moveTo(xx,yy); } ctx.stroke(); ctx.globalAlpha = 1; }
+  ctx.restore();
+}
+function drawDigit(e, hit){
+  const bx = e.x+e.w/2, by = e.y+e.h; e.sq = Math.max(0, (e.sq||0) - 1/30);
+  const sy = e.ground ? 1 - (e.t > .6 ? (e.t-.6)*.5 : 0) : 1.12, sx = 2 - sy;
+  ctx.save(); ctx.translate(bx, by); ctx.scale(sx, sy);
+  ctx.fillStyle = hit ? INK : PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.fillRect(-13, -28, 26, 28); ctx.strokeRect(-13, -28, 26, 28);
+  ctx.fillStyle = hit ? PAPER : INK; ctx.font = `700 18px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(String(e.n), 0, -8);
+  ctx.lineWidth = 2; line(-7, 0, -9, 4); line(7, 0, 9, 4);
+  ctx.restore();
+  if (e.n === 0 && e.ground){ ctx.save(); ctx.font = `700 10px ${FONT}`; ctx.textAlign='center'; ctx.fillStyle = INK; ctx.fillText('!', bx, e.y - 6); ctx.restore(); }
+}
+function drawSetSquare(e, hit){
+  const bx = e.x+e.w/2, by = e.y+e.h/2, d = e.dir||1, dv = e.dive;
+  ctx.save();
+  if (dv && dv.t < .55){ ctx.globalAlpha = .5; ctx.setLineDash([5,6]); ctx.lineWidth = 1.5; line(bx, by, bx + d*320, by + 320); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.font = `700 10px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('45°', bx + d*30, by + 14); }
+  ctx.translate(bx, by); ctx.scale(d, 1); if (dv && dv.t >= .55 && dv.t < 1.25) ctx.rotate(.785);
+  ctx.fillStyle = hit ? INK : PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(-16, -13); ctx.lineTo(-16, 13); ctx.lineTo(16, 13); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-10, -2); ctx.lineTo(-10, 8); ctx.lineTo(1, 8); ctx.closePath(); ctx.stroke();
+  for (let i=0;i<5;i++) line(-16 + i*6, 13, -16 + i*6, 10);
+  ctx.strokeRect(-16, 9, 4, 4);
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(-11, 3, 1.8, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+const ENEMY_DRAW = {compass:drawCompass, digit:drawDigit, setsq:drawSetSquare, slime:drawSlime, limestone:drawLimestone, shade:drawShade, slug:drawSlug, spitter:drawSpitter, jelly:drawJelly, iron:drawIron};
 function drawEnemy(e){
   const hit = e.hurtT>0 && Math.floor(clock*30)%2===0;
   ctx.save(); if (e.hurtT>0) ctx.translate((Math.random()-.5)*3, 0);
@@ -2954,6 +3099,9 @@ function updateEnemyAnim(e, dt){
 }
 // Sổ tay quái vật (mở từ menu dev)
 const BESTIARY = [
+  {type:'compass',   name:'Com-pa Phấn',    sci:'quét cung tròn bán kính r',     weak:'HCl làm tan phấn · giẫm · lướt'},
+  {type:'digit',     name:'Số Nhảy',        sci:'đếm ngược 3·2·1 rồi lao tới',   weak:'HCl · giẫm khi nó vừa đáp'},
+  {type:'setsq',     name:'Ê-ke Bay',       sci:'bổ nhào theo góc 45°',          weak:'HCl · lướt khi nó bay lên lại'},
   {type:'slime',     name:'Nhầy Axit',      sci:'HCl loãng · pH ≈ 2',             weak:'NaOH trung hoà · giẫm · lướt'},
   {type:'slug',      name:'Sên Kiềm',       sci:'NaOH · pH ≈ 12',                weak:'HCl trung hoà · giẫm · lướt'},
   {type:'limestone', name:'Giáp Đá Vôi',    sci:'vỏ CaCO₃ ×2',                   weak:'HCl ăn mòn vỏ → lướt/giẫm'},
@@ -3342,7 +3490,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
-  ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
+  spawnMath = !!L.math; ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
   parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
