@@ -3204,7 +3204,7 @@ function layout(){
 }
 function resize(){
   // giới hạn độ phân giải vẽ: màn 2x vẽ ở 1.5x (đồ hoạ nhẹ: 1x) — mắt khó thấy khác biệt, đỡ ~45% số điểm ảnh
-  DPR = Math.min(PERF.low ? 1 : 1.5, devicePixelRatio||1);
+  DPR = Math.min(PERF.low ? 1 : (innerWidth*innerHeight > 1600*900 ? 1.25 : 1.5), devicePixelRatio||1);   // màn lớn: bớt điểm ảnh
   cv.width = innerWidth*DPR; cv.height = innerHeight*DPR;
   layout();
   if (player) updateCam(0, true);
@@ -4151,7 +4151,29 @@ function drawForeground(){
   }
   ctx.restore();
 }
-let vigCv = null;
+let vigCv = null, lampConeCv = null;
+function lampCone(){
+  if (lampConeCv) return lampConeCv;
+  const k = 2, c = lampConeCv = document.createElement('canvas'); c.width = 164*k; c.height = 242*k;
+  const main = ctx; ctx = c.getContext('2d'); ctx.scale(k,k); ctx.translate(82,-90); ctx.strokeStyle = INK; ctx.lineCap = 'round';
+  try {
+    ctx.save(); ctx.beginPath(); ctx.moveTo(-14,92); ctx.lineTo(14,92); ctx.lineTo(80,330); ctx.lineTo(-80,330); ctx.closePath(); ctx.clip();
+    ctx.globalAlpha=.04; ctx.lineWidth=1; for (let i=-12;i<12;i++) line(i*12,92,i*12+60,330); ctx.restore();
+    ctx.setLineDash([3,6]); ctx.globalAlpha=.3; ctx.lineWidth=2.5; line(-14,92,-70,330); line(14,92,70,330); line(0,94,0,330);
+  } finally { ctx = main; }
+  return c;
+}
+// Viền sáng tách nhân vật khỏi nền tối: một quầng trắng mềm vẽ sẵn, dán phía sau nhân vật.
+// (Trước đây dùng shadowBlur: mỗi nét vẽ của nhân vật bị làm mờ riêng → hàng chục lần blur mỗi khung → lag)
+let haloCv = null;
+function glowDraw(fn, wx, wy, ww, wh, col, blur){
+  if (!PERF.low){
+    if (!haloCv){ haloCv = document.createElement('canvas'); haloCv.width = haloCv.height = 128; const g = haloCv.getContext('2d'), gr = g.createRadialGradient(64,64,10,64,64,64);
+      gr.addColorStop(0,'rgba(255,255,255,.55)'); gr.addColorStop(.5,'rgba(255,255,255,.25)'); gr.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0,0,128,128); }
+    const r = blur*5.5; ctx.drawImage(haloCv, wx - r*.85, wy - r, r*1.7, r*2);
+  }
+  fn();
+}
 // Vùng sáng dưới mỗi đèn: tường sáng dần về tâm (light falloff)
 function drawLanternLight(){
   for (const k of litLamps){
@@ -4162,14 +4184,15 @@ function drawLanternLight(){
     ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx, cy, LIGHT_R, 0, Math.PI*2); ctx.fill();
   }
 }
+let poolCv = null;
 function drawLightPools(L){
   drawLanternLight();
   for (const d of L.decor){
     if (d[0]!=='lamp' || lampOff[d[1]] > 0) continue;
     const cx = d[1]*T+T/2; if (Math.abs(cx-(camX+viewW/2)) > viewW/2+260) continue;
-    const g = ctx.createRadialGradient(cx, T+150, 10, cx, T+170, 230);
-    g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.55, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = g; ctx.fillRect(cx-240, T, 480, 420);
+    if (!poolCv){ poolCv = document.createElement('canvas'); poolCv.width = 240; poolCv.height = 210; const p = poolCv.getContext('2d'), g = p.createRadialGradient(120, 75, 5, 120, 85, 115);
+      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.55, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,255,255,0)'); p.fillStyle = g; p.fillRect(0,0,240,210); }
+    ctx.drawImage(poolCv, cx-240, T, 480, 420);
   }
 }
 // Bóng tối nhẹ ở góc giao giữa không gian trống và khối đặc (ambient occlusion)
@@ -4187,6 +4210,19 @@ function drawAO(x0,x1,y0,y1){
       if (!open(x+1,y)) ctx.fillRect(X+T-d, Y, d, T);
     }
   }
+  ctx.restore();
+}
+// AO nướng sẵn vào bộ đệm tường (chỉ tính tường '#'), gộp các lớp thành 1 dải gradient thay vì hàng nghìn fillRect mỗi khung
+function bakeAO(x0,x1){
+  const open = (x,y) => x<0 || y<0 || x>=GW || y>=GH ? false : grid[y][x] !== '#';
+  ctx.save(); ctx.fillStyle = INK;
+  for (let y=0;y<GH;y++) for (let x=x0;x<=x1;x++){
+    if (!open(x,y)) continue; const X=x*T, Y=y*T;
+    for (let k=0;k<3;k++){ const d = 4+k*5; ctx.globalAlpha = .035;
+      if (!open(x,y+1)) ctx.fillRect(X, Y+T-d, T, d);
+      if (!open(x,y-1)) ctx.fillRect(X, Y, T, d);
+      if (!open(x-1,y)) ctx.fillRect(X, Y, d, T);
+      if (!open(x+1,y)) ctx.fillRect(X+T-d, Y, d, T); } }
   ctx.restore();
 }
 // Bóng tiếp xúc: elip mờ trên mặt sàn ngay dưới vật, nhỏ và nhạt dần khi vật ở cao
@@ -4276,12 +4312,7 @@ function drawDecor(d){
     ctx.beginPath(); ctx.moveTo(-14,90); ctx.lineTo(-6,70); ctx.lineTo(6,70); ctx.lineTo(14,90); ctx.closePath(); ctx.fill();
     const off = lampOff[x] > 0;
     if (!off){
-      ctx.save(); ctx.beginPath(); ctx.moveTo(-14,92); ctx.lineTo(14,92); ctx.lineTo(80,330); ctx.lineTo(-80,330); ctx.closePath(); ctx.clip();
-      ctx.globalAlpha=DA*(.04); ctx.lineWidth=1; for (let i=-12;i<12;i++) line(i*12,92,i*12+60,330);
-      ctx.restore();
-      ctx.setLineDash([3,6]); ctx.globalAlpha=DA*(.3);
-      line(-14,92,-70,330); line(14,92,70,330); line(0,94,0,330);
-      ctx.setLineDash([]); ctx.globalAlpha=DA*(1);
+      ctx.drawImage(lampCone(), -82, 90, 164, 242);   // nón sáng vẽ sẵn một lần (trước: clip + 27 nét + nét đứt mỗi khung)
       ctx.fillStyle=PAPER; ctx.beginPath(); ctx.arc(0,92,3.5,0,Math.PI*2); ctx.fill(); ctx.fillStyle=INK;
     }
     ctx.restore();
@@ -4363,11 +4394,12 @@ function cachedWalls(x0, x1){
     if (!c){
       c = document.createElement('canvas'); c.width = Math.ceil(TC_W*T*k); c.height = Math.ceil(GH*T*k);
       const main = ctx; ctx = c.getContext('2d'); ctx.scale(k,k); ctx.translate(-ci*TC_W*T, 0);
-      try { for (let y=0;y<GH;y++) for (let x=ci*TC_W; x<Math.min(GW,(ci+1)*TC_W); x++) if (grid[y][x]==='#') drawTile('#', x, y); } finally { ctx = main; }
+      try { bakeAO(ci*TC_W, Math.min(GW,(ci+1)*TC_W)-1); for (let y=0;y<GH;y++) for (let x=ci*TC_W; x<Math.min(GW,(ci+1)*TC_W); x++) if (grid[y][x]==='#') drawTile('#', x, y); } finally { ctx = main; }
       tileCache.set(ci, c);
       if (tileCache.size > 8){ const first = tileCache.keys().next().value; if (first !== ci) tileCache.delete(first); }
     }
-    ctx.drawImage(c, ci*TC_W*T, 0, TC_W*T, GH*T);
+    { const y0 = Math.max(0, Math.floor(camY) - T), y1 = Math.min(GH*T, Math.ceil(camY + viewH) + T), k2 = c.height/(GH*T);
+      if (y1 > y0) ctx.drawImage(c, 0, Math.floor(y0*k2), c.width, Math.ceil((y1-y0)*k2), ci*TC_W*T, y0, TC_W*T, y1-y0); }
   }
 }
 function drawTile(c,x,y){
@@ -4765,9 +4797,9 @@ function wrapText(text, maxW){
   for (const w of words){ const t = cur ? cur+' '+w : w; if (ctx.measureText(t).width > maxW && cur){ out.push(cur); cur = w; } else cur = t; }
   if (cur) out.push(cur); return out;
 }
-function drawCrow(){
+function drawCrow(o={}){
   const c = crow; if (!c) return;
-  drawCrowBody(c.x, c.y, c.face, c.flap, c.perch);
+  if (!o.noBody) drawCrowBody(c.x, c.y, c.face, c.flap, c.perch);
   if (c.say){
     ctx.font = `400 15px ${HAND}`;
     const lines = wrapText(c.say, 190), w = Math.min(206, Math.max(...lines.map(l=>ctx.measureText(l).width))+16), h = lines.length*16+10;
@@ -6943,7 +6975,6 @@ function drawGame(){
   ctx.restore();
   const x0=Math.max(0,Math.floor(camX/T)), x1=Math.min(GW-1,Math.ceil((camX+viewW)/T));
   const y0=Math.max(0,Math.floor(camY/T)), y1=Math.min(GH-1,Math.ceil((camY+viewH)/T));
-  drawAO(x0,x1,y0,y1);
   cachedWalls(x0, x1);
   for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c=grid[y][x]; if (c!=='.' && c!=='#') drawTile(c,x,y); }
   if (pulley) drawPulley();
@@ -6975,13 +7006,13 @@ function drawGame(){
   drawItemGetBack();
   if (state!=='dying'){
     // viền sáng (rim light) tách nhân vật khỏi nền tối
-    ctx.save(); if (!PERF.low){ ctx.shadowColor='rgba(255,255,255,.95)'; ctx.shadowBlur=7*S*DPR; } if (player.invT>0 && Math.floor(clock*20)%2) ctx.globalAlpha=.35;
+    ctx.save(); if (player.invT>0 && Math.floor(clock*20)%2) ctx.globalAlpha=.35;
     if (player.rope){ const hx = player.x+11, hy = player.y+6; ctx.translate(hx, hy); ctx.rotate(-player.ropeTh); ctx.translate(-hx, -hy); }
-    drawHero(player); ctx.restore();
+    glowDraw(()=>drawHero(player), player.x+11, player.y+17, 300, 240, 'rgba(255,255,255,.95)', 7); ctx.restore();
     drawItemGetFront();
     drawSwapFx();
   }
-  ctx.save(); if (!PERF.low){ ctx.shadowColor='rgba(255,255,255,.9)'; ctx.shadowBlur=5*S*DPR; } drawCrow(); ctx.restore();
+  if (crow){ ctx.save(); glowDraw(()=>drawCrowBody(crow.x, crow.y, crow.face, crow.flap, crow.perch), crow.x, crow.y, 90, 80, 'rgba(255,255,255,.9)', 5); drawCrow({noBody:true}); ctx.restore(); }
   if (LEVELS[lvl].combat) drawCombatFX();
   if (LEVELS[lvl].combat) drawDarkness();
   drawTnt();
@@ -7053,7 +7084,7 @@ function pickMusic(){
   return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', 1];
 }
 function loop(now){ const dt=Math.min(1/30,(now-last)/1000); last=now;
-  PERF.ema += ((dt*1000) - PERF.ema)*.05; if (state==='play'){ if (PERF.ema > 24){ PERF.slowT += dt; if (PERF.slowT > 2 && !PERF.auto){ PERF.auto = true; resize(); } } else PERF.slowT = Math.max(0, PERF.slowT - dt*.5); } update(dt); draw(); const [mn, mi] = pickMusic(); SFX.music(mn, mi); requestAnimationFrame(loop); }
+  PERF.ema += ((dt*1000) - PERF.ema)*.05; if (state==='play'){ if (PERF.ema > 21){ PERF.slowT += dt; if (PERF.slowT > 2 && !PERF.auto){ PERF.auto = true; resize(); } } else PERF.slowT = Math.max(0, PERF.slowT - dt*.5); } update(dt); draw(); const [mn, mi] = pickMusic(); SFX.music(mn, mi); requestAnimationFrame(loop); }
 requestAnimationFrame(loop);
 </script>
 </body>
