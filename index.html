@@ -3698,16 +3698,24 @@ function updatePlayer(dt){
   // Lướt
   const slide = p.crouch && p.ground, needInk = !p.canDash || slide;   // cúi + lướt = trượt: luôn tốn mực
   if (dashBuf>0 && p.dashT<=0 && p.dashCd<=0 && needInk && mana < MANA_DASH){ dashBuf=0; manaFlash=.5; SFX.play('denied'); if (slide) popups.push({x:p.x+11, y:p.y-16, text:'không đủ mực để trượt', life:1.2}); }
-  if (dashBuf>0 && (!needInk || mana>=MANA_DASH) && p.dashT<=0 && p.dashCd<=0){
-    p.inkDash = needInk; SFX.play(p.inkDash ? 'inkdash' : 'dash');
+  if (dashBuf>0 && (!needInk || mana>=MANA_DASH) && p.dashT<=0 && p.dashCd<=0 && !(p.preT>0)){
+    dashBuf = 0; p.preT = DASH_PRE; p.preDir = p.wall ? -p.wall : (dir || p.face); p.face = p.preDir; p.sx = 1.18; p.sy = .8;
+    if (p.ground) for (let i=0;i<4;i++) parts.push({x:p.x+11+p.preDir*(4+i*3), y:p.y+p.h, vx:p.preDir*(30+Math.random()*60), vy:-20-Math.random()*50, a:0, va:0, l:1.5, life:.25});
+  }
+  if (p.preT>0){ p.preT -= dt; p.vx *= .55; if (!p.ground) p.vy = Math.min(p.vy, 40);
+    if (p.preT <= 0) dashBuf = 1; }
+  if (dashBuf>0 && p.preT<=0 && (!needInk || mana>=MANA_DASH) && p.dashT<=0 && p.dashCd<=0){
+    p.preT = 0; p.inkDash = needInk; SFX.play(p.inkDash ? 'inkdash' : 'dash');
     if (p.inkDash){ mana -= MANA_DASH; for (let i=0;i<10;i++) parts.push({x:p.x+11,y:p.y+17,vx:(Math.random()-.5)*260,vy:(Math.random()-.5)*260,a:Math.random()*6,va:0,l:3,life:.5}); }
     dashBuf=0; p.canDash=false; p.dashT=DASH_TIME; p.dashCd=DASH_CD; p.dashHit = new Set();
-    p.dashDir = p.wall ? -p.wall : (dir || p.face);
+    p.dashDir = p.preDir || (p.wall ? -p.wall : (dir || p.face)); p.preDir = 0; p.flashT = .09; p.recT = 0;
     p.face = p.dashDir; p.vy = 0; p.wall = 0; p.lock = 0;
     p.sx = 1.35; p.sy = .75;
     dust(p.x+11, p.y+20, 6, -p.dashDir);
     p.trail = []; dashFx.push({kind:'burst', x:p.x+11, y:p.y+17, dir:p.dashDir, ink:p.inkDash, t:0});
     for (let i=0;i<(p.inkDash?14:8);i++) parts.push({x:p.x+11-p.dashDir*6, y:p.y+14+(Math.random()-.5)*10, vx:-p.dashDir*(120+Math.random()*260), vy:-60-Math.random()*160, a:0, va:0, l:p.inkDash?2.5:1.5, life:.45+Math.random()*.25});
+    if (p.ground) for (let i=0;i<7;i++) parts.push({x:p.x+11-p.dashDir*4, y:p.y+p.h-1, vx:-p.dashDir*(160+Math.random()*220), vy:-80-Math.random()*200, a:Math.random()*6, va:(Math.random()-.5)*20, l:2+Math.random()*2.5, life:.35+Math.random()*.2});
+    for (const q of p.scarf) q.px = q.x + p.dashDir*6;   // khăn bị giật ngược về sau
     if (p.inkDash) shakeT = Math.max(shakeT, .06);
   }
 
@@ -3738,11 +3746,14 @@ function updatePlayer(dt){
   // Ngang
   if (p.dashT>0){
     p.dashT-=dt; p.vx=p.dashDir*DASH_SPEED; p.vy=0;
-    if (Math.floor(p.dashT*60) % 2 === 0) ghosts.push({x:p.x,y:p.y,faceS:p.faceS,sx:p.sx,sy:p.sy,life:.18,ink:p.inkDash});
+    if (Math.floor(p.dashT*60) % 2 === 0) ghosts.push({x:p.x,y:p.y,faceS:p.faceS,sx:p.sx,sy:p.sy,life:GHOST_LIFE,ink:p.inkDash,pose:{...p.pose},pk:{...p.pk}});
     (p.trail ||= []).push({x:p.x+11 - p.dashDir*4, y:p.y+15 + Math.sin(clock*60)*.8, t:clock, ink:p.inkDash});
     if (Math.random() < dt*40) parts.push({x:p.x+11-p.dashDir*14, y:p.y+18+(Math.random()-.5)*8, vx:-p.dashDir*40, vy:40+Math.random()*80, a:1.57, va:0, l:p.inkDash?2.2:1.2, life:.4});
-    if (p.dashT<=0){ p.vx = p.dashDir*SPEED; dashFx.push({kind:'end', x:p.x+11+p.dashDir*10, y:p.y+p.h, dir:p.dashDir, ground:p.ground, ink:p.inkDash, t:0}); if (p.ground){ dust(p.x+11+p.dashDir*8, p.y+p.h, 6, p.dashDir); p.sx = .82; p.sy = 1.16; } }
+    if (p.dashT<=0){ p.vx = p.dashDir*SPEED; dashFx.push({kind:'end', x:p.x+11+p.dashDir*10, y:p.y+p.h, dir:p.dashDir, ground:p.ground, ink:p.inkDash, t:0}); dashFx.push({kind:'puff', x:p.x+11, y:p.y+p.h-(p.ground?6:17), dir:p.dashDir, ink:p.inkDash, t:0}); p.recT = REC_TIME; if (p.ground){ dust(p.x+11+p.dashDir*8, p.y+p.h, 6, p.dashDir); p.sx = 1.12; p.sy = .86; p.vx = p.dashDir*SPEED*1.15; } }
+  } else if (p.recT>0 && !dir && (p.ground || p.coy>0)){ p.recT -= dt; p.vx *= Math.pow(.0009, dt);
+    if (Math.random() < dt*45) parts.push({x:p.x+11+p.dashDir*8, y:p.y+p.h-1, vx:p.dashDir*(20+Math.random()*60), vy:-30-Math.random()*60, a:0, va:0, l:1.2, life:.3});
   } else if (p.lock<=0){
+    p.recT = 0;
     const a = (p.ground?ACC_GROUND:ACC_AIR)*dt;
     // vừa buông dây: giữ quán tính (không tự hãm), chỉ bấm ngược chiều mới giảm tốc
     const keepFling = p.flingT > 0 && !p.ground && Math.abs(p.vx) > SPEED && (dir===0 || Math.sign(dir)===Math.sign(p.vx));
@@ -5257,6 +5268,8 @@ function heroInit(p){
 function heroState(p){
   if (p===player && itemGet && itemGet.caught && itemGet.t < IG.hold+.15) return 'hold';
   if (p.dashT>0) return 'dash';
+  if (p.preT>0) return 'predash';
+  if (p.recT>0 && p.ground) return 'skid';
   if (p.wall) return 'wall';
   if (p===player && p.throwT > 0) return 'throw';
   if (p===player && p.charging) return 'aim';
@@ -5337,6 +5350,8 @@ function heroTarget(p, st){
     case 'apex':  q.t1=.45; q.s1=-.8; q.t2=-.15; q.s2=-.4; q.a1=1.9; q.a1b=.4; q.a2=-1.9; q.hem=1; q.tipY=-1; break;
     case 'fall':  q.lean=-.05; q.t1=.25; q.s1=-.2; q.t2=-.2; q.s2=.1; q.a1=2.2; q.a1b=.5; q.a2=-2.3; q.hem=3.5; q.tipX=-2; q.tipY=-5; break;
     case 'flip':  q.t1=1.3; q.s1=-2.2; q.t2=1.0; q.s2=-2; q.a1=1.2; q.a1b=1.4; q.a2=-1.2; q.hem=-2; break;
+    case 'predash': q.lean=-.38; q.bob=6; q.t1=.9; q.s1=-1.5; q.t2=-.5; q.s2=-1.2; q.a1=.9; q.a1b=.6; q.a2=1.2; q.hem=3; q.tipX=-3; q.tipY=-2; q.lookX=1; break;
+    case 'skid':  q.lean=-.32; q.bob=5; q.t1=-1.1; q.s1=.25; q.t2=.55; q.s2=-1.3; q.a1=1.9; q.a1b=.3; q.a2=-1.1; q.hem=-4; q.tipX=5; q.tipY=1; q.lookX=.6; break;
     case 'dash':  q.lean=.6; q.bob=2; q.t1=-1.15; q.s1=-.7; q.t2=-.75; q.s2=-.9; q.a1=-1.95; q.a1b=0; q.a2=-1.6; q.hem=-2; q.tipX=6; q.tipY=2; break;
     case 'wall': {            // bám tường: lưng áp tường, tay níu, chân co đạp
       const j = Math.sin(clock*40)*.3;
@@ -5349,7 +5364,9 @@ function heroTarget(p, st){
 function heroAnim(p, dt){
   const st = heroState(p); p.st = st;
   // co giãn đàn hồi, quay mặt mượt
-  p.sx += (1-p.sx)*Math.min(1,dt*11); p.sy += (1-p.sy)*Math.min(1,dt*11);
+  { const tx = st==='dash' ? 1.32 - (1 - Math.max(0,p.dashT)/DASH_TIME)*.25 : st==='predash' ? 1.18 : 1, ty = st==='dash' ? .78 + (1 - Math.max(0,p.dashT)/DASH_TIME)*.15 : st==='predash' ? .8 : 1, kk = st==='dash'||st==='predash' ? 26 : 11;
+    p.sx += (tx-p.sx)*Math.min(1,dt*kk); p.sy += (ty-p.sy)*Math.min(1,dt*kk); }
+  p.flashT = (p.flashT||0) - dt;
   const faceT = p.wall ? -p.wall : (p.dashT>0 ? p.dashDir : p.face);
   p.faceS += (faceT - p.faceS)*Math.min(1, dt*24);
   if (st==='run' || st==='push') p.runT += dt*(st==='push' ? 7 : 6+Math.abs(p.vx)/SPEED*7);
@@ -5358,7 +5375,7 @@ function heroAnim(p, dt){
   if (st==='idle'){ const b=Math.sin(clock*2.6); p.sy *= 1 + b*.0025; }
   p.blinkT -= dt; if (p.blinkT<0){ p.blink=.14; p.blinkT=2.2+Math.random()*3; } p.blink=Math.max(0,p.blink-dt);
   p.actT -= dt; p.flipT -= dt; p.spawnT -= dt;
-  const tg = heroTarget(p, st), k = Math.min(1, dt*(st==='run'?28:16));
+  const tg = heroTarget(p, st), k = Math.min(1, dt*(st==='run'||st==='dash'||st==='predash' ? 34 : 16));
   for (const key in tg) p.pose[key] += (tg[key]-p.pose[key])*k;
   // ba lô: lò xo tắt dần, bị đẩy bởi thay đổi vận tốc của thân (quán tính)
   const pk = p.pk, dvx = p.vx - p.pvx, dvy = p.vy - p.pvy, dbob = p.pose.bob - p.pbob;
@@ -5377,12 +5394,12 @@ function heroAnim(p, dt){
   // khăn quàng: chuỗi điểm có quán tính, gió ngược hướng chạy, rủ xuống khi đứng
   const nk = heroNeck(p), sc = p.scarf, L = 4.6;
   sc[0].x = nk.x; sc[0].y = nk.y;
-  const wind = -p.faceS*(st==='idle'?.15:.45) + Math.sin(clock*3)*.08;
+  const wind = -p.faceS*(st==='idle'?.15 : st==='dash' ? 2.2 : st==='skid' ? -.6 : .45) + Math.sin(clock*3)*.08;
   for (let i=1;i<sc.length;i++){
     const q = sc[i], vx=(q.x-q.px)*.86, vy=(q.y-q.py)*.86;
     q.px=q.x; q.py=q.y;
     q.x += vx + wind + Math.sin(clock*5+i*.8)*.12;
-    q.y += vy + (st==='wall' ? -.05 : .32);
+    q.y += vy + (st==='wall' ? -.05 : st==='dash' ? Math.sin(clock*38 + i*1.1)*.9*i/sc.length : .32);
     const pr = sc[i-1], dx=q.x-pr.x, dy=q.y-pr.y, d=Math.hypot(dx,dy)||1;
     q.x = pr.x + dx/d*L; q.y = pr.y + dy/d*L;
   }
@@ -5483,7 +5500,10 @@ function heroPack(p, ghost, by){
 function drawHero(p, opts={}){
   if (!p || !p.pose) return;   // nhân vật minh hoạ chưa kịp tạo (vẽ trước khi cập nhật) thì bỏ qua khung này
   const ghost = !!opts.ghost, po = p.pose, cx = p.x+11, by = p.y+p.h;
+  if (!ghost && p.flashT > 0){ const f = p.flashT/.09; ctx.save(); ctx.fillStyle = INK; ctx.globalAlpha = f > .5 ? 1 : f*2; ctx.beginPath(); ctx.ellipse(cx, by-17, 24 + (1-f)*14, 28 + (1-f)*10, 0, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.globalAlpha = f*.8; ctx.beginPath(); ctx.ellipse(cx, by-17, 34 + (1-f)*30, 38 + (1-f)*24, 0, 0, Math.PI*2); ctx.stroke(); ctx.restore(); }
   ctx.save();
+  if (!ghost && p.flashT > .045) ctx.filter = 'invert(1)';
   if (!ghost && p.spawnT>0) ctx.globalAlpha *= clamp(1-p.spawnT/.45, 0, 1);
   ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineCap='round'; ctx.lineJoin='round';
   // khăn quàng (toạ độ thế giới)
@@ -5502,7 +5522,7 @@ function drawHero(p, opts={}){
   ctx.scale(p.faceS*p.sx, p.sy);
   if (p.st==='flip'){ const k = 1-Math.max(0,p.flipT)/.35; ctx.translate(0,-17); ctx.rotate(k*Math.PI*2); ctx.translate(0,17); }
   ctx.lineWidth = ghost ? (opts.ink ? 3.2 : 1.3) : 3;
-  if (!ghost){
+  if (!ghost || opts.full){
     // chân sau + tay sau (vẽ trước áo choàng)
     const hipY = -11 + po.bob*.4;
     let k = limb(-1.5, hipY, po.t2, 6); limb(k[0], k[1], po.t2+po.s2, 6.5);
@@ -5529,10 +5549,10 @@ function drawHero(p, opts={}){
     ctx.beginPath(); ctx.arc(0,0,2.5,0,Math.PI*2); ctx.stroke(); line(0,2.5,0,8); line(0,6,2,6); ctx.restore();
   }
 }
-const TRAIL_LIFE = .3;
+const TRAIL_LIFE = .3, DASH_PRE = .05, REC_TIME = .16, GHOST_LIFE = .26;
 function drawDashFx(){
   const p = player, now = clock;
-  dashFx = dashFx.filter(f => now - (f.t0 ??= now) < (f.kind==='end' ? 1.1 : .45));
+  dashFx = dashFx.filter(f => now - (f.t0 ??= now) < (f.kind==='end' ? 1.1 : f.kind==='puff' ? .5 : .45));
   ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
   // nét cọ mực: dày ở đầu, thon dần về đuôi, có vệt "cọ khô" bằng màu giấy
   const tr = (p && p.trail || []).filter(q => now - q.t < TRAIL_LIFE); if (p) p.trail = tr;
@@ -5556,6 +5576,9 @@ function drawDashFx(){
     else if (f.kind==='vec'){ const q = k/.45; ctx.globalAlpha = 1-q; ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = 3; const ex = f.x + f.dir*30, ey = f.y - 40 - q*20;
       line(f.x, f.y, ex, ey); const a = Math.atan2(ey-f.y, ex-f.x); ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex - Math.cos(a-.4)*10, ey - Math.sin(a-.4)*10); ctx.lineTo(ex - Math.cos(a+.4)*10, ey - Math.sin(a+.4)*10); ctx.fill();
       ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; ctx.fillText(f.dir ? 'v⃗ = (±1; 1)' : 'v⃗ = (0; 1)', ex, ey - 10); }
+    else if (f.kind==='puff'){ const q = Math.min(1, k/.45); if (q < 1){ ctx.globalAlpha = (1-q)*(f.ink ? .55 : .35); ctx.strokeStyle = INK; ctx.fillStyle = PAPER; ctx.lineWidth = 1.5;
+      for (let i=0;i<5;i++){ const ang = -Math.PI/2 + (i-2)*.55 + (f.dir<0 ? 0 : 0), r = 4 + q*(9 + (i%2)*4), d = 6 + q*(14 + i*3);
+        const xx = f.x - f.dir*(4 + q*16) + Math.cos(ang)*d*.8, yy = f.y + Math.sin(ang)*d*.6 - q*8; ctx.beginPath(); ctx.arc(xx, yy, r, 0, Math.PI*2); ctx.fill(); ctx.stroke(); } } }
     else if (f.kind==='end'){ const q = k/1.1;
       if (f.ground){ ctx.globalAlpha = (1-q)*(f.ink ? .7 : .3); ctx.fillStyle = INK; ctx.beginPath(); ctx.ellipse(f.x - f.dir*20, f.y - 1, 22*(1 + q*.3), 3, 0, 0, Math.PI*2); ctx.fill();
         if (f.ink) for (let i=0;i<5;i++){ ctx.beginPath(); ctx.arc(f.x - f.dir*(8 + i*9), f.y - 2 - (i%2)*2, 2.2 - i*.25, 0, Math.PI*2); ctx.fill(); } }
@@ -6908,7 +6931,9 @@ function drawGame(){
   for (const b of boxes) drawBox(b);
   drawPrompts();
   if (LEVELS[lvl].combat){ ENEMY_LOOK = {x:player.x+11, y:player.y+17}; drawDecals(); drawSpawns(); const vis = e => e.x+e.w > camX-80 && e.x < camX+viewW+80 && e.y+e.h > camY-80 && e.y < camY+viewH+80; for (const e of enemies) if (vis(e)) contactShadow(e, e.fly ? .45 : .9); for (const e of enemies) if (vis(e)) drawEnemy(e); drawBoss(); }
-  for (const g of ghosts){ ctx.globalAlpha=g.life*2.2; drawHero({x:g.x,y:g.y,h:34,faceS:g.faceS,sx:g.sx,sy:g.sy,pose:player.pose,st:'dash',scarf:[],pk:player.pk},{ghost:true,ink:g.ink}); }
+  for (const g of ghosts){ const q = g.life/GHOST_LIFE; ctx.globalAlpha = q*q*(g.ink ? .75 : .45);
+    drawHero({x:g.x - (1-q)*g.faceS*4, y:g.y, h:34, faceS:g.faceS, sx:g.sx*(1 + (1-q)*.15), sy:g.sy, pose:g.pose||player.pose, st:'dash', scarf:[], pk:g.pk||player.pk, canDash:true, charm:player.charm, blink:0, runT:0}, {ghost:true, full:true, ink:g.ink}); }
+  ctx.globalAlpha = 1;
   ctx.globalAlpha=1;
   drawDashFx();
   drawItemGetBack();
