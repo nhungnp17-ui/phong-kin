@@ -1790,18 +1790,27 @@ function drawMathHUD(){
   const px = player.x+11; let best = null, bd = 1e9;
   for (const q of quizzes){ if (q.solved) continue; const d = Math.min(Math.abs(q.bx - px), ...q.orbs.map(o=>Math.abs(o.x - px))); if (d < bd){ bd = d; best = q; } }
   ctx.save(); ctx.textAlign='center';
-  if (best && bd < 10*T){ ctx.font=`700 15px ${FONT}`; const tw = Math.min(viewW-30, Math.max(320, ctx.measureText(best.q).width + 60)), bx = (viewW-tw)/2, by = 98;
-    ctx.fillStyle=INK; ctx.fillRect(bx, by, tw, 52); ctx.strokeStyle=PAPER; ctx.lineWidth=1; ctx.strokeRect(bx+4, by+4, tw-8, 44);
-    ctx.fillStyle=PAPER; ctx.font=`700 9px ${FONT}`; ctx.fillText(best.kind==='graph' ? 'CÂU ĐỐ · CHỌN HÀM SỐ ĐỂ DỰNG CẦU' : best.kind==='bridge' ? 'CÂU ĐỐ · TRẢ LỜI ĐÚNG ĐỂ DỰNG CẦU' : 'CÂU ĐỐ · TRẢ LỜI ĐÚNG ĐỂ MỞ CỬA', viewW/2, by+16);
-    ctx.font=`700 15px ${FONT}`; ctx.fillText(best.q, viewW/2, by+36);
-    ctx.fillStyle=INK; ctx.font=`400 10px ${FONT}`; ctx.fillText('Đáp án nằm trong 3 quả cầu quanh đây · chạm quả cầu đúng' + (best.hint ? '  ·  gợi ý: ' + best.hint : ''), viewW/2, by+66); }
+  let cardTop = viewH;
+  if (best && bd < 10*T){
+    const tag = best.kind==='graph' ? 'CÂU ĐỐ · CHỌN HÀM SỐ ĐỂ DỰNG CẦU' : best.kind==='bridge' ? 'CÂU ĐỐ · ĐÚNG THÌ CẦU HIỆN RA' : 'CÂU ĐỐ · ĐÚNG THÌ CỬA MỞ';
+    const l2 = '→ chạm quả cầu ghi đáp án đúng', l3 = best.hint ? 'gợi ý: ' + best.hint : '';
+    const qf = Math.max(16, Math.min(20, viewW/50));
+    ctx.font=`700 ${qf}px ${FONT}`; const wq = ctx.measureText(best.q).width; ctx.font=`400 12px ${FONT}`; const w2 = Math.max(ctx.measureText(l2).width, ctx.measureText(l3).width);
+    const tw = Math.min(viewW-24, Math.max(380, viewW-440), Math.max(wq, w2) + 48), th = qf + (l3 ? 48 : 34), bx = (viewW-tw)/2;
+    const by = viewH - th - 10; cardTop = by;
+    ctx.fillStyle=INK; ctx.fillRect(bx+5, by+5, tw, th);
+    ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2.5; ctx.fillRect(bx, by, tw, th); ctx.strokeRect(bx, by, tw, th);
+    ctx.font=`700 9px ${FONT}`; const tgw = ctx.measureText(tag).width + 16; ctx.fillStyle=INK; ctx.fillRect(bx+tw/2-tgw/2, by-9, tgw, 16); ctx.fillStyle=PAPER; ctx.fillText(tag, viewW/2, by+2);
+    ctx.fillStyle=INK; ctx.font=`700 ${qf}px ${FONT}`; ctx.fillText(best.q, viewW/2, by+10+qf);
+    ctx.font=`400 12px ${FONT}`; ctx.fillText(l2, viewW/2, by+qf+26); if (l3){ ctx.font=`italic 400 12px ${FONT}`; ctx.fillText(l3, viewW/2, by+qf+41); } }
   if (L.numRule && Object.keys(numTiles).some(k => Math.abs(numTiles[k].x*T - px) < 12*T)){ const R = NUM_RULES[L.numRule], ex = L.numRule;
     const sample = {even:'✓ 2 4 6 8  ✗ 3 5 7', prime:'✓ 2 3 5 7 11  ✗ 1 4 9 15', square:'✓ 1 4 9 16 25  ✗ 2 8 12', mult3:'✓ 3 6 9 12  ✗ 4 7 10', fib:'✓ 1 2 3 5 8 13  ✗ 4 6 7 9', ineq:'✓ 5 6 7 8  ✗ 1 2 3 4', root:'✓ 2 3  ✗ 0 1 4 5'}[ex] || '';
     const l1 = 'LUẬT Ô SỐ: ' + R.text.replace('Chỉ ô ', '').replace(' mới đứng vững', ' → vững').replace(' mới vững', ' → vững'), l2 = sample + (gear.has('lens') ? '   (giữ V để soi)' : '');
-    ctx.font=`700 10px ${FONT}`; const w1 = ctx.measureText(l1).width; ctx.font=`400 10px ${FONT}`; const tw = Math.max(w1, ctx.measureText(l2).width) + 24, bx = 12, by = viewH - 52;
+    ctx.font=`700 10px ${FONT}`; const w1 = ctx.measureText(l1).width; ctx.font=`400 10px ${FONT}`; const tw = Math.max(w1, ctx.measureText(l2).width) + 24, bx = 12, by = cardTop < viewH ? 184 : viewH - 52;
     ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.fillRect(bx, by, tw, 40); ctx.strokeRect(bx, by, tw, 40);
     ctx.fillStyle=INK; ctx.textAlign='left'; ctx.font=`700 10px ${FONT}`; ctx.fillText(l1, bx+10, by+16);
     ctx.font=`400 10px ${FONT}`; ctx.fillText(l2, bx+10, by+31); }
+  quizCardH = cardTop < viewH ? viewH - cardTop + 6 : 0;
   ctx.restore();
 }
 function updateMath(dt){ updateGear(dt); if (!LEVELS[lvl].math) return; updateNumTiles(dt); updateLaunchers(dt); updateMathFx(dt); updateMathBoss(dt); }
@@ -6687,16 +6696,19 @@ function keycap(x, y, label, big){
   ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.fillRect(x, y-h/2, w, h); ctx.strokeRect(x, y-h/2, w, h); ctx.fillStyle=INK; ctx.fillRect(x, y+h/2, w, 3);
   ctx.textAlign='center'; ctx.fillText(label, x+w/2, y+5); return w;
 }
+let tipTopView = null, quizCardH = 0;
 function drawTip(){
+  tipTopView = null;
   if (!tip || state!=='play') return;
   const a = Math.min(1, tip.t*5, (tip.life - tip.t)*2.5); if (a <= 0) return;
-  const vw = viewW*S, x0 = OX, yb = OY + viewH*S - 14;
+  const vw = viewW*S, x0 = OX, yb = OY + (viewH - (state==='play' && LEVELS[lvl] && LEVELS[lvl].math ? quizCardH : 0))*S - 14;
   ctx.save(); ctx.globalAlpha = a;
   ctx.font = `400 ${Math.max(13, Math.min(16, vw/52))}px ${FONT}`;
   const kw = tip.keys.reduce((s,k)=>{ ctx.font=`700 12px ${FONT}`; return s + Math.max(24, ctx.measureText(k).width+14) + 6; }, 0);
   ctx.font = `400 ${Math.max(13, Math.min(16, vw/52))}px ${FONT}`;
   const maxW = Math.min(vw - 40, 640), lines = wrapText(tip.text, maxW - kw - 60), lh = 20, h = Math.max(46, lines.length*lh + 24), w = Math.min(maxW, kw + 56 + Math.max(...lines.map(l=>ctx.measureText(l).width)));
   const x = x0 + (vw - w)/2, y = yb - h - (1-Math.min(1,tip.t*5))*12;
+  tipTopView = (OY + viewH*S - 14 - h - 6 - OY)/S;
   ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2.5; ctx.fillRect(x, y, w, h); ctx.strokeRect(x, y, w, h); ctx.fillStyle=INK; ctx.fillRect(x+4, y+h, w, 4);
   ctx.font=`700 9px ${FONT}`; ctx.textAlign='left'; ctx.fillText(tip.ok ? 'ĐÚNG RỒI ✓' : 'MẸO', x+10, y+12);
   let kx = x + 12; for (const k of tip.keys) kx += keycap(kx, y + h/2 + 3, k) + 6;
