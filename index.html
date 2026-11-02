@@ -5501,10 +5501,7 @@ function heroPack(p, ghost, by){
 function drawHero(p, opts={}){
   if (!p || !p.pose) return;   // nhân vật minh hoạ chưa kịp tạo (vẽ trước khi cập nhật) thì bỏ qua khung này
   const ghost = !!opts.ghost, po = p.pose, cx = p.x+11, by = p.y+p.h;
-  if (!ghost && p.flashT > 0){ const f = p.flashT/.09; ctx.save(); ctx.fillStyle = INK; ctx.globalAlpha = f > .5 ? 1 : f*2; ctx.beginPath(); ctx.ellipse(cx, by-17, 24 + (1-f)*14, 28 + (1-f)*10, 0, 0, Math.PI*2); ctx.fill();
-    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.globalAlpha = f*.8; ctx.beginPath(); ctx.ellipse(cx, by-17, 34 + (1-f)*30, 38 + (1-f)*24, 0, 0, Math.PI*2); ctx.stroke(); ctx.restore(); }
   ctx.save();
-  if (!ghost && p.flashT > .045) ctx.filter = 'invert(1)';
   if (!ghost && p.spawnT>0) ctx.globalAlpha *= clamp(1-p.spawnT/.45, 0, 1);
   ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineCap='round'; ctx.lineJoin='round';
   // khăn quàng (toạ độ thế giới)
@@ -5571,7 +5568,7 @@ function drawDashFx(){
       for (let i=0;i<6;i++){ const yy = p.y + 2 + crand(i + Math.floor(now*30))*32, x0 = p.x+11 - d*(18 + crand(i*3+Math.floor(now*30))*30); line(x0, yy, x0 - d*(26 + crand(i*7)*40), yy); } }
   }
   for (const f of dashFx){ const k = (now - f.t0);
-    if (f.kind==='burst'){ const q = k/.45; ctx.globalAlpha = (1-q)*(f.ink ? .9 : .55); ctx.strokeStyle = INK; ctx.lineWidth = f.ink ? 3 : 2;
+    if (f.kind==='burst'){ const q = k/.45; ctx.globalAlpha = (1-q)*(f.ink ? .35 : .2); ctx.strokeStyle = INK; ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.ellipse(f.x - f.dir*6, f.y, 6 + q*26, 14 + q*22, 0, 0, Math.PI*2); ctx.stroke();
       ctx.lineWidth = 2; for (let i=-1;i<=1;i++){ ctx.beginPath(); ctx.arc(f.x - f.dir*(10 + q*30), f.y + i*10, 12 + q*10, f.dir>0 ? Math.PI*.6 : -Math.PI*.4, f.dir>0 ? Math.PI*1.4 : Math.PI*.4); ctx.stroke(); } }
     else if (f.kind==='vec'){ const q = k/.45; ctx.globalAlpha = 1-q; ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = 3; const ex = f.x + f.dir*30, ey = f.y - 40 - q*20;
