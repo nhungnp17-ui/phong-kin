@@ -619,6 +619,32 @@ const LEVELS = [
   '###########################################################################################xxx#CCC#xxx########################################################',
   '##############################################################################################################################################################',
  ]},
+ // ===== BOSS CHƯƠNG 3: LÕI NHIỆT ĐỘNG (nhiệt động lực học) =====
+ { name:'Lõi Nhiệt Động', ch:3, theme:'lab', combat:true,
+   coreBoss:{arena:[18, 57], gateL:[17, 11, 13], gateR:[58, 11, 13], cx:37.5, cy:4.6, pillars:[29, 46],
+     valves:[[19.5, 13.5], [56.5, 13.5], [22.5, 8.5], [53.5, 8.5]], vents:[21, 24, 27, 33, 37, 41, 44, 49, 54]},
+   pages:[], secrets:[], decor:[['sign', 9, 'LÕI NHIỆT'], ['lamp', 6], ['clock', 12, 3]],
+   talks:[[6, 13, 'Cạc! Nóng quá… Mực Đen chui vào lõi nồi luyện rồi!'], [14, 13, 'Nhớ: van làm mát hạ nhiệt, cột chịu lực chặn được tia nóng.']],
+   hints:['Lõi Nhiệt Động phía trước. Nhìn đèn đỏ trên piston và nghe tiếng xì trước khi né.', 'Dụ piston đập trúng CỘT CHỊU LỰC để nó kẹt → lõi hạ xuống lộ ra: lướt vào hoặc ném lọ. Van làm mát: nhấn E.', 'Nóng quá 100% là nổ hơi nước: đứng trong vùng làm mát (sau khi mở van) để sống sót.'],
+   notes:[['NHIỆT ĐỘNG HỌC', 'Q = m·c·Δt', 'Nhiệt tự truyền từ nóng → lạnh', 'Van làm mát: hút nhiệt khỏi lõi'], ['KHÍ LÝ TƯỞNG', 'p·V = n·R·T', 'T tăng → áp suất p tăng', 'Quá ngưỡng: nổ hơi nước'], ['ĐỊNH LUẬT 2', 'Entropy của hệ kín luôn tăng', 'Phòng càng nóng: mực hồi chậm', 'Lướt vào cầu nhiệt để bật ngược']],
+   map:[
+  '################################################################',
+  '################################################################',
+  '#................#........................................#....#',
+  '#................#........................................#....#',
+  '#................#........................................#....#',
+  '#................#........................................#....#',
+  '#................#........................................#....#',
+  '#................#........................................#....#',
+  '#................#........................................#....#',
+  '#................#.._____.........................._____..#....#',
+  '#................#...........#................#...........#....#',
+  '#............................#................#...........#....#',
+  '#............................#................#...........#....#',
+  '#..P......f..................#................#...........#...E#',
+  '################################################################',
+  '################################################################'
+   ]},
  { name:"Sảnh Đếm", ch:4, numRule:"even", item:"lens", pages:["Tối nào Hạ cũng đếm bậc cầu thang trước khi ngủ. Mười hai bậc. Không bao giờ sai.", "Mực Đen ăn mất con số nào, thứ đó quên luôn mình là gì. Cầu thang không còn biết mình cao bao nhiêu."], talks:[[5, 13, "Cạc! Chỗ này toàn số. Cửa có dấu ? chỉ mở khi trả lời đúng."], [38, 13, "Ô số lẻ sẽ vỡ! Chỉ đặt chân lên số chẵn."], [88, 13, "Đếm ngược kìa: trừ đi bao nhiêu mỗi lần?"]], hints:["Đọc câu đố trên cửa ?, rồi chạm quả cầu có đáp án đúng. Sai sẽ bị đẩy lùi và mất mực.", "Ô SỐ: chỉ số CHẴN mới đứng vững. Số lẻ vỡ ngay khi bạn đặt chân.", "Giải đúng thì cầu phấn hiện ra. Mẹo Gauss: ghép số đầu với số cuối.", "Cấp số cộng cũng có thể đi lùi."], notes:[["CẤP SỐ CỘNG", "uₙ = u₁ + (n − 1)·d", "3, 7, 11, 15…: d = 4", "Chạm quả cầu đúng để mở cửa"], ["SỐ CHẴN · LẺ", "Chẵn: chia hết cho 2", "Lẻ: chia 2 dư 1", "0, 2, 4, 6… đều chẵn"], ["TỔNG GAUSS", "1 + 2 + … + n = n(n + 1) ÷ 2", "n = 10 → 55", "Ghép cặp đầu–cuối"], ["ĐẾM NGƯỢC", "d có thể âm", "100, 91, 82…: d = −9", ""]], secrets:["Hạc giấy kẹp trong cuốn sổ đếm: “Một, hai, ba… con đếm tới đâu thì ta đợi tới đó.”"], decor:[["sign", 8, "SẢNH ĐẾM"], ["board", 40, 3], ["board", 90, 3]], combat:true, theme:"math", math:true, nums:[2, 3, 13, 14, 3, 8, 3, 17, 14, 1, 20, 3, 8, 21, 24, 19, 1, 20, 19, 14], quiz:[{q:"3, 7, 11, ?, 19", opts:["13", "15", "17"], ans:1, kind:"door", hint:"mỗi số hơn số trước 4", why:"cấp số cộng, công sai d = 4"}, {q:"1 + 2 + 3 + … + 10 = ?", opts:["45", "55", "100"], ans:1, kind:"bridge", hint:"ghép cặp: 1+10, 2+9… có 5 cặp", why:"Gauss: (1 + 10) × 10 ÷ 2 = 55"}, {q:"100, 91, 82, ?", opts:["72", "74", "73"], ans:2, kind:"door", hint:"mỗi bước bớt đi 9", why:"công sai d = −9"}],
    map:[
   '##############################################################################################################',
@@ -2047,8 +2073,219 @@ function drawMathHUD(){
   quizCardH = cardTop < viewH ? (viewH - cardTop + 6)*HK : 0; mathBusy = cardTop < viewH || ruleShown;
   ctx.restore();
 }
-function updateMath(dt){ updateGear(dt); if (!LEVELS[lvl].math) return; updateNumTiles(dt); updateLaunchers(dt); updateMathFx(dt); updateMathBoss(dt); }
-function drawMathWorld(){ drawGearWorld(); if (!LEVELS[lvl].math) return; drawGraphZones(); drawGoneNums(); drawSines(); drawLaunchers(); drawMathOrbs(); drawQuizBoards(); drawMathFx(); drawMathBoss(); }
+// ===== BOSS CHƯƠNG 3: LÕI NHIỆT ĐỘNG =====
+// 3 giai đoạn: chu kỳ piston (dụ đập vào cột chịu lực) → quá nhiệt (van làm mát, nổ hơi nước, tia nhiệt) → sụp đổ (điểm kỳ dị, cầu nhiệt bật ngược, đếm ngược 45 giây)
+let cboss = null;
+const CORE_HP = 12;
+function makeCore(L){
+  const d = L.coreBoss, b = {def:d, hp:CORE_HP, max:CORE_HP, phase:1, heat:50, x:d.cx*T, y:d.cy*T, hy:d.cy*T, lowY:10.2*T, engaged:false, dead:false, dieT:0, t:0, cd:2, hurtT:0,
+    exposed:0, pistons:[], shots:[], zones:[], valveCd:[0,0,0,0], blast:null, jet:null, sing:null, melt:0, orbit:0, hint:{}};
+  b.pistons = [-1, 1].map(sd=>({side:sd, x:d.cx*T + sd*7*T, home:d.cx*T + sd*7*T, y:0, st:'idle', t:0, tx:0}));
+  return b;
+}
+function resetCoreBoss(){ const L = LEVELS[lvl]; if (!cboss || cboss.dead) return; const d = L.coreBoss; cboss = makeCore(L); setGate(d.gateL, false); }
+function setGate(g, closed){ for (let y=g[1]; y<=g[2]; y++) grid[y][g[0]] = closed ? '#' : '.'; tileCache.clear(); }
+const coreSay = (text, big=true, life=2.4)=>{ const b = cboss; popups.push({x:b.x, y:b.y - 90, text, life, big}); };
+function coreHurt(n, why){
+  const b = cboss; if (b.dead || b.hurtT > 0) return; b.hp -= n; b.hurtT = .45; shakeT = Math.max(shakeT, .3); SFX.play('bosshit');
+  popups.push({x:b.x, y:b.y - 70, text: why || 'lõi nứt!', life:1.6, big:true});
+  for (let i=0;i<16;i++){ const a = i/16*Math.PI*2; parts.push({x:b.x, y:b.y, vx:Math.cos(a)*280, vy:Math.sin(a)*280, a, va:0, l:5, life:.6}); }
+  if (b.hp <= 0){ b.dead = true; b.dieT = 0; b.shots = []; b.jet = null; b.sing = null; b.blast = null; b.melt = 0; SFX.play('crash'); coreSay('LÕI NGUỘI DẦN · cân bằng nhiệt', true, 3.5); saveGame(); }
+}
+function updateCoreBoss(dt){
+  const b = cboss; if (!b) return; const d = b.def, p = player, px = p.x+11, py = p.y+17, A0 = d.arena[0]*T, A1 = (d.arena[1]+1)*T, floorY = 14*T;
+  if (!b.engaged){ if (px > A0 + 2*T && px < A1){ b.engaged = true; setGate(d.gateL, true); cp = {x:(d.gateL[0]-2)*T, y:13*T + T - 34}; SFX.play('roar'); coreSay('LÕI NHIỆT ĐỘNG'); } else return; }
+  if (b.dead){ b.dieT += dt; b.heat = Math.max(0, b.heat - dt*30); b.y += (b.hy - b.y)*Math.min(1, dt*2); if (b.dieT > 2.5 && !b.opened){ b.opened = true; setGate(d.gateR, false); setGate(d.gateL, false); SFX.play('door'); } return; }
+  b.t += dt; b.hurtT -= dt; b.cd -= dt; b.exposed = Math.max(0, b.exposed - dt); b.orbit += dt;
+  for (let i=0;i<4;i++) b.valveCd[i] = Math.max(0, b.valveCd[i] - dt);
+  // giai đoạn theo máu
+  const ph = b.hp > 8 ? 1 : b.hp > 3 ? 2 : 3;
+  if (ph !== b.phase){ b.phase = ph; SFX.play('roar'); shakeT = .5; b.cd = 2.5; b.exposed = 0;
+    if (ph === 2){ coreSay('QUÁ NHIỆT! pV = nRT: nhiệt tăng → áp suất tăng'); showTip('core2', ['E'], 'Lõi nóng dần. Mở VAN LÀM MÁT (E) khi nhiệt ≥ 60% để ép lõi xả nhiệt và lộ ra. Tới 100% là nổ hơi nước: trốn vào vùng làm mát!', null, 9); }
+    if (ph === 3){ b.melt = 45; coreSay('SỤP ĐỔ HỆ THỐNG · 45 giây!'); showTip('core3', ['Q'], 'Entropy cực đại! Lõi chỉ còn bị phá bằng chính nhiệt của nó: LƯỚT vào cầu nhiệt để bật ngược vào lõi.', null, 9); } }
+  // nhiệt độ
+  if (b.phase === 1) b.heat += (50 + Math.sin(b.t*.8)*8 - b.heat)*Math.min(1, dt*2);
+  else if (b.phase === 2){ if (!b.blast) b.heat = Math.min(100, b.heat + dt*(b.jet ? 7.5 : 5)); }
+  else b.heat = 100;
+  // lõi: lơ lửng; khi lộ ra thì hạ thấp, mở cửa chớp
+  const wantY = b.exposed > 0 ? b.lowY : b.hy + Math.sin(b.t*1.3)*8;
+  b.y += (wantY - b.y)*Math.min(1, dt*(b.exposed > 0 ? 6 : 2.5));
+  // va chạm với lõi
+  const dc = Math.hypot(px - b.x, py - b.y);
+  if (dc < 66){
+    if (b.exposed > 0 && p.dashT > 0){ if (!p.dashHit.has(b)){ p.dashHit.add(b); coreHurt(1, 'lướt trúng lõi trần!'); p.vx = -p.dashDir*300; p.vy = -300; p.dashT = 0; p.canDash = true; } }
+    else if (p.invT <= 0){ hurtPlayer(1, b.x); p.vx = Math.sign(px - b.x)*360; p.vy = -260; }
+  }
+  // ---- ra đòn ----
+  if (b.cd <= 0 && !b.blast && !b.sing){
+    const P = b.phase, r = Math.random();
+    if (P === 1){ if (r < .6) pistonSlam(b, px); else steamVents(b, px, 3); b.cd = 2.1; }
+    else if (P === 2){ if (r < .35){ pistonSlam(b, px); if (Math.random() < .5) pistonSlam(b, px + (Math.random()<.5?-1:1)*4*T, true); } else if (r < .65 && !b.jet){ b.jet = {t:0, a0: px < b.x ? Math.PI*.95 : Math.PI*.05, a1: px < b.x ? Math.PI*.05 : Math.PI*.95}; SFX.play('pulse'); coreSay('tua-bin gầm rú… TRỐN SAU CỘT!', false, 1.6); } else steamVents(b, px, 4); b.cd = 1.8; }
+    else { if (r < .3){ b.sing = {t:0}; SFX.play('pulse'); coreSay('ĐIỂM KỲ DỊ NHIỆT · bám tường, lướt ngược ra!', false, 2); } else if (r < .75){ for (let i=0;i<3;i++){ const a = Math.atan2(py - b.y, px - b.x) + (i-1)*.45; b.shots.push({kind:'orb', x:b.x + Math.cos(a)*60, y:b.y + Math.sin(a)*60, vx:Math.cos(a)*150, vy:Math.sin(a)*150, life:7}); } SFX.play('throw'); } else { pistonSlam(b, px); steamVents(b, px, 3); } b.cd = 1.6; }
+  }
+  // nổ hơi nước khi đầy nhiệt (giai đoạn 2)
+  if (b.phase === 2 && b.heat >= 100 && !b.blast){ b.blast = {t:0}; SFX.play('roar'); coreSay('NỔ HƠI NƯỚC! Vào vùng làm mát!', true, 2.5); }
+  if (b.blast){ b.blast.t += dt;
+    if (b.blast.t > 2.6 && !b.blast.done){ b.blast.done = true; shakeT = .7; SFX.play('tnt');
+      const safe = b.zones.some(z=>Math.hypot(px - z.x, py - z.y) < z.r);
+      if (!safe) hurtPlayer(2, b.x); else popups.push({x:px, y:py - 40, text:'hơi nước ngưng tụ che chắn!', life:1.6});
+      for (let i=0;i<40;i++){ const a = Math.random()*Math.PI*2, v = 200 + Math.random()*500; parts.push({x:b.x, y:b.y, vx:Math.cos(a)*v, vy:Math.sin(a)*v, a, va:4, l:6, life:.9}); }
+      b.heat = 55; }
+    if (b.blast.t > 3.2) b.blast = null; }
+  // tia nhiệt quét (bị cột và bệ chặn)
+  if (b.jet){ const j = b.jet; j.t += dt; if (j.t > 1.2){ const q = Math.min(1, (j.t - 1.2)/2.4); j.a = j.a0 + (j.a1 - j.a0)*q;
+      const hit = jetHits(b, j.a, px, py); if (hit && p.invT <= 0) hurtPlayer(1, b.x); if (q >= 1) b.jet = null; } else j.a = j.a0; }
+  // điểm kỳ dị: hút về lõi
+  if (b.sing){ const sg = b.sing; sg.t += dt; if (sg.t > 1 && sg.t < 3.6){ const dx = b.x - px, dy = b.y - py, dd = Math.hypot(dx, dy) || 1, f = 330*(1 - Math.min(1, dd/900)) + 120;
+      if (!p.wall) moveX(p, dx/dd*f*dt); if (!p.ground && !p.wall) p.vy += dy/dd*f*1.6*dt; if (Math.random() < dt*40) parts.push({x:b.x + (Math.random()-.5)*700, y:b.y + Math.random()*360, vx:0, vy:0, a:0, va:0, l:2, life:.5, pull:1}); }
+    if (sg.t > 3.8) b.sing = null; }
+  for (const q of parts) if (q.pull){ q.x += (b.x - q.x)*Math.min(1, dt*3); q.y += (b.y - q.y)*Math.min(1, dt*3); }
+  // mảnh vỡ quay quanh lõi (giai đoạn 3)
+  if (b.phase === 3) for (let i=0;i<6;i++){ const a = b.orbit*1.4 + i/6*Math.PI*2, r = 130 + Math.sin(b.orbit*2 + i)*14, ox = b.x + Math.cos(a)*r, oy = b.y + Math.sin(a)*r*.7; if (Math.hypot(ox - px, oy - py) < 16 && p.invT <= 0) hurtPlayer(1, ox); }
+  // đếm ngược sụp đổ
+  if (b.melt > 0){ b.melt -= dt; if (b.melt <= 0){ b.melt = 0; shakeT = 1; SFX.play('tnt'); coreSay('LÕI PHÁT NỔ', true, 2); dev.god ? null : die(); } }
+  // piston
+  for (const ps of b.pistons) updatePiston(b, ps, dt, px, py, floorY);
+  // đạn: cột hơi, sóng xung kích, cầu nhiệt
+  for (const s of b.shots){ s.life -= dt;
+    if (s.kind==='vent'){ s.t += dt; if (s.t > 1.5 && s.t < 2.7 && Math.abs(px - s.x) < 20 && py > floorY - 4.2*T && p.invT <= 0){ hurtPlayer(1, s.x); p.vy = -480; } if (s.t > 1.5 && Math.random() < dt*30) parts.push({x:s.x + (Math.random()-.5)*16, y:floorY - 4, vx:(Math.random()-.5)*40, vy:-300 - Math.random()*200, a:0, va:0, l:4, life:.6}); }
+    else if (s.kind==='wave'){ s.x += s.dir*380*dt; if (s.x < A0 || s.x > A1) s.life = 0; if (p.ground && Math.abs(px - s.x) < 16 && Math.abs(p.y + p.h - floorY) < 8 && p.invT <= 0) hurtPlayer(1, s.x); }
+    else if (s.kind==='orb'){
+      if (!s.ref){ const a = Math.atan2(py - s.y, px - s.x); s.vx += Math.cos(a)*90*dt; s.vy += Math.sin(a)*90*dt; const sp = Math.hypot(s.vx, s.vy); if (sp > 190){ s.vx *= 190/sp; s.vy *= 190/sp; }
+        if (Math.hypot(px - s.x, py - s.y) < 22){ if (p.dashT > 0){ s.ref = true; const a2 = Math.atan2(b.y - s.y, b.x - s.x); s.vx = Math.cos(a2)*620; s.vy = Math.sin(a2)*620; SFX.play('clank'); popups.push({x:s.x, y:s.y - 20, text:'bật ngược! p = m·v', life:1.2}); p.canDash = true; } else if (p.invT <= 0){ s.life = 0; hurtPlayer(1, s.x); } } }
+      s.x += s.vx*dt; s.y += s.vy*dt;
+      if (s.ref && Math.hypot(b.x - s.x, b.y - s.y) < 60){ s.life = 0; coreHurt(1, 'nhiệt trả về lõi!'); }
+      if (!s.ref && solid(Math.floor(s.x/T), Math.floor(s.y/T))) s.life = 0; }
+  }
+  b.shots = b.shots.filter(s=>s.life > 0);
+  // vùng làm mát
+  for (const z of b.zones) z.life -= dt; b.zones = b.zones.filter(z=>z.life > 0);
+}
+function pistonSlam(b, x, quick){
+  const ps = b.pistons.filter(q=>q.st==='idle').sort((a, c)=>Math.abs(a.x - x) - Math.abs(c.x - x))[0]; if (!ps) return;
+  const d = b.def; ps.tx = clamp(x, (d.arena[0]+1.5)*T, (d.arena[1]-.5)*T); ps.st = 'aim'; ps.t = 0; ps.quick = !!quick;
+}
+function updatePiston(b, ps, dt, px, py, floorY){
+  ps.t += dt; const d = b.def, top = 2*T;
+  const stopY = ()=>{ for (const c of d.pillars) if (Math.abs(ps.tx - (c*T + T/2)) < 50) return 10*T; return floorY; };
+  if (ps.st==='idle'){ ps.x += (ps.home - ps.x)*Math.min(1, dt*2); ps.y += (top - ps.y)*Math.min(1, dt*4); }
+  else if (ps.st==='aim'){ ps.x += (ps.tx - ps.x)*Math.min(1, dt*6); if (ps.t > .55){ ps.st = 'tell'; ps.t = 0; } }
+  else if (ps.st==='tell'){ if (ps.t > (ps.quick ? .55 : .85)){ ps.st = 'slam'; ps.t = 0; SFX.play('swoosh'); } }
+  else if (ps.st==='slam'){ const sy = stopY(); ps.y += 1900*dt;
+    if (Math.abs(px - ps.x) < 34 && py > ps.y - 10 && py < ps.y + 40 && player.invT <= 0){ hurtPlayer(1, ps.x); player.vy = -300; }
+    if (ps.y >= sy){ ps.y = sy; shakeT = Math.max(shakeT, .25); SFX.play('stomp'); dust(ps.x, sy, 10);
+      if (sy < floorY){ ps.st = 'stuck'; ps.t = 0; b.exposed = 5; SFX.play('clank'); coreSay('Piston kẹt vào cột chịu lực! LÕI LỘ RA!', true, 2); if (!b.hint.exp){ b.hint.exp = true; showTip('coreexp', ['Q','F'], 'Lõi hạ xuống và mở cửa chớp: LƯỚT vào lõi hoặc NÉM lọ hoá chất để gây sát thương!', null, 7); } }
+      else { ps.st = 'hold'; ps.t = 0; for (const dir of [-1, 1]) b.shots.push({kind:'wave', x:ps.x + dir*30, dir, life:3}); } } }
+  else if (ps.st==='hold'){ if (ps.t > .35){ ps.st = 'rise'; ps.t = 0; } }
+  else if (ps.st==='stuck'){ ps.x += Math.sin(ps.t*60)*.6; if (ps.t > 5){ ps.st = 'rise'; ps.t = 0; } }
+  else if (ps.st==='rise'){ ps.y += (top - ps.y)*Math.min(1, dt*4); if (ps.t > .8){ ps.st = 'idle'; ps.t = 0; } }
+}
+function steamVents(b, px, n){
+  const vs = b.def.vents.slice().sort((a, c)=>Math.abs(a*T - px) - Math.abs(c*T - px)).slice(0, n);
+  for (const v of vs) b.shots.push({kind:'vent', x:v*T + T/2, t:0, life:2.8});
+  SFX.play('sizzle');
+}
+function jetHits(b, a, px, py){
+  const dx = Math.cos(a), dy = Math.sin(a), along = (px - b.x)*dx + (py - b.y)*dy; if (along < 0) return false;
+  const perp = Math.abs((px - b.x)*dy - (py - b.y)*dx); if (perp > 16) return false;
+  for (let s = 60; s < along; s += 10){ const x = b.x + dx*s, y = b.y + dy*s; if (solid(Math.floor(x/T), Math.floor(y/T))) return false; }   // bị cột / bệ chặn
+  return true;
+}
+function jetLen(b, a){ for (let s = 60; s < 1400; s += 8){ const x = b.x + Math.cos(a)*s, y = b.y + Math.sin(a)*s; if (solid(Math.floor(x/T), Math.floor(y/T))) return s; } return 1400; }
+function useCoreValve(){
+  const b = cboss; if (!b || !b.engaged || b.dead) return false; const px = player.x+11, py = player.y+17;
+  const i = b.def.valves.findIndex(v=>Math.hypot(v[0]*T - px, v[1]*T - py) < 50); if (i < 0) return false;
+  if (b.valveCd[i] > 0){ popups.push({x:px, y:py - 30, text:`van đang nạp lại ${Math.ceil(b.valveCd[i])}s`, life:1}); return true; }
+  const v = b.def.valves[i]; b.valveCd[i] = 7; player.actT = .3; SFX.play('valve'); SFX.play('steam');
+  b.zones.push({x:v[0]*T, y:v[1]*T - 20, r:100, life:7, max:7});
+  if (b.heat >= 60 && b.phase === 2){ b.heat = Math.max(20, b.heat - 40); b.exposed = 4; coreSay('Q tỏa ra: lõi xả nhiệt, cửa chớp mở!', true, 2); }
+  else popups.push({x:px, y:py - 40, text: b.phase === 1 ? 'nước mát phun ra · vùng an toàn 7s' : 'vùng làm mát · 7s', life:1.6});
+  return true;
+}
+function drawCoreBoss(){
+  const b = cboss; if (!b) return; const d = b.def, t = clock, H = b.heat/100, A0 = d.arena[0]*T, A1 = (d.arena[1]+1)*T, floorY = 14*T;
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = INK; ctx.fillStyle = INK;
+  // vùng làm mát: sương ngưng tụ + giọt nước
+  for (const z of b.zones){ const a = Math.min(1, z.life, (z.max - z.life)*3); ctx.globalAlpha = a*.18; ctx.beginPath(); ctx.arc(z.x, z.y, z.r, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = a*.6; ctx.setLineDash([3,6]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(z.x, z.y, z.r, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    for (let k=0;k<8;k++){ const yy = z.y - z.r*.6 + ((t*60 + k*23) % (z.r*1.2)), xx = z.x + Math.sin(k*2.3)*z.r*.6; ctx.beginPath(); ctx.arc(xx, yy, 1.6, 0, Math.PI*2); ctx.fill(); } ctx.globalAlpha = 1;
+    ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('VÙNG LÀM MÁT ' + Math.ceil(z.life) + 's', z.x, z.y - z.r - 6); }
+  // ống dẫn nhiệt từ trần xuống lõi (phình theo áp suất)
+  const bulge = b.phase >= 2 ? 1 + Math.sin(t*8)*.15*H : 1;
+  for (const sd of [-1, -.4, .4, 1]){ const x0 = b.x + sd*170, y0 = 2*T; ctx.lineWidth = 8*bulge; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x0, b.y - 30, b.x + sd*48, b.y - 20); ctx.stroke();
+    ctx.strokeStyle = PAPER; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x0, b.y - 30, b.x + sd*48, b.y - 20); ctx.stroke(); ctx.strokeStyle = INK; }
+  // van làm mát
+  b.def.valves.forEach((v, i)=>{ const X = v[0]*T, Y = v[1]*T, rd = b.valveCd[i] <= 0; ctx.lineWidth = 3; line(X, Y + 12, X, Y - 6); ctx.fillStyle = PAPER; ctx.beginPath(); ctx.arc(X, Y - 10, 9, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.save(); ctx.translate(X, Y - 10); ctx.rotate(rd ? 0 : t*6); ctx.lineWidth = 2; line(-7, 0, 7, 0); line(0, -7, 0, 7); ctx.restore();
+    ctx.fillStyle = INK; ctx.font = `700 8px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(rd ? 'VAN · E' : Math.ceil(b.valveCd[i]) + 's', X, Y - 24);
+    if (rd && b.engaged && !b.dead && Math.hypot(X - player.x - 11, Y - player.y - 17) < 50){ ctx.globalAlpha = .5 + .5*Math.sin(t*8); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X, Y - 10, 15, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1; } });
+  // khe thoát hơi trên sàn
+  for (const v of d.vents){ const X = v*T + T/2; ctx.fillStyle = INK; for (let k=-1;k<=1;k++) ctx.fillRect(X - 12, floorY - 3 + k*0, 24, 2); }
+  // tia nhiệt
+  if (b.jet){ const j = b.jet, a = j.a ?? j.a0, L = jetLen(b, a), on = j.t > 1.2; ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(a);
+    if (!on){ ctx.globalAlpha = .45 + .3*Math.sin(t*30); ctx.setLineDash([8,6]); ctx.lineWidth = 1.5; line(60, 0, L, 0); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    else { ctx.lineWidth = 14; line(60, 0, L, 0); ctx.strokeStyle = PAPER; ctx.lineWidth = 4; line(60, 0, L, 0); for (let k=0;k<6;k++){ const xx = 70 + ((t*900 + k*80) % (L - 70)); ctx.lineWidth = 2; line(xx, -6, xx + 20, 6); } ctx.strokeStyle = INK;
+      ctx.fillStyle = INK; for (let k=0;k<5;k++){ ctx.beginPath(); ctx.arc(L, (Math.random()-.5)*14, 4 + Math.random()*5, 0, Math.PI*2); ctx.fill(); } }
+    ctx.restore(); }
+  // cột hơi + sóng xung kích + cầu nhiệt
+  for (const s of b.shots){
+    if (s.kind==='vent'){ if (s.t < 1.5){ ctx.globalAlpha = .5; for (let k=0;k<3;k++){ const q = ((t*2 + k/3) % 1); ctx.beginPath(); ctx.arc(s.x + Math.sin(k*3)*6, floorY - 6 - q*20, 3 + q*5, 0, Math.PI*2); ctx.stroke(); } ctx.globalAlpha = 1; ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('xì…', s.x, floorY - 34); }
+      else if (s.t < 2.7){ const h = 4.2*T*Math.min(1, (s.t - 1.5)*6); ctx.fillStyle = PAPER; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(s.x - 12, floorY); for (let y = 0; y <= h; y += 10){ ctx.lineTo(s.x - 12 - Math.sin(y*.1 + t*20)*4 - y*.05, floorY - y); } for (let y = h; y >= 0; y -= 10){ ctx.lineTo(s.x + 12 + Math.sin(y*.12 + t*18)*4 + y*.05, floorY - y); } ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = INK; } }
+    else if (s.kind==='wave'){ ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(s.x - s.dir*24, floorY); ctx.quadraticCurveTo(s.x, floorY - 22, s.x + s.dir*6, floorY); ctx.stroke(); ctx.globalAlpha = .4; line(s.x - s.dir*60, floorY - 3, s.x - s.dir*24, floorY - 3); ctx.globalAlpha = 1; }
+    else if (s.kind==='orb'){ const r = 10 + Math.sin(t*14)*1.5; ctx.fillStyle = s.ref ? PAPER : INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle = s.ref ? INK : PAPER; ctx.font = `700 8px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('Q', s.x, s.y + 3); ctx.fillStyle = INK;
+      ctx.globalAlpha = .3; for (let k=1;k<4;k++){ ctx.beginPath(); ctx.arc(s.x - s.vx*k*.02, s.y - s.vy*k*.02, r - k*2, 0, Math.PI*2); ctx.stroke(); } ctx.globalAlpha = 1; }
+  }
+  // piston thuỷ lực trên ray trần
+  ctx.lineWidth = 4; line(A0 + 20, 2*T + 4, A1 - 20, 2*T + 4);
+  for (const ps of b.pistons){ const X = ps.x, Y = ps.y; ctx.fillStyle = INK; ctx.fillRect(X - 26, 2*T - 4, 52, 16);
+    ctx.fillStyle = PAPER; ctx.lineWidth = 3; ctx.fillRect(X - 9, 2*T + 10, 18, Math.max(0, Y - 2*T - 40)); ctx.strokeRect(X - 9, 2*T + 10, 18, Math.max(0, Y - 2*T - 40));
+    ctx.fillStyle = INK; ctx.fillRect(X - 32, Y - 32, 64, 32); ctx.fillStyle = PAPER; for (let k=0;k<4;k++) ctx.fillRect(X - 26 + k*15, Y - 26, 8, 3);
+    const tell = ps.st==='tell' || ps.st==='aim'; ctx.fillStyle = tell && Math.floor(t*14)%2 ? PAPER : INK; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X, Y - 40, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    if (tell){ ctx.globalAlpha = .4; ctx.setLineDash([5,6]); ctx.lineWidth = 1.5; line(ps.tx - 32, 14*T, ps.tx + 32, 14*T); line(ps.tx, Y, ps.tx, 14*T); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    if (ps.st==='stuck'){ ctx.fillStyle = INK; ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('KẸT!', X, Y - 52); } }
+  // mảnh vỡ quay quanh lõi (giai đoạn 3)
+  if (b.phase === 3 && !b.dead) for (let i=0;i<6;i++){ const a = b.orbit*1.4 + i/6*Math.PI*2, r = 130 + Math.sin(b.orbit*2 + i)*14; ctx.save(); ctx.translate(b.x + Math.cos(a)*r, b.y + Math.sin(a)*r*.7); ctx.rotate(t*3 + i); ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(-10, -6); ctx.lineTo(9, -8); ctx.lineTo(6, 8); ctx.lineTo(-8, 5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  // điểm kỳ dị: các vòng sóng nhiệt co lại
+  if (b.sing){ for (let k=0;k<4;k++){ const q = 1 - ((b.sing.t*1.4 + k/4) % 1); ctx.globalAlpha = (1-q)*.6; ctx.lineWidth = 2; ctx.beginPath(); for (let i=0;i<=40;i++){ const a = i/40*Math.PI*2, rr = q*420 + Math.sin(a*6 + t*8)*6; i ? ctx.lineTo(b.x + Math.cos(a)*rr, b.y + Math.sin(a)*rr*.7) : ctx.moveTo(b.x + rr, b.y); } ctx.stroke(); } ctx.globalAlpha = 1; }
+  // sóng nhiệt bốc lên trên lõi
+  ctx.globalAlpha = .25 + H*.35; ctx.lineWidth = 1.5; for (let k=0;k<5;k++){ ctx.beginPath(); for (let y = 0; y < 90; y += 6){ const xx = b.x - 40 + k*20 + Math.sin(y*.12 - t*6 + k)*4*(1+H); y ? ctx.lineTo(xx, b.y - 70 - y) : ctx.moveTo(xx, b.y - 70); } ctx.stroke(); } ctx.globalAlpha = 1;
+  // THÂN LÕI: bình cầu tán đinh, ô kính tròn thấy lõi nóng, nhiệt kế bên hông
+  const shk = (b.hurtT > 0 ? (Math.random()-.5)*8 : 0) + (b.blast && !b.blast.done ? (Math.random()-.5)*b.blast.t*4 : 0), inv = b.hurtT > 0 && Math.floor(t*20)%2, F = inv ? PAPER : INK, Bc = inv ? INK : PAPER;
+  ctx.save(); ctx.translate(b.x + shk, b.y); ctx.globalAlpha = b.dead ? Math.max(.35, 1 - b.dieT/3) : 1;
+  ctx.fillStyle = F; ctx.beginPath(); ctx.arc(0, 0, 62, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = Bc; for (let k=0;k<16;k++){ const a = k/16*Math.PI*2; ctx.beginPath(); ctx.arc(Math.cos(a)*55, Math.sin(a)*55, 2.2, 0, Math.PI*2); ctx.fill(); }
+  ctx.strokeStyle = Bc; ctx.lineWidth = 2; line(-62, 0, -40, 0); line(40, 0, 62, 0);
+  // cửa chớp: mở khi lõi lộ ra
+  const open = b.exposed > 0 ? Math.min(1, (b.exposed > 3.6 ? (5 - b.exposed)*3 : 1)) : 0;
+  const coreR = 30; const glow = ctx.createRadialGradient(0, 0, 2, 0, 0, coreR); glow.addColorStop(0, PAPER); glow.addColorStop(Math.max(.05, 1 - H*.9), PAPER); glow.addColorStop(1, `rgba(${inv?'17,17,17':'245,243,236'},${.3 + H*.5})`);
+  ctx.fillStyle = Bc; ctx.beginPath(); ctx.arc(0, 0, coreR + 4, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(0, 0, coreR, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = F; ctx.globalAlpha *= .9; ctx.beginPath(); ctx.arc(0, 0, coreR*(.25 + (1-H)*.35) + Math.sin(t*10)*2*H, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha /= .9;   // nhân Mực Đen trong lõi: càng nóng càng teo
+  for (let k=0;k<4;k++){ const a = k/4*Math.PI*2 + Math.PI/4; ctx.save(); ctx.rotate(a); ctx.fillStyle = F; ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, coreR + 5, -Math.PI/4*(1 - open), Math.PI/4*(1 - open)); ctx.closePath(); if (open < 1) ctx.fill(); ctx.restore(); }
+  ctx.strokeStyle = F; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, coreR + 5, 0, Math.PI*2); ctx.stroke();
+  // nhiệt kế
+  ctx.fillStyle = Bc; ctx.strokeStyle = F; ctx.lineWidth = 2; ctx.fillRect(68, -40, 12, 70); ctx.strokeRect(68, -40, 12, 70); ctx.beginPath(); ctx.arc(74, 36, 9, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = F; ctx.fillRect(71, 30 - 66*H, 6, 66*H); ctx.beginPath(); ctx.arc(74, 36, 6, 0, Math.PI*2); ctx.fill();
+  ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(Math.round(b.heat) + '°', 84, -30 + 0);
+  // áp kế
+  ctx.fillStyle = Bc; ctx.beginPath(); ctx.arc(-76, -10, 13, 0, Math.PI*2); ctx.fill(); ctx.stroke(); const na = Math.PI*.8 + H*Math.PI*1.4 + (b.phase >= 2 ? Math.sin(t*25)*.08 : 0); ctx.strokeStyle = F; line(-76, -10, -76 + Math.cos(na)*10, -10 + Math.sin(na)*10); ctx.font = `700 7px ${FONT}`; ctx.textAlign = 'center'; ctx.fillStyle = F; ctx.fillText('p', -76, 10);
+  if (b.exposed > 0){ ctx.fillStyle = INK; ctx.font = `700 11px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('LÕI LỘ! ' + Math.ceil(b.exposed) + 's', 0, -78); }
+  ctx.restore();
+  // nổ hơi nước sắp tới: vòng cảnh báo
+  if (b.blast && !b.blast.done){ const q = b.blast.t/2.6; ctx.globalAlpha = .3 + .4*Math.sin(t*20); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(b.x, b.y, 80 + q*700, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1; }
+  if (b.blast && b.blast.done){ const q = (b.blast.t - 2.6)/.6; ctx.globalAlpha = Math.max(0, 1 - q)*.8; ctx.fillStyle = PAPER; ctx.beginPath(); ctx.arc(b.x, b.y, 100 + q*900, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1; }
+  ctx.restore();
+}
+function drawCoreHUD(){
+  const b = cboss; if (!b || !b.engaged || b.dead) return; const w = Math.min(300, viewW - 420), x = (viewW - w)/2, y = 24;
+  ctx.save(); ctx.fillStyle = PAPER; ctx.globalAlpha = .85; ctx.fillRect(x - 10, y - 20, w + 20, 62); ctx.globalAlpha = 1; ctx.fillStyle = INK; ctx.font = `700 11px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(`LÕI NHIỆT ĐỘNG · GIAI ĐOẠN ${b.phase}`, viewW/2, y - 6);
+  ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(x, y, w, 10); for (let i=0;i<b.max;i++) if (i < b.hp) ctx.fillRect(x + 2 + i*(w-4)/b.max, y + 2, (w-4)/b.max - 2, 6);
+  // thanh nhiệt
+  ctx.strokeRect(x, y + 16, w, 7); ctx.globalAlpha = .7; ctx.fillRect(x + 1, y + 17, (w - 2)*b.heat/100, 5); ctx.globalAlpha = 1; ctx.font = `400 8px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(`nhiệt ${Math.round(b.heat)}%`, x, y + 33);
+  ctx.setLineDash([2,3]); line(x + w*.6, y + 14, x + w*.6, y + 25); ctx.setLineDash([]);
+  if (b.melt > 0){ ctx.font = `700 ${b.melt < 10 ? 26 : 20}px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(`SỤP ĐỔ HỆ THỐNG · ${b.melt.toFixed(1)}s`, viewW/2, 92 + 4); }
+  ctx.restore();
+}
+function updateMath(dt){ updateGear(dt); updateCoreBoss(dt); if (!LEVELS[lvl].math) return; updateNumTiles(dt); updateLaunchers(dt); updateMathFx(dt); updateMathBoss(dt); }
+function drawMathWorld(){ drawGearWorld(); drawCoreBoss(); if (!LEVELS[lvl].math) return; drawGraphZones(); drawGoneNums(); drawSines(); drawLaunchers(); drawMathOrbs(); drawQuizBoards(); drawMathFx(); drawMathBoss(); }
 
 // Đổi lọ: lọ cũ bay ngược vào ba lô, lọ mới bật ra xoay vòng rồi rơi vào tay
 let swapFx = null; const SWAP_DUR = .6;
@@ -2222,6 +2459,9 @@ function splash(x, y, kind){
     }
   }
   if (boss && !boss.dead && Math.hypot(boss.x+boss.w/2-x, boss.y+boss.h/2-y) < SPLASH_R + boss.w/2) bossFlask(kind);
+  if (cboss && cboss.engaged && !cboss.dead && Math.hypot(cboss.x - x, cboss.y - y) < SPLASH_R + 62){
+    if (cboss.exposed > 0) coreHurt(1, kind==='h2so4' ? 'H₂SO₄ đặc ăn vào lõi trần!' : kind==='acid' ? 'HCl bắn vào lõi trần!' : 'NaOH bám vào lõi trần!');
+    else popups.push({x:cboss.x, y:cboss.y - 80, text:'vỏ thép đang đóng: chờ lõi lộ ra', life:1.4}); }
 }
 function dissolveLime(sx, sy){
   const q=[[sx,sy]], seen=new Set(); let n=0;
@@ -3485,7 +3725,14 @@ const STORY = {
     ],
     [
       {shots:[
-        cineShot('forge', [0,200,1,0],   [0,120,1.4,0],7,   'Nồi luyện chạy lại. Ngọn lửa nhỏ trong ngực Bấc bừng lên, như đáp lại. Lần đầu tiên, cậu cháy mà không thấy mình ngắn đi.', {chest:true, tr:'fade'}),
+        cineShot('forge', [0,140,.9,0], [0,40,1.25,0], 7, 'Nồi luyện vừa ấm lên thì kim áp kế vọt qua vạch đỏ. Một giọt Mực Đen đã chui vào lõi lò.', {tr:'fade'}),
+        cineCard('Nhiệt không bao giờ tự đi từ vật lạnh sang vật nóng. Muốn đảo ngược, phải trả giá.', 5),
+      ]},
+      {scene:'chapter', title:'Phần 5 · Lõi Nhiệt Động', icon:'lab', lines:['Nơi entropy chỉ có một chiều: tăng.']},
+    ],
+    [
+      {shots:[
+        cineShot('forge', [0,200,1,0],   [0,120,1.4,0],7,   'Lõi nguội dần. Nồi luyện chạy lại. Ngọn lửa nhỏ trong ngực Bấc bừng lên, như đáp lại. Lần đầu tiên, cậu cháy mà không thấy mình ngắn đi.', {chest:true, tr:'fade'}),
         cineCard('Trong ba lô giờ có ba lọ: một để phá, một để hoá giải, và một thứ mạnh đến mức phải học cách dùng nó.', 6),
         cineCard('Hết Chương 3', 3.5),
         cineShot('study',   [-90,50,2.0,0],  [-60,55,2.4,0],   6.5, 'Đêm ấy, Giáo sư mở một ngăn kéo khoá kỹ: những cuốn sổ toán của Hạ.', {mode:'think', prof:'look', tr:'fade'}),
@@ -3648,12 +3895,14 @@ function drawLeverFx(){
   ctx.restore();
 }
 function updateZoom(dt){
-  let want = (boss && (boss.engaged || bossCS) && !boss.dead) ? Math.min(RH, (boss.arena.floor - boss.arena.top) + 3*T) : (mboss && mboss.engaged && !mboss.dead) ? Math.min(RH, VIEW_H*1.3) : (player && player.sit) ? Math.min(RH, VIEW_H*1.3) : VIEW_H;
+  let want = (boss && (boss.engaged || bossCS) && !boss.dead) ? Math.min(RH, (boss.arena.floor - boss.arena.top) + 3*T) : (mboss && mboss.engaged && !mboss.dead) ? Math.min(RH, VIEW_H*1.3) : (player && player.sit) ? Math.min(RH, VIEW_H*1.3) : (cboss && cboss.engaged && !cboss.dead) ? Math.min(RH, 14.5*T) : VIEW_H;
   const wantZ = want, sp = zoomH < VIEW_H*.95 ? 5 : 2.5;
   if (Math.abs(wantZ - zoomH) > .5){ zoomH += (wantZ - zoomH)*Math.min(1, dt*sp); layout(); }
 }
 function updateCam(dt, snap, center){
   const px = player.x+11, py = player.y+17, mx = viewW*CAM_EDGE, my = viewH*CAM_EDGE;
+  if (cboss && cboss.engaged && !cboss.dead && !snap){ const d = cboss.def, cxm = (d.arena[0] + d.arena[1] + 1)/2*T, fx = cxm*.7 + px*.3;
+    const tx = clamp(fx - viewW/2, 0, Math.max(0, RW - viewW)), ty = clamp(RH - viewH, 0, Math.max(0, RH - viewH)), k = Math.min(1, dt*3); camX += (tx-camX)*k; camY += (ty-camY)*k; return; }
   if (mboss && mboss.engaged && !mboss.dead && !snap){   // khung đấu boss toán: giữ cả Bấc lẫn boss trong hình
     const fx = px*.6 + mboss.x*.4, fy = Math.min(py, mboss.y + 120);
     const tx = clamp(fx - viewW/2, 0, Math.max(0, RW - viewW)), ty = clamp(fy - viewH/2 + 30, 0, Math.max(0, RH - viewH)), k = Math.min(1, dt*3); camX += (tx-camX)*k; camY += (ty-camY)*k; return; }
@@ -3718,7 +3967,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
-  spawnMath = !!L.math; ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
+  spawnMath = !!L.math; cboss = null; ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
   parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
@@ -3753,6 +4002,7 @@ function load(i){
   diary.sort((a,b)=>a.x-b.x).forEach((d,i)=>{ d.idx=i; d.no=i_global(i); d.got=gotPages.has(d.no); });
   secrets.sort((a,b)=>a.x-b.x).forEach((q,k)=>{ q.text = (L.secrets||[])[k] || 'Một con hạc giấy nhỏ.'; });
   buildCeil();
+  if (L.coreBoss) cboss = makeCore(L);
   computeAmmo(L); if (!reagentList().includes(reagent)) reagent = 'base';
   { const ks = Object.values(numTiles).sort((a,b)=>a.x-b.x || a.y-b.y); ks.forEach((n,i)=>{ n.val = (L.nums||[])[i % Math.max(1,(L.nums||[]).length)] ?? 0; }); }
   initMath(L, orbCells, bossCell);
@@ -3777,6 +4027,7 @@ function respawn(){
   SFX.play('respawn');
   if (wave && wave.active){ wave.active = false; wave.idx = 0; wave.pending = []; enemies = enemies.filter(e=>!e.wave); }
   if (boss && !boss.dead) resetBoss();
+  if (cboss && cboss.engaged && !cboss.dead){ resetCoreBoss(); popups.push({x:cp.x+11, y:cp.y-30, text:'Lõi hồi phục: đấu lại từ đầu!', life:2.4, big:true}); }
   if (mboss && mboss.engaged && !mboss.dead){ resetMathBoss(); popups.push({x:cp.x+11, y:cp.y-30, text:'Boss hồi đầy máu: đấu lại từ đầu!', life:2.4, big:true}); }
   blobs = []; flasks = [];
   for (const r of ropes) r.held = false;
@@ -4005,9 +4256,13 @@ const SAVE_KEY = 'phongkin_save_v1';
 let saveT = 0;
 function saveGame(){
   if (!player || !cp || !(state==='play' || state==='trans') || (LEVELS[lvl] && LEVELS[lvl].secret)) return;
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({v:1, lvl, cpSeg, cp:{x:cp.x, y:cp.y}, pages:[...gotPages], secrets:[...gotSecrets], deaths, time:(performance.now()-t0)/1000, introSeen, h2so4:hasH2SO4, gear:[...gear]})); } catch(e){}
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({v:1, lvl, name:LEVELS[lvl].name, cpSeg, cp:{x:cp.x, y:cp.y}, pages:[...gotPages], secrets:[...gotSecrets], deaths, time:(performance.now()-t0)/1000, introSeen, h2so4:hasH2SO4, gear:[...gear]})); } catch(e){}
 }
-function loadSave(){ try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (s && s.v===1 && LEVELS[s.lvl]) return s; } catch(e){} return null; }
+function loadSave(){ try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (!s || s.v!==1) return null;
+    // bản cũ chưa lưu tên màn: các màn từ vị trí 16 trở đi đã lùi 1 do chèn boss Lõi Nhiệt Động
+    if (s.name){ const i = LEVELS.findIndex(L=>L.name===s.name); if (i >= 0) s.lvl = i; }
+    else if (s.lvl >= 16) s.lvl += 1;
+    if (LEVELS[s.lvl]) return s; } catch(e){} return null; }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch(e){} }
 function continueGame(){
   const sv = loadSave(); if (!sv){ begin(); return; }
@@ -4309,6 +4564,7 @@ function update(dt){
   // Ánh sáng: dò tia từ nguồn, phản xạ ở gương, xuyên kính; thiêu bóng mực, châm sứa và đèn, kích cảm biến
   computeBeams();
   // Cần gạt
+  if (actPress && cboss && useCoreValve()) actPress = false;
   if (actPress && LEVELS[lvl].warp){ const w = LEVELS[lvl].warp, px = player.x+11, py = player.y+17;
     if (px > w.x*T - 34 && px < (w.x+w.w)*T + 20 && py > w.y*T - 30 && py < (w.y+w.h)*T + 30){ actPress = false; const to = LEVELS.findIndex(L=>L.name===w.to);
       const T2 = LEVELS[to]; let sx = 7, sr = 13; T2.map.forEach((r,y)=>{ const i = r.indexOf('P'); if (i >= 0){ sx = i + .5; sr = y + 1; } });
@@ -4365,7 +4621,7 @@ function update(dt){
     for (let i=0;i<12;i++){ const a=i/12*Math.PI*2; parts.push({x:d.x,y:d.y,vx:Math.cos(a)*160,vy:Math.sin(a)*160,a,va:0,l:5,life:.5}); }
   }
   updateCrow(dt); updateTips(dt); updateMath(dt);
-  if (p.ground && p.dashT<=0 && !p.pushing) mana = Math.min(MANA_MAX, mana + MANA_REGEN*dt);
+  if (p.ground && p.dashT<=0 && !p.pushing) mana = Math.min(MANA_MAX, mana + MANA_REGEN*dt*(cboss && cboss.engaged && !cboss.dead && cboss.heat > 70 ? .4 : 1));   // định luật 2: phòng nóng → mực hồi chậm
   for (const o of orbs){
     o.cd -= dt;
     if (o.cd<=0 && Math.hypot(o.x-cx, o.y-cy)<26 && mana<MANA_MAX){
@@ -7522,7 +7778,7 @@ function drawGame(){
   // HUD vẽ nhỏ lại theo hệ số HK để không tràn khung nhìn
   ctx.save(); ctx.scale(HK, HK); const vw0 = viewW, vh0 = viewH; viewW /= HK; viewH /= HK;
   try {
-  if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawQuestHUD(); drawMathBossHUD(); drawMathHUD(); drawGearHUD(); drawBossLine(); }
+  if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawQuestHUD(); drawMathBossHUD(); drawCoreHUD(); drawMathHUD(); drawGearHUD(); drawBossLine(); }
   drawNotes();
   drawNightQuote();
   // nút loa (cạnh thanh mực): bấm hoặc nhấn M
@@ -7577,6 +7833,7 @@ function pickMusic(){
   if (boss && boss.engaged && !boss.dead) return boss.phase===4 ? ['heart',1] : ['boss', boss.phase];
   const th = LEVELS[lvl] && LEVELS[lvl].theme;
   if (mboss && mboss.engaged && !mboss.dead) return ['boss', 1 + Math.min(2, Math.floor((mboss.max - mboss.hp)/2))];
+  if (cboss && cboss.engaged && !cboss.dead) return ['boss', cboss.phase];
   if (th==='night') return ['night', 1];
   return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', dangerLevel()];
 }
