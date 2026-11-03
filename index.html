@@ -80,6 +80,7 @@ const LEVELS = [
           'Nhảy vào tường để bám. Đang bám thì nhảy tiếp để leo.',
           'Chạm hạt sáng: được nhảy thêm một lần và lướt lại.'],
    secrets:['Hạc giấy đầu tiên ông gấp cho Bấc. Mặt trong ghi: "Nhìn lên cao một chút."'],
+   warp:{x:23, y:3, w:3, h:2.5, to:'Hiên Đêm'},
    decor:[['chand',27],['shelfw',15,2.2],['door',6],['sign',12,'TẦNG TRỆT'],['lamp',2],['lamp',18],['window',23,3],['frame',31,4],['clock',50,1.6],['frame',55,1.2],['lamp',81],['window',64,1.5]],
    map:[
   '######################################################################################',
@@ -916,6 +917,30 @@ const LEVELS = [
   '################################################################',
   '################################################################',
  ]},
+ // ===== MÀN ẨN: Hiên Đêm (ra từ cửa sổ Tầng trệt, nhấn E). Không tính vào tiến trình =====
+ { name:'Hiên Đêm', theme:'night', secret:true, side:true, ret:{lvl:0, x:19.5, row:3}, bench:[56.5, 2],
+   pages:[], talks:[], secrets:[], decor:[],
+   hints:['Hiên đêm. Thành phố sáng đèn, mưa rất nhẹ. Đi sang trái (cửa sổ) để quay vào nhà.', 'Không có gì phải vội.', 'Bồn nước trên kia có một chỗ ngồi.'],
+   map:[
+  '####....................................................................',
+  '####....................................................................',
+  '####....................................................................',
+  '####..................................................######............',
+  '####..................................................######............',
+  '####..................................................#....#___.........',
+  '####..................................................#....#............',
+  '####..................................................#....#.___........',
+  '####..................................................#....#............',
+  '####........................##.........############################.....',
+  '####........................##.........############################.....',
+  '####..................#############....############################.....',
+  '####E..P..........##..#############....############################.....',
+  '#################.##..#############....############################.....',
+  '#################.....#############....############################.....',
+  '####..................#############.##.############################.....',
+  '########################################################################',
+  '########################################################################'
+   ]}
 ];
 
 // ===================================================================
@@ -985,6 +1010,7 @@ const SFX = (() => {
     sizzle:   ()=>{ noise({type:'highpass', f:3500, f2:6000, t:.6, v:.18}); },
     fizz:     ()=>{ noise({type:'highpass', f:2000, t:1.2, v:.12}); for (let i=0;i<18;i++) tone({f:R(500,1600), f2:R(1600,2400), t:.03, v:.04, d:i*.06}); tone({f:200, f2:600, t:.8, v:.08}); },
     caw:      ()=>{ tone({type:'sawtooth', f:760, f2:430, t:.12, v:.07, bp:1300, q:3}); tone({type:'sawtooth', f:720, f2:400, t:.14, v:.07, bp:1300, q:3, d:.16}); },
+    drip:     ()=>{ tone({f:R(1400,2400), f2:R(500,800), t:.06, v:.018}); },
     tick:     ()=>{ tone({type:'square', f:R(1700,2000), t:.012, v:.025}); },
     turn:     ()=>{ noise({type:'highpass', f:2500, f2:4000, t:.14, v:.09}); },
     start:    ()=>{ [392,523,659].forEach((f,i)=>tone({type:'triangle', f, t:.4, v:.1, d:i*.1})); },
@@ -1098,10 +1124,30 @@ const SFX = (() => {
       if (I>=2 && s%2===1) drum('h', t, .018);
       if (I>=3 && s%16===0) for (const m of [62,65,69]) nt('sawtooth', m, t, .35, .018, {lp:2200});
       if (s%32===28) nt('square', 74 + (I>=3?1:0), t, .25, .02, {lp:2500}); }},
+    // Hiên Đêm: lofi siêu chill — Rhodes giả (sine + tam giác lệch nhẹ), hợp âm maj7/9, trống chổi lười, bass tròn, tiếng đĩa than lẹt xẹt
+    night: {bpm:72, tense:false, fn(s,t){
+      const ch = prog(s, [[53,57,60,64,67],[52,55,59,62,64],[50,53,57,60,64],[48,52,55,59,62]]), bar = s%16, sw = (s%2) ? .045 : 0, tt = t + sw;
+      if (bar===0){ for (let i=0;i<ch.length;i++){ nt('sine', ch[i], t + i*.018, 3.6, .028 - i*.003, {a:.02}); nt('triangle', ch[i]+12, t + i*.018, 2.2, .006, {a:.03, lp:1800, det:6}); } }
+      if (bar===10 && Math.random()<.7) for (let i=1;i<4;i++) nt('sine', ch[i], tt + i*.02, 1.4, .016, {a:.02});
+      if (bar===0) nt('sine', ch[0]-24, t, 1.2, .1, {a:.02}); if (bar===7) nt('sine', ch[0]-24+7, tt, .5, .06, {a:.02}); if (bar===10) nt('sine', ch[0]-24, tt, .8, .08, {a:.02});
+      if (bar===0 || bar===9) drum('k', tt, .09); if (bar===4 || bar===12) drum('s', tt, .02);
+      if (s%2===0 && Math.random()<.85) drum('h', tt, .006 + (s%4===2 ? .004 : 0));
+      const pent = [0,2,4,7,9]; if ((bar===2 || bar===6 || bar===13) && Math.random()<.5) nt('sine', 72 + pent[Math.floor(Math.random()*5)] + (ch[0]%12===2 ? -2 : 0), tt, .9, .018, {a:.01, lp:2400});
+      if (Math.random()<.12) drum('h', t + Math.random()*.1, .003); }},
     // Tim Mực: chỉ còn nhịp tim và tiếng ù chói
     heart: {bpm:72, fn(s,t){ if (s%8===0) drum('k', t, .3); if (s%8===2) drum('k', t, .2);
       if (s%32===0){ nt('sine', 74, t, 7, .02, {a:2}); nt('sine', 75, t, 7, .02, {a:2}); nt('sawtooth', 26, t, 7, .05, {a:1, lp:200}); } }},
   };
+  // lớp căng thẳng phủ lên nhạc khám phá khi có nguy hiểm: bass dồn móc, hi-hat 16 phách, dây cao chói nửa cung, trống nhịp tim
+  const TRACKS_NOTENSE = new Set(['boss','heart','story','night']);
+  function tension(s, t, I){
+    const root = [38, 38, 41, 36][Math.floor(s/32)%4];
+    if (s%2===0) nt('sawtooth', root - (s%8===6 ? -1 : 0), t, .16, I >= 3 ? .05 : .035, {lp:700, lp2:160, q:5});
+    if (s%2===1 || I >= 3) drum('h', t, .008);
+    if (s%8===0) drum('k', t, I >= 3 ? .16 : .1); if (I >= 3 && s%8===3) drum('k', t, .08);
+    if (s%32===0){ nt('sawtooth', 74, t, 3.4, .009, {a:.6, lp:2600, det:-5}); nt('sawtooth', 75, t, 3.4, .009, {a:.6, lp:2600, det:5}); }
+    if (I >= 3 && s%16===12) drum('s', t, .04);
+  }
   function sched(){
     if (!ac || !M.bus) return;
     if (M.want !== M.name){                       // chuyển bài: hạ nhỏ rồi đổi
@@ -1113,13 +1159,13 @@ const SFX = (() => {
     const tr = TRACKS[M.name]; if (!tr) return;
     const spb = 60/tr.bpm/4;
     if (M.next < now() - .5) M.next = now() + .05;
-    while (M.next < now() + .25){ try { tr.fn(M.step, M.next, M.inten); } catch(e){} M.step++; M.next += spb; }
+    while (M.next < now() + .25){ try { tr.fn(M.step, M.next, M.inten); if (tr.tense !== false && M.inten >= 2 && !TRACKS_NOTENSE.has(M.name)) tension(M.step, M.next, M.inten); } catch(e){} M.step++; M.next += spb; }
   }
   return {
     init(){ init(); musInit(); },
     music(name, inten){ M.want = name; M.inten = inten || 1; if (ac && !M.bus) musInit(); },
     play(name, arg){ if (!ac || muted || !lib[name]) return; try { lib[name](arg); } catch(e){} },
-    loop(name, level){ if (!ac) return; const C = {slide:{type:'bandpass',f:2600,q:2,v:.07}, belt:{type:'bandpass',f:180,q:3,v:.12}, gale:{type:'bandpass',f:600,q:.5,v:.08}, push:{type:'lowpass',f:260,v:.16}, steam:{type:'highpass',f:2800,v:.08}, wind:{type:'bandpass',f:900,q:.6,v:.05}}[name]; loop(name, muted?0:level, C); },
+    loop(name, level){ if (!ac) return; const C = {slide:{type:'bandpass',f:2600,q:2,v:.07}, belt:{type:'bandpass',f:180,q:3,v:.12}, gale:{type:'bandpass',f:600,q:.5,v:.08}, push:{type:'lowpass',f:260,v:.16}, steam:{type:'highpass',f:2800,v:.08}, wind:{type:'bandpass',f:900,q:.6,v:.05}, rain:{type:'highpass',f:1500,v:.045}, city:{type:'lowpass',f:220,v:.09}, hiss:{type:'bandpass',f:4200,q:.25,v:.018}}[name]; loop(name, muted?0:level, C); },
     toggle(){ muted = !muted; try { localStorage.setItem('phongkin_mute', muted?'1':'0'); } catch(e){} if (master) master.gain.setTargetAtTime(muted?0:.55, now(), .02); if (muted) for (const k in loops) loops[k].g.gain.value = 0; },
     get muted(){ return muted; },
   };
@@ -3590,7 +3636,7 @@ function drawLeverFx(){
   ctx.restore();
 }
 function updateZoom(dt){
-  let want = (boss && (boss.engaged || bossCS) && !boss.dead) ? Math.min(RH, (boss.arena.floor - boss.arena.top) + 3*T) : (mboss && mboss.engaged && !mboss.dead) ? Math.min(RH, VIEW_H*1.3) : VIEW_H;
+  let want = (boss && (boss.engaged || bossCS) && !boss.dead) ? Math.min(RH, (boss.arena.floor - boss.arena.top) + 3*T) : (mboss && mboss.engaged && !mboss.dead) ? Math.min(RH, VIEW_H*1.3) : (player && player.sit) ? Math.min(RH, VIEW_H*1.3) : VIEW_H;
   const wantZ = want, sp = zoomH < VIEW_H*.95 ? 5 : 2.5;
   if (Math.abs(wantZ - zoomH) > .5){ zoomH += (wantZ - zoomH)*Math.min(1, dt*sp); layout(); }
 }
@@ -3869,7 +3915,7 @@ function computeSteam(){
 
 // ===== Input =====
 const inp = {left:false,right:false,jump:false,throw:false};
-let jumpBuf=0, dashBuf=0, actPress=false;
+let jumpBuf=0, dashBuf=0, actPress=false, transTo=null;
 const KEYMAP = {KeyV:'lens', ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'jump',KeyW:'jump',Space:'jump',KeyZ:'jump',KeyC:'jump',KeyF:'throw',KeyJ:'throw',KeyE:'act'};
 function trigger(kind){
   if (bossCS){ skipBossCS(); return; }
@@ -3946,7 +3992,7 @@ cv.addEventListener('pointerup',up); cv.addEventListener('pointercancel',up);
 const SAVE_KEY = 'phongkin_save_v1';
 let saveT = 0;
 function saveGame(){
-  if (!player || !cp || !(state==='play' || state==='trans')) return;
+  if (!player || !cp || !(state==='play' || state==='trans') || (LEVELS[lvl] && LEVELS[lvl].secret)) return;
   try { localStorage.setItem(SAVE_KEY, JSON.stringify({v:1, lvl, cpSeg, cp:{x:cp.x, y:cp.y}, pages:[...gotPages], secrets:[...gotSecrets], deaths, time:(performance.now()-t0)/1000, introSeen, h2so4:hasH2SO4, gear:[...gear]})); } catch(e){}
 }
 function loadSave(){ try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (s && s.v===1 && LEVELS[s.lvl]) return s; } catch(e){} return null; }
@@ -3975,7 +4021,7 @@ function die(){
   SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0);
   for (let i=0;i<16;i++) parts.push({x:player.x+11,y:player.y+17,vx:(Math.random()-.5)*420,vy:-Math.random()*420,a:Math.random()*6,va:(Math.random()-.5)*12,l:6+Math.random()*10,life:1});
 }
-function win(){ state='trans'; tState=0; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); }
+function win(){ const L0 = LEVELS[lvl]; if (L0 && L0.secret && L0.ret){ transTo = {lvl:L0.ret.lvl, x:L0.ret.x, row:L0.ret.row, face:-1, sfx:'door'}; } state='trans'; tState=0; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); }
 function dust(x,y,n,dirx=0){
   for (let i=0;i<n;i++) parts.push({x,y,vx:dirx*80+(Math.random()-.5)*120,vy:-Math.random()*120,a:Math.random()*6,va:(Math.random()-.5)*8,l:3+Math.random()*4,life:.5});
 }
@@ -3995,6 +4041,9 @@ function updateMirrorHold(dt){
 function updatePlayer(dt){
   const p = player;
   updateMirrorHold(dt);
+  if (p.sit){ p.sitT += dt; p.vx = 0; dashBuf = 0;
+    if ((inp.left || inp.right || jumpBuf > 0) && p.sitT > .6){ p.sit = false; jumpBuf = 0; SFX.play('step'); }
+    else { jumpBuf = 0; heroAnim(p, dt); return; } }
   if (leverAct || forgeSeq || itemGet){ p.vx = 0; jumpBuf = 0; dashBuf = 0; p.vy = Math.min(p.vy + G*dt, FALL_MAX); moveY(p, p.vy*dt); heroAnim(p, dt); return; }
   p.flingT = Math.max(0, (p.flingT||0) - dt);
   if (p.rope){ if (updateRopePlayer(p, dt)) return; }
@@ -4148,6 +4197,9 @@ function update(dt){
   if (swapFx){ swapFx.t += dt; if (swapFx.t > SWAP_DUR) swapFx = null; }
   if (state==='play'){ saveT -= dt; if (saveT <= 0){ saveT = 5; saveGame(); } }
   updateTnt(dt); updateRopes(dt);
+  { const night = state==='play' && LEVELS[lvl] && LEVELS[lvl].theme==='night'; if (night) updateNight(dt);
+    SFX.loop('rain', night ? 1 : 0); SFX.loop('city', night ? 1 : 0); SFX.loop('hiss', night ? 1 : 0);
+    if (night && Math.random() < dt*1.4) SFX.play('drip'); }
   if (bestiary){ updateBestiary(dt); return; }
   if (devMenu) return;
   if (dev.ink) mana = MANA_MAX;
@@ -4172,8 +4224,9 @@ function update(dt){
   if (state==='trans'){
     tState+=dt;
     if (tState>.45 && tState-dt<=.45){
+      if (transTo){ const tt = transTo; transTo = null; lvl = tt.lvl; load(lvl); if (tt.x != null){ player.x = tt.x*T - 11; player.y = tt.row*T - player.h; cp = {x:player.x, y:player.y}; player.face = tt.face || 1; updateCam(0, true, true); } state = 'play'; SFX.play(tt.sfx || 'door'); return; }
       lvl++;
-      if (lvl>=LEVELS.length){ endTime=(performance.now()-t0)/1000; clearSave(); startStory(STORY.finale, ()=>{ state='end'; }); return; }
+      if (lvl>=LEVELS.length || LEVELS[lvl].secret){ endTime=(performance.now()-t0)/1000; clearSave(); startStory(STORY.finale, ()=>{ state='end'; }); return; }
       startStory(STORY.chapters[lvl] || [], ()=>{ load(lvl); state='play'; saveGame(); }); return;
     }
     if (tState>.9) state='play';
@@ -4244,6 +4297,11 @@ function update(dt){
   // Ánh sáng: dò tia từ nguồn, phản xạ ở gương, xuyên kính; thiêu bóng mực, châm sứa và đèn, kích cảm biến
   computeBeams();
   // Cần gạt
+  if (actPress && LEVELS[lvl].warp){ const w = LEVELS[lvl].warp, px = player.x+11, py = player.y+17;
+    if (px > w.x*T - 34 && px < (w.x+w.w)*T + 20 && py > w.y*T - 30 && py < (w.y+w.h)*T + 30){ actPress = false; const to = LEVELS.findIndex(L=>L.name===w.to);
+      const T2 = LEVELS[to]; let sx = 7, sr = 13; T2.map.forEach((r,y)=>{ const i = r.indexOf('P'); if (i >= 0){ sx = i + .5; sr = y + 1; } });
+      transTo = {lvl:to, x:sx, row:sr, face:1, sfx:'door'}; player.actT = .3; win(); return; } }
+  if (actPress && LEVELS[lvl].bench && !player.sit){ const [bx, br] = LEVELS[lvl].bench; if (Math.abs(player.x+11 - bx*T) < 50 && Math.abs(player.y+player.h - (br+1)*T) < 30 && player.ground){ actPress = false; sitDown(); } }
   if (actPress){
     actPress=false;
     { const cx = Math.floor((player.x+11)/T), cy = Math.floor((player.y+17)/T); let mr = null;
@@ -4439,7 +4497,7 @@ function drawForeground(){
     if (hash2(i,3) < .35) continue;
     const x = i*sp - ox + hash2(i,5)*200, len = 50 + hash2(i,9)*90, sw = Math.sin(clock*1.2+i)*.05;
     ctx.save(); ctx.translate(x, -4); ctx.rotate(sw);
-    if (th==='outside'){ ctx.restore(); continue; }
+    if (th==='outside' || th==='night'){ ctx.restore(); continue; }
     if (th==='fallen'){              // xúc tu mực rủ xuống
       ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(0,0); for (let k=1;k<=8;k++) ctx.lineTo(Math.sin(clock*1.4+i+k*.6)*8*k/8, k*len/8); ctx.stroke();
       ctx.beginPath(); ctx.arc(Math.sin(clock*1.4+i+4.8)*8, len+4, 4, 0, Math.PI*2); ctx.fill();
@@ -4471,6 +4529,87 @@ function drawForeground(){
   ctx.restore();
 }
 let vigCv = null, lampConeCv = null;
+// ===== MÀN ẨN: HIÊN ĐÊM =====
+const NIGHT_LINES = ['Dưới kia, cả nghìn ô cửa đang sáng.', 'Sau mỗi ô cửa là một người. Chẳng ai biết có một sợi bấc đang nhìn họ.', 'Mưa nhỏ thôi. Đủ để thành phố dịu lại.', 'Có lẽ Hạ cũng từng ngồi đây. Đếm đèn thay vì đếm sao.', 'Ở lại thêm một chút cũng được.'];
+let nightQ = null;
+function sitDown(){ const p = player, [bx, br] = LEVELS[lvl].bench; p.sit = true; p.sitT = 0; p.x = bx*T - 11; p.y = (br+1)*T - p.h; p.vx = p.vy = 0; p.face = 1; nightQ = {i:0, t:0}; SFX.play('step'); }
+function updateNight(dt){
+  if (!LEVELS[lvl] || LEVELS[lvl].theme !== 'night') return;
+  if (player.sit && nightQ){ nightQ.t += dt; if (nightQ.t > 6.5 && nightQ.i < NIGHT_LINES.length - 1){ nightQ.i++; nightQ.t = 0; } }
+  if (!player.sit) nightQ = null;
+}
+function drawNightQuote(){
+  if (!nightQ || state!=='play') return; const a = clamp(Math.min(nightQ.t/1.2, (6.5 - nightQ.t)/1.2), 0, 1); if (nightQ.i === NIGHT_LINES.length-1) { if (nightQ.t > 1.2) {} }
+  const aa = nightQ.i === NIGHT_LINES.length-1 ? clamp(nightQ.t/1.2, 0, 1) : a;
+  ctx.save(); ctx.globalAlpha = aa; ctx.fillStyle = PAPER; ctx.textAlign = 'center'; ctx.font = `400 ${Math.min(22, viewW/32)}px ${HAND}`; ctx.fillText(NIGHT_LINES[nightQ.i], viewW/2, viewH - 40);
+  ctx.globalAlpha = aa*.5; ctx.font = `400 9px ${FONT}`; ctx.fillText('← → để đứng dậy', viewW/2, viewH - 20); ctx.restore();
+}
+// bầu trời + thành phố nhiều lớp (vẽ trong toạ độ khung nhìn)
+function drawNightSky(){
+  const W = viewW, H = viewH, t = clock;
+  const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0d0d0f'); g.addColorStop(.55, '#1d1d21'); g.addColorStop(1, '#3a3a3f'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // quầng sáng thành phố hắt lên mây
+  const hz = H*.62 - camY*.08; const gl = ctx.createLinearGradient(0, hz - 140, 0, hz + 40); gl.addColorStop(0, 'rgba(255,255,255,0)'); gl.addColorStop(1, 'rgba(255,255,255,.12)'); ctx.fillStyle = gl; ctx.fillRect(0, hz-140, W, 180);
+  // mây trôi
+  ctx.fillStyle = 'rgba(255,255,255,.04)'; for (let i=0;i<6;i++){ const x = ((i*260 - t*6 - camX*.05) % (W+400) + W+400) % (W+400) - 200, y = 30 + (i%3)*28; ctx.beginPath(); ctx.ellipse(x, y, 160, 18, 0, 0, Math.PI*2); ctx.fill(); }
+  // máy bay nhấp nháy
+  { const x = ((t*22) % (W+300)) - 150, y = 40 + Math.sin(t*.2)*8; if (Math.floor(t*1.6)%2){ ctx.fillStyle = '#fff'; ctx.fillRect(x, y, 2, 2); } ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillRect(x+6, y, 1.5, 1.5); }
+  // ba lớp nhà cao tầng: xa mờ → gần đậm, cửa sổ sáng nhấp nháy
+  const layers = [[.12, '#2a2a2f', 'rgba(255,255,255,.35)', 26, 60, 140], [.22, '#1c1c20', 'rgba(255,255,255,.55)', 34, 80, 200], [.35, '#121214', 'rgba(255,250,235,.85)', 44, 50, 150]];
+  layers.forEach(([f, col, win, bw, hmin, hvar], li)=>{
+    const ox = camX*f, base = H*.72 - camY*f*.4 + li*18; const s0 = Math.floor(ox/bw) - 1;
+    for (let i=s0; i*bw - ox < W + bw; i++){ const x = i*bw - ox, h = hmin + hash2(i, li+11)*hvar, w = bw - 3 - hash2(i, li+3)*8, y = base - h;
+      ctx.fillStyle = col; ctx.fillRect(x, y, w, H - y);
+      if (hash2(i, li+7) > .7){ ctx.fillRect(x + w*.45, y - 18, 2, 18); if (Math.floor(t*1.2 + i)%3 === 0){ ctx.fillStyle = '#fff'; ctx.fillRect(x + w*.45 - 1, y - 20, 4, 3); } }   // ăng-ten đèn chớp
+      ctx.fillStyle = win; const cw = li === 2 ? 4 : 2.5, ch = li === 2 ? 5 : 3, gx = li === 2 ? 9 : 6, gy = li === 2 ? 11 : 8;
+      for (let yy = y + 6; yy < H - 6; yy += gy) for (let xx = x + 4; xx < x + w - 4; xx += gx){ const hh = hash2(Math.floor(xx*7 + i), Math.floor(yy) + li*97);
+        if (hh > .62 && !(hh > .985 && Math.floor(t*.5 + hh*20)%2)) ctx.fillRect(xx, yy, cw, ch); }
+      if (li === 2 && hash2(i, 41) > .82){ ctx.save(); ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; const sign = ['PHỞ','24H','CAFÉ','KARAOKE','HOTEL','BIA'][Math.floor(hash2(i,43)*6)]; const on = Math.sin(t*3 + i) > -.7;
+        ctx.strokeStyle = on ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.2)'; ctx.lineWidth = 1; ctx.strokeRect(x + w/2 - 22, y + 14, 44, 14); ctx.fillStyle = ctx.strokeStyle; ctx.fillText(sign, x + w/2, y + 25); ctx.restore(); } }
+    if (li === 1){ // đường cao tốc trên cao: dòng đèn xe chạy hai chiều
+      const ry = base + 26; ctx.fillStyle = '#0f0f11'; ctx.fillRect(0, ry, W, 6);
+      for (let k=0;k<26;k++){ const sp = 60 + hash2(k, 5)*50, dir = k%2 ? 1 : -1, x = ((hash2(k,9)*1600 + dir*t*sp) % 1600 + 1600) % 1600 - 200;
+        ctx.fillStyle = dir > 0 ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.45)'; ctx.fillRect(x, ry + (dir > 0 ? 1 : 3.5), 3, 1.5); } }
+  });
+  // đèn pha quét trời
+  ctx.save(); ctx.globalAlpha = .05; ctx.fillStyle = '#fff'; for (const [bx0, sp] of [[W*.3, .4], [W*.78, -.33]]){ const a = -Math.PI/2 + Math.sin(t*sp)*.5; ctx.beginPath(); ctx.moveTo(bx0, H*.7); ctx.lineTo(bx0 + Math.cos(a-.04)*600, H*.7 + Math.sin(a-.04)*600); ctx.lineTo(bx0 + Math.cos(a+.04)*600, H*.7 + Math.sin(a+.04)*600); ctx.closePath(); ctx.fill(); } ctx.restore();
+}
+// vật thể trên hiên + mái (toạ độ thế giới)
+function drawNightWorld(){
+  const t = clock; ctx.save(); ctx.lineCap = 'round';
+  // viền sáng mép mái/tường để thấy rõ chỗ đặt chân
+  const x0 = Math.max(0, Math.floor(camX/T)), x1 = Math.min(GW-1, Math.ceil((camX+viewW)/T)), y0 = Math.max(0, Math.floor(camY/T)), y1 = Math.min(GH-1, Math.ceil((camY+viewH)/T));
+  ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 1.5;
+  for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ if (grid[y][x] !== '#') continue; const up = y>0 && grid[y-1][x] !== '#', lf = x>0 && grid[y][x-1] !== '#', rt = x<GW-1 && grid[y][x+1] !== '#';
+    if (up) line(x*T, y*T+.5, x*T+T, y*T+.5); ctx.globalAlpha = .35; if (lf) line(x*T+.5, y*T, x*T+.5, y*T+T); if (rt) line(x*T+T-.5, y*T, x*T+T-.5, y*T+T); ctx.globalAlpha = 1; }
+  // ô cửa sổ nhà Giáo sư (sáng ấm) trên tường bên trái
+  { const X = 1.2*T, Y = 9*T, w = 2.4*T, h = 3*T; const g = ctx.createRadialGradient(X+w/2, Y+h/2, 10, X+w/2, Y+h/2, 160); g.addColorStop(0, 'rgba(255,248,230,.35)'); g.addColorStop(1, 'rgba(255,248,230,0)'); ctx.fillStyle = g; ctx.fillRect(X-150, Y-150, w+300, h+300);
+    ctx.fillStyle = '#f4efe2'; ctx.fillRect(X, Y, w, h); ctx.fillStyle = INK; ctx.fillRect(X + w/2 - 2, Y, 4, h); ctx.fillRect(X, Y + h/2 - 2, w, 4); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.strokeRect(X-3, Y-3, w+6, h+6);
+    ctx.fillStyle = 'rgba(17,17,17,.5)'; ctx.beginPath(); ctx.arc(X + w*.7, Y + h*.62, 9, 0, Math.PI*2); ctx.fill(); }
+  // lan can hiên
+  ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 2; line(4*T, 12*T + 4, 17*T, 12*T + 4); ctx.lineWidth = 1.2; for (let x = 4*T + 10; x < 17*T; x += 12) line(x, 12*T + 4, x, 13*T);
+  // chậu cây + dây phơi đồ đung đưa
+  ctx.fillStyle = '#111'; ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(13*T, 13*T); ctx.lineTo(13*T+20, 13*T); ctx.lineTo(13*T+17, 13*T-16); ctx.lineTo(13*T+3, 13*T-16); ctx.closePath(); ctx.fill(); ctx.stroke();
+  for (let k=0;k<5;k++){ const a = -1.1 + k*.55 + Math.sin(t*1.5 + k)*.06; ctx.beginPath(); ctx.moveTo(13*T+10, 13*T-16); ctx.quadraticCurveTo(13*T+10 + Math.sin(a)*14, 13*T-30, 13*T+10 + Math.sin(a)*22, 13*T-40 + k%2*6); ctx.stroke(); }
+  { const ax = 5*T, bx2 = 11*T, yy = 10*T; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(ax, yy); ctx.quadraticCurveTo((ax+bx2)/2, yy + 14, bx2, yy); ctx.stroke();
+    for (let k=0;k<4;k++){ const u = .2 + k*.2, cx = ax + (bx2-ax)*u, cy = yy + 14*4*u*(1-u) , sw = Math.sin(t*2 + k*1.3)*.15; ctx.save(); ctx.translate(cx, cy); ctx.rotate(sw); ctx.fillStyle = k%2 ? '#e8e4d8' : '#222'; ctx.fillRect(-8, 0, 16, 18 + k%2*6); ctx.strokeRect(-8, 0, 16, 18 + k%2*6); ctx.restore(); } }
+  // cục nóng điều hoà: lưới quạt quay
+  { const X = 18*T, Y = 12*T; ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X + T, Y + T, 22, 0, Math.PI*2); ctx.stroke(); for (let k=0;k<3;k++){ const a = t*9 + k*2.09; line(X + T, Y + T, X + T + Math.cos(a)*18, Y + T + Math.sin(a)*18); } }
+  // chảo vệ tinh + đèn đỏ trên ống khói (chớp trắng)
+  ctx.strokeStyle = 'rgba(255,255,255,.65)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(31*T, 11*T - 14, 12, Math.PI*.9, Math.PI*1.9); ctx.stroke(); line(31*T, 11*T - 6, 31*T + 4, 11*T);
+  line(46*T, 9*T, 46*T, 9*T - 60); if (Math.floor(t*1.3)%2){ ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(46*T, 9*T - 62, 3, 0, Math.PI*2); ctx.fill(); }
+  // bồn nước: đai thép, thang, ghế băng nhỏ
+  ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 1.2; for (const yy of [3*T + 12, 4*T + 10]) line(54*T, yy, 60*T, yy); ctx.font = `700 9px ${FONT}`; ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.textAlign = 'center'; ctx.fillText('H₂O', 57*T, 4*T + 4);
+  { const [bx, br] = LEVELS[lvl].bench || [0,0], X = bx*T, Y = (br+1)*T; ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 2; line(X - 22, Y - 12, X + 22, Y - 12); line(X - 18, Y - 12, X - 18, Y); line(X + 18, Y - 12, X + 18, Y); line(X - 22, Y - 26, X + 22, Y - 26); line(X - 20, Y - 26, X - 20, Y - 12); line(X + 20, Y - 26, X + 20, Y - 12); }
+  // vũng nước gợn vòng trên mái
+  ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1; for (let k=0;k<14;k++){ const px0 = hash2(k, 77)*GW*T, row = [13, 11, 9, 16][k%4], q = ((t*.7 + hash2(k, 3)) % 1); if (grid[row] && grid[row][Math.floor(px0/T)] === '#' && grid[row-1][Math.floor(px0/T)] !== '#'){ ctx.globalAlpha = (1-q)*.5; ctx.beginPath(); ctx.ellipse(px0, row*T, 3 + q*12, 1 + q*2.5, 0, 0, Math.PI*2); ctx.stroke(); } }
+  ctx.globalAlpha = 1; ctx.restore();
+}
+function drawNightRain(){
+  ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,.22)'; ctx.lineWidth = 1; const t = clock;
+  for (let i=0;i<90;i++){ const x = (hash2(i, 1)*(viewW+80) + t*30) % (viewW+80) - 40, y = (hash2(i, 2)*viewH + t*(380 + hash2(i,3)*140)) % (viewH+40) - 20; line(x, y, x - 3, y + 11); }
+  ctx.restore();
+}
 function lampCone(){
   if (lampConeCv) return lampConeCv;
   const k = 2, c = lampConeCv = document.createElement('canvas'); c.width = 164*k; c.height = 242*k;
@@ -4561,7 +4700,11 @@ function contactShadow(e, k){
 }
 // Gợi ý tương tác: phím E nổi trên cần gạt / van khi đứng gần
 function drawPrompts(){
-  const px = player.x+11, py = player.y+17;
+  const px = player.x+11, py = player.y+17, LL = LEVELS[lvl];
+  const pr = (x, y, d, lab)=>{ const a = clamp((90-d)/40, 0, 1); if (a <= 0) return; const yy = y + Math.sin(clock*4)*2; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.8;
+    ctx.fillRect(x-9,yy-9,18,18); ctx.strokeRect(x-9,yy-9,18,18); ctx.fillStyle=INK; ctx.font=`700 11px ${FONT}`; ctx.textAlign='center'; ctx.fillText('E', x, yy+4); if (lab){ ctx.font=`400 9px ${FONT}`; ctx.fillStyle = LL.theme==='night' ? PAPER : INK; ctx.fillText(lab, x, yy-14); } ctx.restore(); };
+  if (LL.warp){ const w = LL.warp, cx = (w.x + w.w/2)*T, cy = (w.y + w.h/2)*T; pr(cx, w.y*T - 16, Math.hypot(cx-px, cy-py) - 40, 'mở cửa sổ'); }
+  if (LL.bench && !player.sit){ const [bx, br] = LL.bench; pr(bx*T, br*T - 30, Math.hypot(bx*T-px, (br+.5)*T-py), 'ngồi'); }
   for (const c of ['l','v','n','F']) for (const t of tiles[c]||[]){
     if (c==='F' && (forgeDone || forgeSeq)) continue;
     if (c==='n' && litLamps.has(t.x+','+t.y)) continue;
@@ -5076,7 +5219,7 @@ function drawNotes(){
 }
 // ===== QUẠ GIẤY: bạn đồng hành, bay theo và bình luận =====
 function updateCrow(dt){
-  const c = crow, p = player; if (!c) return;
+  const c = crow, p = player; if (!c || LEVELS[lvl].secret) return;
   const idle = p.ground && Math.abs(p.vx) < 10 && p.idleT > 1.2;
   let tx, ty;
   if (idle){ tx = p.x+11 - p.faceS*7; ty = p.y + p.h - 34 - 4; }      // đậu lên ba lô
@@ -5620,6 +5763,7 @@ function heroInit(p){
 }
 function heroState(p){
   if (p===player && itemGet && itemGet.caught && itemGet.t < IG.hold+.15) return 'hold';
+  if (p.sit) return 'sit';
   if (p.dashT>0) return 'dash';
   if (p.preT>0) return 'predash';
   if (p.recT>0 && p.ground) return 'skid';
@@ -5703,6 +5847,8 @@ function heroTarget(p, st){
     case 'apex':  q.t1=.45; q.s1=-.8; q.t2=-.15; q.s2=-.4; q.a1=1.9; q.a1b=.4; q.a2=-1.9; q.hem=1; q.tipY=-1; break;
     case 'fall':  q.lean=-.05; q.t1=.25; q.s1=-.2; q.t2=-.2; q.s2=.1; q.a1=2.2; q.a1b=.5; q.a2=-2.3; q.hem=3.5; q.tipX=-2; q.tipY=-5; break;
     case 'flip':  q.t1=1.3; q.s1=-2.2; q.t2=1.0; q.s2=-2; q.a1=1.2; q.a1b=1.4; q.a2=-1.2; q.hem=-2; break;
+    case 'sit': { const sw = Math.sin(clock*1.3)*.12;      // ngồi mép bồn nước, chân đung đưa, ngửa nhìn trời
+      q.bob = 12; q.lean = -.08; q.t1 = -1.5; q.s1 = 1.45 + sw; q.t2 = -1.35; q.s2 = 1.5 - sw; q.a1 = .55; q.a1b = .2; q.a2 = .35; q.hem = 3; q.tipX = -2; q.tipY = -1; q.lookX = .3; break; }
     case 'predash': q.lean=-.38; q.bob=6; q.t1=.9; q.s1=-1.5; q.t2=-.5; q.s2=-1.2; q.a1=.9; q.a1b=.6; q.a2=1.2; q.hem=3; q.tipX=-3; q.tipY=-2; q.lookX=1; break;
     case 'skid':  q.lean=-.32; q.bob=5; q.t1=-1.1; q.s1=.25; q.t2=.55; q.s2=-1.3; q.a1=1.9; q.a1b=.3; q.a2=-1.1; q.hem=-4; q.tipX=5; q.tipY=1; q.lookX=.6; break;
     case 'dash':  q.lean=.6; q.bob=2; q.t1=-1.15; q.s1=-.7; q.t2=-.75; q.s2=-.9; q.a1=-1.95; q.a1b=0; q.a2=-1.6; q.hem=-2; q.tipX=6; q.tipY=2; break;
@@ -5940,6 +6086,7 @@ function drawDashFx(){
 function drawManaHUD(){
   const shake = manaFlash>0 ? Math.sin(clock*70)*2.5 : 0, lv = Math.max(0, manaShow)/MANA_MAX;
   ctx.save(); ctx.translate(14+shake, 14); ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  { ctx.save(); ctx.globalAlpha = .82; ctx.fillStyle = PAPER; const hh = 44 + (LEVELS[lvl].combat ? 34 : 0); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-8, -8, 178, hh, 6) : ctx.rect(-8, -8, 178, hh); ctx.fill(); ctx.restore(); }   // tấm nền giấy: luôn đọc được kể cả khi trần nhà tối
   const capW = 26, x0 = capW + 4, bw = 104, y = 8, h = 14;
   // nắp bút + kẹp
   ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(0, y+2); ctx.quadraticCurveTo(0, y, 3, y); ctx.lineTo(capW, y); ctx.lineTo(capW, y+h); ctx.lineTo(3, y+h); ctx.quadraticCurveTo(0, y+h, 0, y+h-2); ctx.closePath(); ctx.fill();
@@ -7055,7 +7202,7 @@ const TIP_KEY = 'phongkin_tips_v1';
 let tipsSeen = new Set(), tip = null, tipQ = [], helpOpen = false, tipDeny = 0;
 try { tipsSeen = new Set(JSON.parse(localStorage.getItem(TIP_KEY) || '[]')); } catch(e){}
 function saveTips(){ try { localStorage.setItem(TIP_KEY, JSON.stringify([...tipsSeen])); } catch(e){} }
-function showTip(id, keys, text, done, life=8){
+function showTip(id, keys, text, done, life=8){ if (LEVELS[lvl] && LEVELS[lvl].secret) return;
   if (tipsSeen.has(id) || (tip && tip.id===id) || tipQ.some(q=>q.id===id)) return;
   tipQ.push({id, keys, text, done, life, t:0});
 }
@@ -7266,7 +7413,7 @@ function drawGame(){
 
   // HUD
   const L = LEVELS[lvl], nSeg = L.hints.length;
-  text(`CH.${chOf(lvl)} · ${L.side ? 'CHƯƠNG PHỤ' : `PHẦN ${partNo(lvl)}/${PARTS_OF(chOf(lvl))}`} · ${L.name.toUpperCase()}`, OX, 34, 14, 700, 'left');
+  text(L.secret ? `✦ NƠI BÍ MẬT · ${L.name.toUpperCase()}` : `CH.${chOf(lvl)} · ${L.side ? 'CHƯƠNG PHỤ' : `PHẦN ${partNo(lvl)}/${PARTS_OF(chOf(lvl))}`} · ${L.name.toUpperCase()}`, OX, 34, 14, 700, 'left');
   text(`nhật ký ${gotPages.size}/${PAGE_TOTAL}  ·  hạc ${gotSecrets.size}/${SECRET_TOTAL}  ·  chết: ${deaths}`, OX+viewW*S, 34, 14, 400, 'right');
   // thanh tiến độ: các đoạn của khu
   for (let i=0;i<nSeg;i++){
@@ -7284,7 +7431,7 @@ function drawGame(){
   ctx.setTransform(S*DPR,0,0,S*DPR,OX*DPR,OY*DPR);
   ctx.save(); ctx.beginPath(); ctx.rect(0,0,viewW,viewH); ctx.clip();
   ctx.fillStyle = L.theme==='fallen' ? '#d4d4cf' : L.theme==='outside' ? '#f2f1ec' : WALL; ctx.fillRect(0,0,viewW,viewH);
-  drawBackdrop();
+  if (L.theme==='night') drawNightSky(); else drawBackdrop();
   if (!PERF.low) drawMotes();
   const shk = shakeT>0 ? shakeT*16 : 0;
   ctx.translate(-Math.round(camX*S)/S + (Math.random()-.5)*shk, -Math.round(camY*S)/S + (Math.random()-.5)*shk);
@@ -7297,6 +7444,7 @@ function drawGame(){
   const y0=Math.max(0,Math.floor(camY/T)), y1=Math.min(GH-1,Math.ceil((camY+viewH)/T));
   cachedWalls(x0, x1);
   for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c=grid[y][x]; if (c!=='.' && c!=='#') drawTile(c,x,y); }
+  if (L.theme==='night') drawNightWorld();
   if (pulley) drawPulley();
   if (heaterOn) drawSteam();
   for (const k of keyItems) if (!k.got) drawKey(k);
@@ -7332,7 +7480,7 @@ function drawGame(){
     drawItemGetFront();
     drawSwapFx();
   }
-  if (crow){ ctx.save(); glowDraw(()=>drawCrowBody(crow.x, crow.y, crow.face, crow.flap, crow.perch), crow.x, crow.y, 90, 80, 'rgba(255,255,255,.9)', 5); drawCrow({noBody:true}); ctx.restore(); }
+  if (crow && !L.secret){ ctx.save(); glowDraw(()=>drawCrowBody(crow.x, crow.y, crow.face, crow.flap, crow.perch), crow.x, crow.y, 90, 80, 'rgba(255,255,255,.9)', 5); drawCrow({noBody:true}); ctx.restore(); }
   if (LEVELS[lvl].combat) drawCombatFX();
   if (LEVELS[lvl].combat) drawDarkness();
   drawTnt();
@@ -7355,6 +7503,7 @@ function drawGame(){
   if (state==='dying'){ ctx.fillStyle=INK; ctx.globalAlpha=Math.max(0,tState-.35)*2; ctx.fillRect(0,0,viewW,viewH); ctx.globalAlpha=1; }
   ctx.restore();
   // thanh mực (góc trên trái khung nhìn) + sổ tay khoa học (góc phải)
+  if (L.theme==='night') drawNightRain();
   drawExitArrow();
   if (reading) drawReading();
   drawBossCSOverlay();
@@ -7363,6 +7512,7 @@ function drawGame(){
   try {
   if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawQuestHUD(); drawMathBossHUD(); drawMathHUD(); drawGearHUD(); drawBossLine(); }
   drawNotes();
+  drawNightQuote();
   // nút loa (cạnh thanh mực): bấm hoặc nhấn M
   { const sx = 212, sy = 29; ctx.save(); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.arc(sx,sy,13,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle=INK;
@@ -7398,6 +7548,16 @@ function drawGame(){
 resize();
 let last=performance.now();
 // Chọn nhạc nền theo trạng thái game
+// độ căng của nhạc: 1 bình thường · 2 có quái gần · 3 nguy kịch (ít máu, bị vây)
+let dangerS = 1;
+function dangerLevel(){
+  if (state!=='play' || !player) return 1;
+  const px = player.x+11, py = player.y+17; let near = 0;
+  for (const e of enemies) if (!e.dead && Math.abs(e.x - px) < 9*T && Math.abs(e.y - py) < 5*T) near++;
+  const want = (player.hp <= 2 && near) || near >= 3 ? 3 : near ? 2 : 1;
+  if (want > dangerS) dangerS = want; else if (want < dangerS && Math.random() < .004) dangerS--;   // hạ nhiệt từ từ
+  return dangerS;
+}
 function pickMusic(){
   if (state==='title' || state==='end') return ['house',1];
   if (state==='story') return ['story',1];
@@ -7405,7 +7565,8 @@ function pickMusic(){
   if (boss && boss.engaged && !boss.dead) return boss.phase===4 ? ['heart',1] : ['boss', boss.phase];
   const th = LEVELS[lvl] && LEVELS[lvl].theme;
   if (mboss && mboss.engaged && !mboss.dead) return ['boss', 1 + Math.min(2, Math.floor((mboss.max - mboss.hp)/2))];
-  return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', 1];
+  if (th==='night') return ['night', 1];
+  return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', dangerLevel()];
 }
 function loop(now){ const dt=Math.min(1/30,(now-last)/1000); last=now;
   PERF.ema += ((dt*1000) - PERF.ema)*.05; if (state==='play'){ if (PERF.ema > 21){ PERF.slowT += dt; if (PERF.slowT > 2 && !PERF.auto){ PERF.auto = true; resize(); } } else PERF.slowT = Math.max(0, PERF.slowT - dt*.5); } try { update(dt); draw(); } catch (err){ console.error(err); errCount = (errCount||0) + 1; try { ctx.restore(); } catch(_){} }   // lỗi một khung không được làm đứng cả game
