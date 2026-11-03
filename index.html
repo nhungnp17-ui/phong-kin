@@ -1078,6 +1078,11 @@ const SFX = (() => {
     osc.start(t0); osc.stop(t0+dur+.05);
   }
   function drum(kind, t0, v){
+    if (kind==='b' || kind==='sh'){   // chổi quét (b) & hi-hat mềm (sh) cho nhạc lofi: lọc dịu, không chói
+      const src = ac.createBufferSource(), f = ac.createBiquadFilter(), f2 = ac.createBiquadFilter(), g = ac.createGain(); src.buffer = noiseBuf;
+      f.type = kind==='b' ? 'bandpass' : 'highpass'; f.frequency.value = kind==='b' ? 1100 : 5200; f.Q.value = .6; f2.type = 'lowpass'; f2.frequency.value = kind==='b' ? 2600 : 8000;
+      src.connect(f); f.connect(f2); f2.connect(g); g.connect(M.bus); const d = kind==='b' ? .26 : .05, a = kind==='b' ? .02 : .002;
+      g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(v, t0+a); g.gain.exponentialRampToValueAtTime(.0001, t0+d); src.start(t0, Math.random()*.5); src.stop(t0+d+.03); return; }
     if (kind==='k'){ const o = ac.createOscillator(), g = ac.createGain(); o.frequency.setValueAtTime(110, t0); o.frequency.exponentialRampToValueAtTime(38, t0+.18); o.connect(g); g.connect(M.bus); g.gain.setValueAtTime(v, t0); g.gain.exponentialRampToValueAtTime(.0001, t0+.25); o.start(t0); o.stop(t0+.3); return; }
     const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain(); src.buffer = noiseBuf;
     f.type = kind==='h' ? 'highpass' : 'bandpass'; f.frequency.value = kind==='h' ? 7000 : 1800; f.Q.value = .8;
@@ -1125,15 +1130,22 @@ const SFX = (() => {
       if (I>=3 && s%16===0) for (const m of [62,65,69]) nt('sawtooth', m, t, .35, .018, {lp:2200});
       if (s%32===28) nt('square', 74 + (I>=3?1:0), t, .25, .02, {lp:2500}); }},
     // Hiên Đêm: lofi siêu chill — Rhodes giả (sine + tam giác lệch nhẹ), hợp âm maj7/9, trống chổi lười, bass tròn, tiếng đĩa than lẹt xẹt
-    night: {bpm:72, tense:false, fn(s,t){
-      const ch = prog(s, [[53,57,60,64,67],[52,55,59,62,64],[50,53,57,60,64],[48,52,55,59,62]]), bar = s%16, sw = (s%2) ? .045 : 0, tt = t + sw;
-      if (bar===0){ for (let i=0;i<ch.length;i++){ nt('sine', ch[i], t + i*.018, 3.6, .028 - i*.003, {a:.02}); nt('triangle', ch[i]+12, t + i*.018, 2.2, .006, {a:.03, lp:1800, det:6}); } }
-      if (bar===10 && Math.random()<.7) for (let i=1;i<4;i++) nt('sine', ch[i], tt + i*.02, 1.4, .016, {a:.02});
-      if (bar===0) nt('sine', ch[0]-24, t, 1.2, .1, {a:.02}); if (bar===7) nt('sine', ch[0]-24+7, tt, .5, .06, {a:.02}); if (bar===10) nt('sine', ch[0]-24, tt, .8, .08, {a:.02});
-      if (bar===0 || bar===9) drum('k', tt, .09); if (bar===4 || bar===12) drum('s', tt, .02);
-      if (s%2===0 && Math.random()<.85) drum('h', tt, .006 + (s%4===2 ? .004 : 0));
-      const pent = [0,2,4,7,9]; if ((bar===2 || bar===6 || bar===13) && Math.random()<.5) nt('sine', 72 + pent[Math.floor(Math.random()*5)] + (ch[0]%12===2 ? -2 : 0), tt, .9, .018, {a:.01, lp:2400});
-      if (Math.random()<.12) drum('h', t + Math.random()*.1, .003); }},
+    // Hiên Đêm: lofi chậm — Rhodes ấm (2 sóng sine lệch nhẹ + hoạ âm), vòng hợp âm jazz 8 ô nhịp,
+    // giai điệu cố định 4 ô rồi nghỉ 4 ô cho thoáng; kick êm, chổi quét, hi-hat rất nhỏ; mọi nốt hơi lệch cao độ như băng cassette cũ
+    night: {bpm:68, tense:false, fn(s,t){
+      const bar = Math.floor(s/16) % 8, st = s % 16, sw = (s%2) ? .05 : 0, tt = t + sw, wow = Math.sin(t*.7)*6;
+      const CH = [ [41,[57,60,64,67]], [40,[55,59,62,67]], [38,[53,57,60,64]], [36,[52,55,59,64]],
+                   [45,[55,60,64,67]], [38,[53,57,60,65]], [43,[53,57,60,62]], [36,[52,55,59,62]] ];
+      const [bs, vc] = CH[bar];
+      const rh = (m, when, dur, v)=>{ nt('sine', m, when, dur, v, {a:.012, det:wow-4}); nt('sine', m, when, dur*.9, v*.7, {a:.012, det:wow+5}); nt('triangle', m+12, when, dur*.35, v*.12, {a:.005, lp:1400}); };
+      if (st===0) vc.forEach((m,i)=>rh(m, t + i*.025, 3.2, .016));
+      if (st===10) vc.slice(1).forEach((m,i)=>rh(m, tt + i*.02, 1.6, .009));
+      if (st===0) nt('sine', bs-12, t, 1.4, .09, {a:.03}); if (st===8) nt('sine', bs-12+7, t, .7, .05, {a:.03}); if (st===14) nt('sine', bs-12+(bar%2?2:-1), tt, .35, .045, {a:.03});
+      const MEL = [ {2:72,4:76,7:74,12:72}, {2:71,4:74,7:72,12:67}, {2:69,4:72,7:76,10:74}, {2:71,6:67} ];
+      if (bar < 4){ const m = MEL[bar][st]; if (m) nt('sine', m, tt, 1.1, .022, {a:.03, det:wow}); }
+      if (st===0 || st===10) drum('k', tt, .055); if (st===4 || st===12) drum('b', tt, .035);
+      if (st%4===2) drum('sh', tt, .006);
+    }},
     // Tim Mực: chỉ còn nhịp tim và tiếng ù chói
     heart: {bpm:72, fn(s,t){ if (s%8===0) drum('k', t, .3); if (s%8===2) drum('k', t, .2);
       if (s%32===0){ nt('sine', 74, t, 7, .02, {a:2}); nt('sine', 75, t, 7, .02, {a:2}); nt('sawtooth', 26, t, 7, .05, {a:1, lp:200}); } }},
@@ -1165,7 +1177,7 @@ const SFX = (() => {
     init(){ init(); musInit(); },
     music(name, inten){ M.want = name; M.inten = inten || 1; if (ac && !M.bus) musInit(); },
     play(name, arg){ if (!ac || muted || !lib[name]) return; try { lib[name](arg); } catch(e){} },
-    loop(name, level){ if (!ac) return; const C = {slide:{type:'bandpass',f:2600,q:2,v:.07}, belt:{type:'bandpass',f:180,q:3,v:.12}, gale:{type:'bandpass',f:600,q:.5,v:.08}, push:{type:'lowpass',f:260,v:.16}, steam:{type:'highpass',f:2800,v:.08}, wind:{type:'bandpass',f:900,q:.6,v:.05}, rain:{type:'highpass',f:1500,v:.045}, city:{type:'lowpass',f:220,v:.09}, hiss:{type:'bandpass',f:4200,q:.25,v:.018}}[name]; loop(name, muted?0:level, C); },
+    loop(name, level){ if (!ac) return; const C = {slide:{type:'bandpass',f:2600,q:2,v:.07}, belt:{type:'bandpass',f:180,q:3,v:.12}, gale:{type:'bandpass',f:600,q:.5,v:.08}, push:{type:'lowpass',f:260,v:.16}, steam:{type:'highpass',f:2800,v:.08}, wind:{type:'bandpass',f:900,q:.6,v:.05}, rain:{type:'highpass',f:1800,v:.03}, vinyl:{type:'bandpass',f:2400,q:.4,v:.008}, city:{type:'lowpass',f:220,v:.09}, hiss:{type:'bandpass',f:4200,q:.25,v:.018}}[name]; loop(name, muted?0:level, C); },
     toggle(){ muted = !muted; try { localStorage.setItem('phongkin_mute', muted?'1':'0'); } catch(e){} if (master) master.gain.setTargetAtTime(muted?0:.55, now(), .02); if (muted) for (const k in loops) loops[k].g.gain.value = 0; },
     get muted(){ return muted; },
   };
@@ -4198,7 +4210,7 @@ function update(dt){
   if (state==='play'){ saveT -= dt; if (saveT <= 0){ saveT = 5; saveGame(); } }
   updateTnt(dt); updateRopes(dt);
   { const night = state==='play' && LEVELS[lvl] && LEVELS[lvl].theme==='night'; if (night) updateNight(dt);
-    SFX.loop('rain', night ? 1 : 0); SFX.loop('city', night ? 1 : 0); SFX.loop('hiss', night ? 1 : 0);
+    SFX.loop('rain', night ? 1 : 0); SFX.loop('city', night ? 1 : 0); SFX.loop('hiss', night ? 1 : 0); SFX.loop('vinyl', night ? 1 : 0);
     if (night && Math.random() < dt*1.4) SFX.play('drip'); }
   if (bestiary){ updateBestiary(dt); return; }
   if (devMenu) return;
@@ -4562,9 +4574,9 @@ function drawNightSky(){
       ctx.fillStyle = col; ctx.fillRect(x, y, w, H - y);
       if (hash2(i, li+7) > .7){ ctx.fillRect(x + w*.45, y - 18, 2, 18); if (Math.floor(t*1.2 + i)%3 === 0){ ctx.fillStyle = '#fff'; ctx.fillRect(x + w*.45 - 1, y - 20, 4, 3); } }   // ăng-ten đèn chớp
       ctx.fillStyle = win; const cw = li === 2 ? 4 : 2.5, ch = li === 2 ? 5 : 3, gx = li === 2 ? 9 : 6, gy = li === 2 ? 11 : 8;
-      for (let yy = y + 6; yy < H - 6; yy += gy) for (let xx = x + 4; xx < x + w - 4; xx += gx){ const hh = hash2(Math.floor(xx*7 + i), Math.floor(yy) + li*97);
-        if (hh > .62 && !(hh > .985 && Math.floor(t*.5 + hh*20)%2)) ctx.fillRect(xx, yy, cw, ch); }
-      if (li === 2 && hash2(i, 41) > .82){ ctx.save(); ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; const sign = ['PHỞ','24H','CAFÉ','KARAOKE','HOTEL','BIA'][Math.floor(hash2(i,43)*6)]; const on = Math.sin(t*3 + i) > -.7;
+      for (let r = 0, yy = y + 6; yy < H - 6; yy += gy, r++) for (let c = 0, xx = x + 4; xx < x + w - 4; xx += gx, c++){ const hh = hash2(i*31 + c, r*13 + li*97);   // theo ô cửa của chính toà nhà → không đổi khi máy quay di chuyển
+        if (hh > .62 && !(hh > .993 && Math.floor(t/9 + hh*50)%2)) ctx.fillRect(xx, yy, cw, ch); }
+      if (li === 2 && hash2(i, 41) > .82){ ctx.save(); ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; const sign = ['PHỞ','24H','CAFÉ','KARAOKE','HOTEL','BIA'][Math.floor(hash2(i,43)*6)]; const on = Math.sin(t*.8 + i) > -.92;
         ctx.strokeStyle = on ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.2)'; ctx.lineWidth = 1; ctx.strokeRect(x + w/2 - 22, y + 14, 44, 14); ctx.fillStyle = ctx.strokeStyle; ctx.fillText(sign, x + w/2, y + 25); ctx.restore(); } }
     if (li === 1){ // đường cao tốc trên cao: dòng đèn xe chạy hai chiều
       const ry = base + 26; ctx.fillStyle = '#0f0f11'; ctx.fillRect(0, ry, W, 6);
