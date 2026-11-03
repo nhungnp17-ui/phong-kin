@@ -1647,6 +1647,40 @@ function mbAsk(){
   b.orbs = b.def.orbs.map((c,i)=>({x:c[0]*T+T/2, x0:c[0]*T+T/2, y:c[1]*T+T/2, k:i, cd:0}));
   popups.push({x:b.x, y:b.y-90, text:'CÂU HỎI!', life:1.2, big:true});
 }
+// [tên chiêu, giai đoạn mở khoá, chiêu nhẹ (dùng được khi đang hỏi), trọng số]
+const MB_MOVES = {
+  sphinx:  [['tri',1,1,3],['ring',1,0,2],['sq',1,1,2],['sweep',1,0,2],['bounce',1,1,2],['spiral',2,0,2],['dive',2,0,2],['wind',2,0,2],['pillar',3,0,2],['orbit',3,0,2]],
+  plotter: [['sine',1,0,2],['par',1,1,3],['vec',1,1,2],['exp',1,0,2],['coord',1,1,2],['line',2,0,2],['circ',2,0,2],['abs',2,0,2],['asym',3,0,2],['storm',3,0,2]],
+};
+function mbMove(b, mv, px, py, ar){
+  const sh = (o)=>b.shots.push(o), floorY = ar[2]*T, L = ar[0]*T, R = ar[1]*T;
+  switch (mv){
+    case 'tri': sh({kind:'tri', x:b.x, y:b.y, vx:clamp((px-b.x)*1.1, -420, 420), vy:-420, rot:0, life:4}); SFX.play('throw'); break;
+    case 'bounce': for (const k of [-1,1]) sh({kind:'tri', x:b.x, y:b.y, vx:clamp((px-b.x)*.9 + k*120, -460, 460), vy:-300, rot:0, life:5, bounce:2}); SFX.play('throw'); break;
+    case 'ring': sh({kind:'ring', x:b.x, y:floorY, r:10, life:2.2}); SFX.play('stomp'); shakeT = Math.max(shakeT, .1); break;
+    case 'sq': for (let i=0;i<3;i++) sh({kind:'sq', x:px + (i-1)*90 + (Math.random()-.5)*30, y:camY - 20 - i*40, vx:0, vy:120, rot:0, life:4}); SFX.play('swoosh'); break;
+    case 'sweep': { const d = px > b.x ? 1 : -1; sh({kind:'sweep', t:0, x0:b.x - d*260, x1:b.x + d*420, life:2.2}); SFX.play('pulse'); break; }
+    case 'spiral': { const n = 10 + b.phase*2; b.spin = (b.spin||0) + .35; for (let i=0;i<n;i++){ const a = b.spin + i/n*Math.PI*2; sh({kind:'pi', x:b.x, y:b.y, vx:Math.cos(a)*190, vy:Math.sin(a)*190, life:3.2}); } SFX.play('pulse'); break; }
+    case 'dive': b.dive = {t:0, tx:clamp(px, L+80, R-80)}; popups.push({x:px, y:py-60, text:'⇩', life:.6, big:true}); SFX.play('swoosh'); break;
+    case 'wind': sh({kind:'wind', t:0, dir: px > b.x ? 1 : -1, life:2.4}); SFX.play('swoosh'); break;
+    case 'pillar': { const off = Math.floor(Math.random()*3); for (let x = ar[0]+1+off; x < ar[1]; x += 3) sh({kind:'pillar', x:x*T+T/2, t:0, life:1.5}); SFX.play('chain'); break; }
+    case 'orbit': for (let i=0;i<4;i++) sh({kind:'orbit', a:i/4*Math.PI*2, r:30, t:0, life:4}); SFX.play('pulse'); break;
+    case 'sine': sh({kind:'sine', t:0, life:3.4, y0:b.y+40, dir:Math.random()<.5?1:-1}); SFX.play('pulse'); break;
+    case 'par': { const a = .5 + Math.random()*.3; sh({kind:'par', x:b.x, y:b.y, vx:clamp((px-b.x)*1.2,-460,460), vy:-520*a-160, rot:0, life:4}); SFX.play('throw'); break; }
+    case 'vec': { const ang = Math.atan2(py - b.y, px - b.x); sh({kind:'vec', x:b.x, y:b.y, vx:Math.cos(ang)*520, vy:Math.sin(ang)*520, ang, life:2.4, tell:.45}); SFX.play('swoosh'); break; }
+    case 'exp': { const d = px > (L+R)/2 ? 1 : -1; sh({kind:'exp', x: d > 0 ? L+20 : R-20, y:floorY-14, dir:d, t:0, life:5}); SFX.play('pulse'); break; }
+    case 'coord': for (let i=0;i<3;i++) sh({kind:'coord', x:clamp(px + (i-1)*(70+Math.random()*30), L+30, R-30), y:py + (Math.random()-.5)*60, t:-i*.18, life:1.6}); SFX.play('tick'); break;
+    case 'line': sh({kind:'line', a:(Math.random()-.5)*1.1, x0:px, y0:py, t:0, life:1.4}); SFX.play('pulse'); break;
+    case 'circ': sh({kind:'circ', cx:px, cy:py, R:180, t:0, life:1.9}); SFX.play('swoosh'); break;
+    case 'abs': sh({kind:'abs', vx:px, t:0, life:1.5}); SFX.play('pulse'); break;
+    case 'asym': { const c0 = px + (Math.random()-.5)*T*2; for (const k of [-2,-1,0,1,2]){ const x = c0 + k*T*3.2; if (x > L && x < R) sh({kind:'asym', x, t:0, life:1.5}); } SFX.play('chain'); break; }
+    case 'storm': for (let i=0;i<6;i++){ const ang = Math.atan2(py - b.y, px - b.x) + (i-2.5)*.22; sh({kind:'vec', x:b.x, y:b.y, vx:Math.cos(ang)*430, vy:Math.sin(ang)*430, ang, life:2.6, tell:.55 + i*.06}); } SFX.play('swoosh'); break;
+  }
+}
+function resetMathBoss(){
+  const b = mboss; if (!b || b.dead) return;
+  Object.assign(b, {hp:b.max, phase:1, st:'wait', t:0, qi:0, shots:[], orbs:[], dive:null, engaged:false, x:b.hx, y:b.hy, cd:0, lastMove:null, hurtT:0, k:1});
+}
 const mbAskTime = b => [14, 12, 10][(b.phase||1)-1];
 function mbAttack(){ const b = mboss; b.st = 'attack'; b.t = 0; b.orbs = []; b.k = 1 + (b.max - b.hp)*.12; }
 function updateMathBoss(dt){
@@ -1666,33 +1700,19 @@ function updateMathBoss(dt){
     if (d.t > .6 && d.t < 1.5 && Math.abs(b.x - px) < 52 && Math.abs(b.y - py) < 60) hurtPlayer(1, b.x); }
   else { b.x += (b.hx + Math.sin(clock*.7)*T*4 - b.x)*Math.min(1, dt*1.5); b.y += (b.hy + Math.sin(clock*1.3)*20 - b.y)*Math.min(1, dt*1.5); }
   const atkLen = 5.5 + (b.phase-1)*1.2;
-  const fireMove = (plot, r)=>{
-      const P = b.phase;
-      if (!plot){
-        if (P >= 2 && r < .16){ const n = 10 + P*2; b.spin = (b.spin||0) + .35; for (let i=0;i<n;i++){ const a = b.spin + i/n*Math.PI*2; b.shots.push({kind:'pi', x:b.x, y:b.y, vx:Math.cos(a)*190, vy:Math.sin(a)*190, life:3.2}); } SFX.play('pulse'); return; }
-        if (P >= 2 && r < .30 && !b.dive){ b.dive = {t:0, tx:clamp(px, ar[0]*T+80, ar[1]*T-80)}; popups.push({x:px, y:py-60, text:'⇩', life:.6, big:true}); SFX.play('swoosh'); return; }
-        if (P >= 3 && r < .44){ const off = Math.floor(Math.random()*3); for (let x = ar[0]+1+off; x < ar[1]; x += 3) b.shots.push({kind:'pillar', x:x*T+T/2, t:0, life:1.5}); SFX.play('chain'); return; }
-        r = Math.random();
-        if (r < .45){ const dx = px - b.x; b.shots.push({kind:'tri', x:b.x, y:b.y, vx:clamp(dx*1.1, -420, 420), vy:-420, rot:0, life:4}); SFX.play('throw'); }
-        else if (r < .75){ b.shots.push({kind:'ring', x:b.x, y:ar[2]*T, r:10, life:2.2}); SFX.play('stomp'); shakeT = Math.max(shakeT, .1); }
-        else { for (let i=0;i<3;i++) b.shots.push({kind:'sq', x:px + (i-1)*90 + (Math.random()-.5)*30, y:camY - 20 - i*40, vx:0, vy:120, rot:0, life:4}); SFX.play('swoosh'); }
-      } else {
-        if (P >= 2 && r < .17){ const a = (Math.random()-.5)*1.1; b.shots.push({kind:'line', a, x0:px, y0:py, t:0, life:1.4}); SFX.play('pulse'); return; }
-        if (P >= 2 && r < .32){ b.shots.push({kind:'circ', cx:px, cy:py, R:180, t:0, life:1.9}); SFX.play('swoosh'); return; }
-        if (P >= 3 && r < .46){ const c0 = px + (Math.random()-.5)*T*2; for (const k of [-2,-1,0,1,2]) { const x = c0 + k*T*3.2; if (x > ar[0]*T && x < ar[1]*T) b.shots.push({kind:'asym', x, t:0, life:1.5}); } SFX.play('chain'); return; }
-        r = Math.random();
-        if (r < .4){ b.shots.push({kind:'sine', t:0, life:3.4, y0:b.y+40, dir:Math.random()<.5?1:-1}); SFX.play('pulse'); }
-        else if (r < .75){ const a = .5 + Math.random()*.3, dx = px - b.x; b.shots.push({kind:'par', x:b.x, y:b.y, vx:clamp(dx*1.2,-460,460), vy:-520*a-160, rot:0, life:4}); SFX.play('throw'); }
-        else { const ang = Math.atan2(py - b.y, px - b.x); b.shots.push({kind:'vec', x:b.x, y:b.y, vx:Math.cos(ang)*520, vy:Math.sin(ang)*520, ang, life:2.4, tell:.45}); SFX.play('swoosh'); }
-      } };
+  const fireMove = (plot, light)=>{
+      const P = b.phase, list = MB_MOVES[plot ? 'plotter' : 'sphinx'].filter(([n,ph,lt])=>ph <= P && (!light || lt) && n !== b.lastMove && !(n==='dive' && b.dive));
+      let tot = 0; for (const m of list) tot += m[3]; let r = Math.random()*tot, mv = list[0][0]; for (const m of list){ r -= m[3]; if (r <= 0){ mv = m[0]; break; } }
+      b.lastMove = mv; mbMove(b, mv, px, py, ar);
+  };
   if (b.st==='attack'){
     const plot = b.def.kind==='plotter';
     b.cd = (b.cd||0) - dt;
-    if (b.cd <= 0){ b.cd = (plot ? 1.3 : 1.0)/b.k; fireMove(plot, Math.random());
-      if (b.phase >= 3 && Math.random() < .35) fireMove(plot, .5 + Math.random()*.5); }   // giai đoạn cuối: ra 2 chiêu cùng lúc
+    if (b.cd <= 0){ b.cd = (plot ? 1.3 : 1.05)/b.k; fireMove(plot, false);
+      if (b.phase >= 3 && Math.random() < .35) fireMove(plot, true); }   // giai đoạn cuối: ra 2 chiêu cùng lúc
     if (b.t > atkLen && !b.dive) mbAsk();
   } else if (b.st==='ask'){
-    if (b.phase >= 2){ b.cd = (b.cd||0) - dt; if (b.cd <= 0){ b.cd = b.phase >= 3 ? 1.6 : 2.4; fireMove(b.def.kind==='plotter', .5 + Math.random()*.5); } }
+    if (b.phase >= 2){ b.cd = (b.cd||0) - dt; if (b.cd <= 0){ b.cd = b.phase >= 3 ? 1.6 : 2.4; fireMove(b.def.kind==='plotter', true); } }
     if (b.phase >= 3) for (const o of b.orbs){ o.x = o.x0 + Math.sin(clock*1.3 + o.k*2.1)*T*1.5; }   // quả cầu trôi qua lại
     for (const o of b.orbs){ o.cd = Math.max(0, o.cd - dt); if (o.cd > 0) continue;
       if (Math.hypot(o.x-px, o.y-py) < ORB_R+14){
@@ -1706,10 +1726,18 @@ function updateMathBoss(dt){
   }
   // đạn
   for (const s of b.shots){ s.life -= dt;
-    if (s.kind==='tri' || s.kind==='par'){ s.vy += 900*dt; s.x += s.vx*dt; s.y += s.vy*dt; s.rot += dt*6; if (solid(Math.floor(s.x/T), Math.floor(s.y/T))){ s.life = 0; dust(s.x, s.y, 5); } if (Math.hypot(s.x-px, s.y-py) < 20) { s.life = 0; hurtPlayer(1, s.x); } }
+    if (s.kind==='tri' || s.kind==='par'){ s.vy += 900*dt; s.x += s.vx*dt; s.y += s.vy*dt; s.rot += dt*6; if (solid(Math.floor(s.x/T), Math.floor(s.y/T))){ if (s.bounce > 0){ s.bounce--; s.y -= 6; s.vy = -Math.abs(s.vy)*.75; dust(s.x, s.y, 3); SFX.play('tick'); } else { s.life = 0; dust(s.x, s.y, 5); } } if (Math.hypot(s.x-px, s.y-py) < 20) { s.life = 0; hurtPlayer(1, s.x); } }
     else if (s.kind==='sq'){ s.vy += 600*dt; s.y += s.vy*dt; s.rot += dt*3; if (solid(Math.floor(s.x/T), Math.floor((s.y+12)/T))){ s.life = 0; dust(s.x, s.y+12, 6); SFX.play('boxland'); } if (Math.abs(s.x-px) < 22 && Math.abs(s.y-py) < 26){ s.life = 0; hurtPlayer(1, s.x); } }
     else if (s.kind==='ring'){ s.r += 330*dt; if (p.ground && Math.abs(Math.abs(px - s.x) - s.r) < 16 && Math.abs((p.y+p.h) - s.y) < 10) hurtPlayer(1, s.x); }
     else if (s.kind==='sine'){ s.t += dt; const yy = s.y0 + Math.sin(px/T*1.2 - s.t*4*s.dir)*T*1.6 + (s.t-1.7)*0; if (s.t > .6 && Math.abs(py - yy) < 12) hurtPlayer(1, px); }
+    else if (s.kind==='sweep'){ s.t += dt; if (s.t > .6){ const q = Math.min(1, (s.t-.6)/1.2); s.hx = s.x0 + (s.x1-s.x0)*q; const fy = ar[2]*T;
+        if (Math.random() < dt*40) parts.push({x:s.hx, y:fy-2, vx:(Math.random()-.5)*80, vy:-60-Math.random()*120, a:0, va:0, l:2, life:.35});
+        if (q < 1 && p.ground && Math.abs(px - s.hx) < 18 && Math.abs(p.y+p.h - fy) < 12) hurtPlayer(1, s.hx); } }
+    else if (s.kind==='wind'){ s.t += dt; if (s.t > .5 && s.t < 2){ moveX(p, s.dir*(p.ground ? 230 : 300)*dt); if (Math.random() < dt*30) parts.push({x:camX + (s.dir>0 ? 0 : viewW), y:camY + Math.random()*viewH, vx:s.dir*700, vy:0, a:0, va:0, l:14, life:.8}); } }
+    else if (s.kind==='orbit'){ s.t += dt; s.a += dt*(2.2 + s.t*.4); s.r = Math.min(200, 30 + s.t*70); s.x = b.x + Math.cos(s.a)*s.r; s.y = b.y + 20 + Math.sin(s.a)*s.r*.75; if (Math.hypot(s.x-px, s.y-py) < 15) hurtPlayer(1, s.x); }
+    else if (s.kind==='exp'){ s.t += dt; const v = Math.min(900, 45*Math.pow(2, s.t*2.4)); s.x += s.dir*v*dt; if (s.x < ar[0]*T-40 || s.x > ar[1]*T+40) s.life = 0; if (Math.abs(s.x-px) < 16 && Math.abs(s.y-py) < 22) { hurtPlayer(1, s.x); } }
+    else if (s.kind==='coord'){ s.t += dt; if (s.t > 1 && s.t < 1.2 && !s.boom){ s.boom = true; SFX.play('stomp'); dust(s.x, s.y, 8); if (Math.hypot(s.x-px, s.y-py) < 46) hurtPlayer(1, s.x); } }
+    else if (s.kind==='abs'){ s.t += dt; if (s.t > .8 && s.t < 1.2){ const fy = ar[2]*T, yl = fy - Math.abs(px - s.vx); if (Math.abs(py - yl) < 16 && py < fy) hurtPlayer(1, px); } }
     else if (s.kind==='pi'){ s.x += s.vx*dt; s.y += s.vy*dt; if (Math.hypot(s.x-px, s.y-py) < 14){ s.life = 0; hurtPlayer(1, s.x); } }
     else if (s.kind==='pillar' || s.kind==='asym'){ s.t += dt; if (s.t > .8 && s.t < 1.25 && Math.abs(px - s.x) < 15) hurtPlayer(1, s.x); }
     else if (s.kind==='line'){ s.t += dt; if (s.t > .9 && s.t < 1.3){ const dd = Math.abs(s.a*(px - s.x0) - (py - s.y0))/Math.hypot(s.a, 1); if (dd < 14) hurtPlayer(1, px); } }
@@ -1730,6 +1758,22 @@ function drawMathBoss(){
     else if (s.kind==='sine'){ const a = Math.min(1, s.t/.6, s.life); ctx.globalAlpha = s.t < .6 ? .3 : a; ctx.lineWidth = s.t < .6 ? 1.5 : 5; if (s.t < .6) ctx.setLineDash([6,6]); ctx.beginPath();
       for (let x = ar[0]*T; x <= ar[1]*T; x += 8){ const yy = s.y0 + Math.sin(x/T*1.2 - s.t*4*s.dir)*T*1.6; x===ar[0]*T ? ctx.moveTo(x,yy) : ctx.lineTo(x,yy); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=1;
       ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillText('y = 1,6·sin(1,2x − 4t)', ar[0]*T+10, s.y0-80); }
+    else if (s.kind==='sweep'){ const fy = ar[2]*T, on = s.t > .6 && s.t < 1.8, hx = on ? s.hx : s.x0;
+      ctx.globalAlpha = on ? .8 : .35; ctx.lineWidth = on ? 2.5 : 1.2; if (!on) ctx.setLineDash([5,6]); line(b.x, b.y-2, hx, fy); ctx.setLineDash([]);
+      if (!on){ ctx.globalAlpha = .35; line(s.x0, fy-3, s.x1, fy-3); }
+      else { ctx.globalAlpha = 1; flameD(hx, fy, 22); ctx.globalAlpha = .5; ctx.lineWidth = 3; line(s.x0, fy-2, hx, fy-2); }
+      ctx.globalAlpha = 1; ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; if (!on) ctx.fillText('NHẢY!', s.x0, fy-20); }
+    else if (s.kind==='wind'){ if (s.t < .5){ ctx.font=`700 13px ${FONT}`; ctx.textAlign='center'; ctx.fillText(s.dir>0 ? '→ → →  F = m·a' : 'F = m·a  ← ← ←', px, py-50); } }
+    else if (s.kind==='orbit'){ ctx.beginPath(); ctx.arc(s.x, s.y, 10, 0, Math.PI*2); ctx.fill(); ctx.fillStyle=PAPER; ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; ctx.fillText('Σ', s.x, s.y+3); ctx.fillStyle=INK;
+      ctx.globalAlpha = .25; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(b.x, b.y+20, s.r, s.r*.75, 0, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1; }
+    else if (s.kind==='exp'){ ctx.save(); ctx.translate(s.x, s.y); ctx.scale(s.dir, 1); ctx.beginPath(); ctx.moveTo(16,0); ctx.lineTo(-10,-10); ctx.lineTo(-6,0); ctx.lineTo(-10,10); ctx.closePath(); ctx.fill();
+      ctx.globalAlpha=.4; ctx.lineWidth=2; for (let i=1;i<4;i++) line(-10-i*10, -4+i*2, -24-i*10, -4+i*2); ctx.restore(); ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; ctx.fillText('y = 2ˣ', s.x, s.y-18); }
+    else if (s.kind==='coord'){ if (s.t >= 0){ const k = s.t < 1 ? s.t : 1, R = 46; ctx.globalAlpha = s.t < 1 ? .6 : Math.max(0, 1-(s.t-1)*3); ctx.lineWidth = s.t < 1 ? 1.5 : 5;
+        ctx.beginPath(); ctx.arc(s.x, s.y, R*(s.t < 1 ? 1.4 - k*.4 : 1 + (s.t-1)*.6), 0, Math.PI*2); ctx.stroke(); line(s.x-12, s.y, s.x+12, s.y); line(s.x, s.y-12, s.x, s.y+12);
+        ctx.globalAlpha = 1; ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; if (s.t < 1) ctx.fillText(`(${Math.round(s.x/T)}; ${Math.round((ar[2]*T - s.y)/T)})`, s.x, s.y - R - 6); } }
+    else if (s.kind==='abs'){ const fy = ar[2]*T, on = s.t > .8 && s.t < 1.2, H = 7*T; ctx.globalAlpha = on ? 1 : .4; ctx.lineWidth = on ? 8 : 1.5; if (!on) ctx.setLineDash([6,6]);
+      ctx.beginPath(); ctx.moveTo(s.vx - H, fy - H); ctx.lineTo(s.vx, fy); ctx.lineTo(s.vx + H, fy - H); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      ctx.font=`700 10px ${FONT}`; ctx.textAlign='center'; ctx.fillText('y = |x − a|', s.vx, fy - H - 8); }
     else if (s.kind==='pi'){ ctx.beginPath(); ctx.arc(s.x, s.y, 9, 0, Math.PI*2); ctx.fill(); ctx.fillStyle=PAPER; ctx.font=`700 10px ${FONT}`; ctx.textAlign='center'; ctx.fillText('π', s.x, s.y+3.5); ctx.fillStyle=INK; }
     else if (s.kind==='pillar' || s.kind==='asym'){ const y0 = ar[2]*T - 9*T, y1 = ar[2]*T, on = s.t > .8 && s.t < 1.25;
       if (!on){ ctx.globalAlpha = s.t > 1.25 ? Math.max(0, 1-(s.t-1.25)*4)*.6 : .35 + .3*Math.sin(clock*30)*(s.t>.5); ctx.lineWidth = 1.5; ctx.setLineDash([5,6]); line(s.x, y0, s.x, y1); ctx.setLineDash([]); }
@@ -3549,6 +3593,7 @@ function respawn(){
   SFX.play('respawn');
   if (wave && wave.active){ wave.active = false; wave.idx = 0; wave.pending = []; enemies = enemies.filter(e=>!e.wave); }
   if (boss && !boss.dead) resetBoss();
+  if (mboss && mboss.engaged && !mboss.dead){ resetMathBoss(); popups.push({x:cp.x+11, y:cp.y-30, text:'Boss hồi đầy máu: đấu lại từ đầu!', life:2.4, big:true}); }
   blobs = []; flasks = [];
   for (const r of ropes) r.held = false;
   player = makePlayer(cp.x, cp.y); ghosts=[]; jumpBuf=0; dashBuf=0;
