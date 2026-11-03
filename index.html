@@ -16,6 +16,10 @@
 // ===== PHÒNG KÍN — platformer giải đố, vector đen trắng =====
 const cv = document.getElementById('c'); let ctx = cv.getContext('2d');
 // Hiệu năng: tự hạ đồ hoạ khi máy chậm (hoặc bật tay trong menu dev)
+// an toàn: bán kính âm (do hoạt ảnh co/giãn) làm canvas ném lỗi và đứng game → kẹp về 0
+{ const P = CanvasRenderingContext2D.prototype, A = P.arc, E = P.ellipse;
+  P.arc = function(x,y,r,a0,a1,ccw){ return A.call(this, x, y, r > 0 ? r : 0, a0, a1, ccw); };
+  P.ellipse = function(x,y,rx,ry,rot,a0,a1,ccw){ return E.call(this, x, y, rx > 0 ? rx : 0, ry > 0 ? ry : 0, rot, a0, a1, ccw); }; }
 const PERF = {ema:16, slowT:0, auto:false, get low(){ return this.auto || dev.lite; }};
 const MAX_PARTS = 260;
 const INK = '#111', PAPER = '#fff', FONT = '"IBM Plex Mono", ui-monospace, monospace', HAND = '"Patrick Hand", "Segoe Print", cursive';   // phông viết tay có đủ dấu tiếng Việt
@@ -26,7 +30,7 @@ const WALL = '#ededeb', BG_LINE = 'rgba(17,17,17,.065)', BG_FILL = 'rgba(17,17,1
 let GW = 24, GH = 13, RW = GW*T, RH = GH*T;   // kích thước map, đổi theo khu
 
 // ---- Camera ----
-const VIEW_H = 360, VIEW_MIN_W = 440;   // khung nhìn tối thiểu (đơn vị game)
+const VIEW_H = 360, VIEW_MIN_W = 440, HK = .8;   // HK: tỉ lệ thu nhỏ giao diện (HUD)   // khung nhìn tối thiểu (đơn vị game)
 const CAM_EDGE = .3;                     // camera chỉ trượt khi nhân vật vào 30% sát mép màn hình
 let camX = 0, camY = 0, viewW = 720, viewH = VIEW_H;
 
@@ -1747,7 +1751,7 @@ function updateMathBoss(dt){
   b.shots = b.shots.filter(s=>s.life > 0);
 }
 function drawMathBoss(){
-  const b = mboss; if (!b) return; const ar = b.def.arena;
+  const b = mboss; if (!b) return; const ar = b.def.arena, px = player.x+11, py = player.y+17;
   ctx.save(); ctx.strokeStyle=INK; ctx.fillStyle=INK; ctx.lineCap='round'; ctx.lineJoin='round';
   // đạn
   for (const s of b.shots){
@@ -1940,7 +1944,7 @@ function drawGearWorld(){
   for (const r of rulers){ if (r.t > 1.2) continue; for (const c of r.cells){ if (Math.floor(clock*10)%2){ ctx.save(); ctx.fillStyle='rgba(255,255,255,.7)'; ctx.fillRect(c.x*T, c.y*T, T, T); ctx.restore(); } } }
   // kính lúp: vòng soi quanh Bấc, ô số hiện ✓ / ✗ và phép tính
   if (lensOn > 0 && LEVELS[lvl].numRule){ const R = NUM_RULES[LEVELS[lvl].numRule], cx = player.x+11, cy = player.y+17, rad = 190*lensOn;
-    ctx.save(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.globalAlpha=.8; ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI*2); ctx.stroke(); ctx.lineWidth=1; ctx.setLineDash([3,5]); ctx.beginPath(); ctx.arc(cx, cy, rad-8, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.save(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.globalAlpha=.8; ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI*2); ctx.stroke(); ctx.lineWidth=1; ctx.setLineDash([3,5]); ctx.beginPath(); ctx.arc(cx, cy, Math.max(0, rad-8), 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI*2); ctx.clip();
     for (const k in numTiles){ const n = numTiles[k]; const X = n.x*T, Y = n.y*T; if (Math.hypot(X+T/2-cx, Y+T/2-cy) > rad) continue; const ok = R.f(n.val);
       ctx.globalAlpha = .9; ctx.fillStyle = ok ? 'rgba(255,255,255,.0)' : 'rgba(17,17,17,.35)'; ctx.fillRect(X+2, Y+2, T-4, T-4);
@@ -1962,7 +1966,7 @@ function drawMathHUD(){
   const px = player.x+11; let best = null, bd = 1e9;
   for (const q of quizzes){ if (q.solved) continue; const d = Math.min(Math.abs(q.bx - px), ...q.orbs.map(o=>Math.abs(o.x - px))); if (d < bd){ bd = d; best = q; } }
   ctx.save(); ctx.textAlign='center';
-  let cardTop = viewH;
+  let cardTop = viewH, ruleShown = false;
   if (best && bd < 10*T){
     const tag = best.kind==='graph' ? 'CÂU ĐỐ · CHỌN HÀM SỐ ĐỂ DỰNG CẦU' : best.kind==='bridge' ? 'CÂU ĐỐ · ĐÚNG THÌ CẦU HIỆN RA' : 'CÂU ĐỐ · ĐÚNG THÌ CỬA MỞ';
     const l2 = '→ chạm quả cầu ghi đáp án đúng', l3 = best.hint ? 'gợi ý: ' + best.hint : '';
@@ -1975,14 +1979,14 @@ function drawMathHUD(){
     ctx.font=`700 9px ${FONT}`; const tgw = ctx.measureText(tag).width + 16; ctx.fillStyle=INK; ctx.fillRect(bx+tw/2-tgw/2, by-9, tgw, 16); ctx.fillStyle=PAPER; ctx.fillText(tag, viewW/2, by+2);
     ctx.fillStyle=INK; ctx.font=`700 ${qf}px ${FONT}`; ctx.fillText(best.q, viewW/2, by+10+qf);
     ctx.font=`400 12px ${FONT}`; ctx.fillText(l2, viewW/2, by+qf+26); if (l3){ ctx.font=`italic 400 12px ${FONT}`; ctx.fillText(l3, viewW/2, by+qf+41); } }
-  if (L.numRule && Object.keys(numTiles).some(k => Math.abs(numTiles[k].x*T - px) < 12*T)){ const R = NUM_RULES[L.numRule], ex = L.numRule;
+  if (L.numRule && Object.keys(numTiles).some(k => Math.abs(numTiles[k].x*T - px) < 12*T)){ ruleShown = true; const R = NUM_RULES[L.numRule], ex = L.numRule;
     const sample = {even:'✓ 2 4 6 8  ✗ 3 5 7', prime:'✓ 2 3 5 7 11  ✗ 1 4 9 15', square:'✓ 1 4 9 16 25  ✗ 2 8 12', mult3:'✓ 3 6 9 12  ✗ 4 7 10', fib:'✓ 1 2 3 5 8 13  ✗ 4 6 7 9', ineq:'✓ 5 6 7 8  ✗ 1 2 3 4', root:'✓ 2 3  ✗ 0 1 4 5'}[ex] || '';
     const l1 = 'LUẬT Ô SỐ: ' + R.text.replace('Chỉ ô ', '').replace(' mới đứng vững', ' → vững').replace(' mới vững', ' → vững'), l2 = sample + (gear.has('lens') ? '   (giữ V để soi)' : '');
     ctx.font=`700 10px ${FONT}`; const w1 = ctx.measureText(l1).width; ctx.font=`400 10px ${FONT}`; const tw = Math.max(w1, ctx.measureText(l2).width) + 24, bx = 12, by = cardTop < viewH ? 184 : viewH - 52;
     ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.fillRect(bx, by, tw, 40); ctx.strokeRect(bx, by, tw, 40);
     ctx.fillStyle=INK; ctx.textAlign='left'; ctx.font=`700 10px ${FONT}`; ctx.fillText(l1, bx+10, by+16);
     ctx.font=`400 10px ${FONT}`; ctx.fillText(l2, bx+10, by+31); }
-  quizCardH = cardTop < viewH ? viewH - cardTop + 6 : 0;
+  quizCardH = cardTop < viewH ? (viewH - cardTop + 6)*HK : 0; mathBusy = cardTop < viewH || ruleShown;
   ctx.restore();
 }
 function updateMath(dt){ updateGear(dt); if (!LEVELS[lvl].math) return; updateNumTiles(dt); updateLaunchers(dt); updateMathFx(dt); updateMathBoss(dt); }
@@ -3920,11 +3924,11 @@ cv.addEventListener('pointerdown', e=>{
   if (bestiary){ bestiary = null; return; }
   if (devMenu){ devClick(e.clientX, e.clientY); return; }
   if (e.clientX < 90 && e.clientY < 50){ devTap(); if (devMenu) return; }
-  if (Math.hypot(e.clientX-(OX+212*S), e.clientY-(OY+29*S)) < 16*S && state==='play'){ SFX.toggle(); return; }
+  if (Math.hypot(e.clientX-(OX+212*S*HK), e.clientY-(OY+29*S*HK)) < 16*S*HK && state==='play'){ SFX.toggle(); return; }
   if (e.pointerType==='touch' && !touchUI){ touchUI=true; resize(); }
   if (state==='title' && loadSave() && titleNewBtn && e.clientX>titleNewBtn.x && e.clientX<titleNewBtn.x+titleNewBtn.w && e.clientY>titleNewBtn.y && e.clientY<titleNewBtn.y+titleNewBtn.h){ begin(); return; }
   if (helpOpen){ toggleHelp(); return; }
-  if (state==='play' && notesBox && noteT > 0){ const nx = OX + notesBox.x*S, ny = OY + notesBox.y*S; if (e.clientX > nx && e.clientX < nx + notesBox.w*S && e.clientY > ny && e.clientY < ny + notesBox.h*S){ toggleNotes(); return; } }
+  if (state==='play' && notesBox && noteT > 0){ const k = S*HK, nx = OX + notesBox.x*k, ny = OY + notesBox.y*k; if (e.clientX > nx && e.clientX < nx + notesBox.w*k && e.clientY > ny && e.clientY < ny + notesBox.h*k){ toggleNotes(); return; } }
   if (state!=='play' || reading){ trigger('jump'); return; }
   const id = touchUI ? hitBtn(e.clientX,e.clientY) : null;
   if (!id) return;
@@ -5051,14 +5055,15 @@ function drawSteam(){
     if (!c.acid){ ctx.font=`700 9px ${FONT}`; ctx.textAlign='center'; ctx.fillStyle=INK; ctx.globalAlpha=.6; ctx.fillText('↑ H₂O', c.x+T/2, c.top+16+Math.sin(clock*2)*3); ctx.globalAlpha=1; }
   }
 }
-let notesBox = null;
+let notesBox = null, mathBusy = false;
 function toggleNotes(){ if (!LEVELS[lvl].notes) return; if (noteT > 0) noteT = 0; else { noteT = 8.9; } SFX.play('page'); }
 function drawNotes(){
   notesBox = null;
   const L = LEVELS[lvl]; if (!L.notes || noteT<=0 || bossCS || (boss && boss.engaged && !boss.dead)) return;
   const n = L.notes[curSeg]; if (!n) return;
   const a = Math.min(1, noteT*1.5, (9-noteT)*4);
-  const w = Math.min(300, viewW - 180), h = 22 + (n.length-1)*16 + 8, x = viewW - w - 12, y = 12;
+  const compact = mathBusy && LEVELS[lvl].math;   // đang có thẻ câu đố / luật ô số: sổ tay thu gọn chỉ còn tiêu đề
+  const w = compact ? Math.min(220, viewW - 260) : Math.min(300, viewW - 180), h = compact ? 22 : 22 + (n.length-1)*16 + 8, x = viewW - w - 12, y = 12;
   ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y + (1-a)*-10);
   ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.fillRect(0,0,w,h); ctx.strokeRect(0,0,w,h);
   // gáy sổ lò xo
@@ -5066,7 +5071,7 @@ function drawNotes(){
   ctx.fillStyle=INK; ctx.fillRect(0,4,w,16);
   ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillStyle=PAPER; ctx.fillText('SỔ TAY · '+n[0], 8, 16, w-60); ctx.textAlign='right'; ctx.fillText('✕ N', w-8, 16); ctx.textAlign='left'; notesBox = {x, y, w, h};
   ctx.fillStyle=INK; ctx.font=`400 ${w<280?9.5:11}px ${FONT}`;
-  for (let i=1;i<n.length;i++) ctx.fillText(n[i], 8, 20+i*16, w-14);
+  if (!compact) for (let i=1;i<n.length;i++) ctx.fillText(n[i], 8, 20+i*16, w-14);
   ctx.restore();
 }
 // ===== QUẠ GIẤY: bạn đồng hành, bay theo và bình luận =====
@@ -7353,6 +7358,9 @@ function drawGame(){
   drawExitArrow();
   if (reading) drawReading();
   drawBossCSOverlay();
+  // HUD vẽ nhỏ lại theo hệ số HK để không tràn khung nhìn
+  ctx.save(); ctx.scale(HK, HK); const vw0 = viewW, vh0 = viewH; viewW /= HK; viewH /= HK;
+  try {
   if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawQuestHUD(); drawMathBossHUD(); drawMathHUD(); drawGearHUD(); drawBossLine(); }
   drawNotes();
   // nút loa (cạnh thanh mực): bấm hoặc nhấn M
@@ -7362,6 +7370,7 @@ function drawGame(){
     if (SFX.muted){ line(sx+2,sy-4,sx+8,sy+4); line(sx+8,sy-4,sx+2,sy+4); }
     else { ctx.beginPath(); ctx.arc(sx+1,sy,4,-.8,.8); ctx.stroke(); ctx.beginPath(); ctx.arc(sx+1,sy,7.5,-.8,.8); ctx.stroke(); }
     ctx.restore(); }
+  } finally { viewW = vw0; viewH = vh0; ctx.restore(); }
   if (state==='dying' && bossLoss && tState>.5){
     const a = Math.min(1,(tState-.5)*2);
     ctx.save(); ctx.globalAlpha=a; ctx.fillStyle=INK; ctx.fillRect(0,0,viewW,viewH);
@@ -7399,7 +7408,9 @@ function pickMusic(){
   return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', 1];
 }
 function loop(now){ const dt=Math.min(1/30,(now-last)/1000); last=now;
-  PERF.ema += ((dt*1000) - PERF.ema)*.05; if (state==='play'){ if (PERF.ema > 21){ PERF.slowT += dt; if (PERF.slowT > 2 && !PERF.auto){ PERF.auto = true; resize(); } } else PERF.slowT = Math.max(0, PERF.slowT - dt*.5); } update(dt); draw(); const [mn, mi] = pickMusic(); SFX.music(mn, mi); requestAnimationFrame(loop); }
+  PERF.ema += ((dt*1000) - PERF.ema)*.05; if (state==='play'){ if (PERF.ema > 21){ PERF.slowT += dt; if (PERF.slowT > 2 && !PERF.auto){ PERF.auto = true; resize(); } } else PERF.slowT = Math.max(0, PERF.slowT - dt*.5); } try { update(dt); draw(); } catch (err){ console.error(err); errCount = (errCount||0) + 1; try { ctx.restore(); } catch(_){} }   // lỗi một khung không được làm đứng cả game
+  const [mn, mi] = pickMusic(); SFX.music(mn, mi); requestAnimationFrame(loop); }
+var errCount = 0;
 requestAnimationFrame(loop);
 </script>
 </body>
