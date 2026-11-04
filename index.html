@@ -1340,14 +1340,15 @@ function hurtPlayer(n, fromX){
   const p = player;
   if (dev.god){ if (p.invT<=0){ p.invT = .6; hurtFlash = .15; } return; }
   if (p.invT > 0 || state!=='play') return;
-  p.hp -= n; p.invT = INVULN; hurtFlash = .35; shakeT = .2;
+  if (p.shield > 0){ p.shield--; p.invT = INVULN; hurtFlash = .2; shakeT = .15; SFX.play('clank'); popups.push({x:p.x+11, y:p.y-20, text:'lớp mực bảo vệ đỡ đòn!', life:1.2}); engHurt(); return; }
+  p.hp -= n; p.invT = INVULN; hurtFlash = .35; shakeT = .2; engHurt();
   showTip('hurt', [], 'Bị thương! Máu là các ngọn lửa dưới thanh mực. Điểm lưu kế tiếp sẽ hồi đầy máu.', null, 7);
   p.vx = Math.sign(p.x+11-fromX || 1)*280; p.vy = -320; p.lock = .22; p.dashT = 0;
   SFX.play('hurt');
   if (p.hp <= 0) die();
 }
 function killEnemy(e, text){
-  e.dead = true; SFX.play('enemydie');
+  e.dead = true; SFX.play('enemydie'); engKill();
   for (let i=0;i<18;i++) parts.push({x:e.x+e.w/2,y:e.y+e.h/2,vx:(Math.random()-.5)*300,vy:-Math.random()*320,a:Math.random()*6,va:(Math.random()-.5)*10,l:3+Math.random()*6,life:.7});
   if (text) popups.push({x:e.x+e.w/2, y:e.y-12, text, life:2.6, big:text.length>22});
   if (Math.random() < .6) drops.push({x:e.x+e.w/2, y:e.y+e.h/2, vy:-200, kind: Math.random()<.35 ? 'oil' : 'ink'});
@@ -2217,7 +2218,7 @@ function updateCoreBoss(dt){
         if (Math.hypot(px - s.x, py - s.y) < 22){ if (p.dashT > 0){ s.ref = true; const a2 = Math.atan2(b.y - s.y, b.x - s.x); s.vx = Math.cos(a2)*620; s.vy = Math.sin(a2)*620; SFX.play('clank'); popups.push({x:s.x, y:s.y - 20, text:'bật ngược! p = m·v', life:1.2}); p.canDash = true; } else if (p.invT <= 0){ s.life = 0; hurtPlayer(1, s.x); } } }
       if (s.ref){ const a3 = Math.atan2(b.y - s.y, b.x - s.x); s.vx = Math.cos(a3)*620; s.vy = Math.sin(a3)*620; }   // cầu đã bật ngược: tự bám theo lõi
       s.x += s.vx*dt; s.y += s.vy*dt;
-      if (s.ref && Math.hypot(b.x - s.x, b.y - s.y) < 60*b.sc){ s.life = 0; coreHurt(1, 'nhiệt trả về lõi!'); }
+      if (s.ref && Math.hypot(b.x - s.x, b.y - s.y) < 60*b.sc){ award('reflect'); s.life = 0; coreHurt(1, 'nhiệt trả về lõi!'); }
       if (!s.ref && solid(Math.floor(s.x/T), Math.floor(s.y/T))) s.life = 0; }
   }
   b.shots = b.shots.filter(s=>s.life > 0);
@@ -2533,7 +2534,7 @@ function throwFlask(ch, cost = FLASK_COST){
   const p = player; if (ch === undefined) ch = p.charge;
   if (mana < cost){ manaFlash=.5; SFX.play('denied'); return; }
   if (reagent!=='tnt'){ if ((ammo[reagent]||0) <= 0){ SFX.play('denied'); popups.push({x:p.x+11, y:p.y-26, text:`hết lọ ${REAGENT_NAME[reagent]}!`, life:1.4}); showTip('noammo', ['X'], 'Hết loại lọ này rồi. Nhấn X để đổi sang lọ khác. Nhấn R chơi lại khu để được cấp lại đầy đủ.', null, 8); return; } ammo[reagent]--; }
-  mana -= cost;
+  mana -= cost; engThrow();
   const s0 = flaskStart(p), v = flaskVel(ch, p.faceS>=0?1:-1);
   flasks.push({x:s0.x, y:s0.y, vx:v.vx, vy:v.vy, kind:reagent, rot:0});
   SFX.play('throw'); p.sx = 1.12; p.sy = .9;
@@ -4166,7 +4167,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
-  spawnMath = !!L.math; cboss = null; ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
+  spawnMath = !!L.math; cboss = null; engLevelStart(); ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
   parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
@@ -4234,7 +4235,7 @@ function respawn(){
   player = makePlayer(cp.x, cp.y); ghosts=[]; jumpBuf=0; dashBuf=0;
   for (const c of crystals) c.cd = 0;
   mana = Math.max(mana, MANA_DASH);
-  updateCam(0, true, true);
+  updateCam(0, true, true); engRespawn();
   // hoạt ảnh hiện hình: mực tụ lại
   for (let i=0;i<14;i++){ const a=i/14*Math.PI*2; parts.push({x:cp.x+11+Math.cos(a)*40,y:cp.y+17+Math.sin(a)*40,vx:-Math.cos(a)*90,vy:-Math.sin(a)*90-60,a,va:0,l:5,life:.45}); }
 }
@@ -4452,6 +4453,105 @@ cv.addEventListener('pointerup',up); cv.addEventListener('pointercancel',up);
 
 // ===== Luồng game =====
 // Lưu tự động vào trình duyệt: mở lại file vẫn chơi tiếp, không phải làm lại từ đầu
+// ===== GẮN KẾT NGƯỜI CHƠI (thiết kế theo tâm lý học trò chơi) =====
+// 1) Thành tựu: phần thưởng bất ngờ + cảm giác tiến bộ  2) Tổng kết khu có sao & kỷ lục: mục tiêu rõ, muốn chơi lại cho đẹp
+// 3) Chuỗi hạ quái (combo) có thưởng mực: vòng phản hồi nhanh  4) Trợ giúp thích ứng khi chết nhiều ở một chỗ: giữ người chơi trong "vùng flow"
+// 5) Thông điệp "suýt thắng" khi thua boss: biến thất bại thành động lực thử lại
+const ACH = {
+  firstdash:  ['Nét Mực Đầu Tiên', 'Lướt lần đầu'],
+  combo3:     ['Phản Ứng Dây Chuyền', 'Hạ 3 quái liên tiếp không trúng đòn'],
+  combo6:     ['Chất Xúc Tác', 'Chuỗi 6 quái'],
+  nohit:      ['Không Một Vết Mực', 'Qua trọn một khu không trúng đòn'],
+  stars3:     ['Ba Ngôi Sao', 'Đạt 3 sao ở một khu'],
+  persist:    ['Kiên Trì Như Sợi Bấc', 'Ngã 10 lần mà vẫn đứng dậy'],
+  vuamuc:     ['Trung Hoà Vua Mực', 'Hạ Vua Mực'],
+  sphinx:     ['Kẻ Trả Lời Nhân Sư', 'Hạ Nhân Sư Hình Số'],
+  plotter:    ['Người Vẽ Lại Đồ Thị', 'Hạ Máy Vẽ Đồ Thị'],
+  core:       ['Cân Bằng Nhiệt', 'Hạ Lõi Nhiệt Động'],
+  reflect:    ['Định Luật Bảo Toàn', 'Bật ngược một cầu nhiệt'],
+  pages10:    ['Người Đọc Nhật Ký', 'Nhặt 10 trang nhật ký'],
+  cranes5:    ['Đàn Hạc Giấy', 'Tìm 5 hạc giấy bí mật'],
+  night:      ['Thành Phố Không Ngủ', 'Ngồi ngắm thành phố trên Hiên Đêm'],
+  spam:       ['Phòng Thí Nghiệm Di Động', 'Ném 8 lọ trong 3 giây'],
+};
+let achGot = new Set(), achQ = [], achShow = null;
+try { achGot = new Set(JSON.parse(localStorage.getItem('phongkin_ach_v1')||'[]')); } catch(e){}
+function award(id){ if (achGot.has(id) || !ACH[id] || dev.god) return; achGot.add(id); try { localStorage.setItem('phongkin_ach_v1', JSON.stringify([...achGot])); } catch(e){} achQ.push(id); }
+function updateAch(dt){ if (!achShow && achQ.length){ achShow = {id:achQ.shift(), t:0}; SFX.play('fanfare'); } if (achShow){ achShow.t += dt; if (achShow.t > 3.6) achShow = null; } }
+function drawAch(){   // thẻ thành tựu trượt xuống từ trên (toạ độ màn hình)
+  if (!achShow) return; const [nm, ds] = ACH[achShow.id], t = achShow.t, k = Math.min(1, t/.35, (3.6 - t)/.35), w = 300, h = 46, x = innerWidth/2 - w/2, y = 8 + (k - 1)*60;
+  ctx.save(); ctx.globalAlpha = Math.max(0, k); ctx.fillStyle = INK; ctx.fillRect(x, y, w, h); ctx.strokeStyle = PAPER; ctx.lineWidth = 1; ctx.strokeRect(x+3, y+3, w-6, h-6);
+  ctx.fillStyle = PAPER; ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(`✦ THÀNH TỰU · ${achGot.size}/${Object.keys(ACH).length}`, x + 46, y + 15);
+  ctx.font = `700 14px ${FONT}`; ctx.fillText(nm, x + 46, y + 31); ctx.font = `400 9px ${FONT}`; ctx.globalAlpha *= .8; ctx.fillText(ds, x + 46, y + 42); ctx.globalAlpha /= .8;
+  ctx.save(); ctx.translate(x + 23, y + 23); ctx.rotate(t*2); ctx.strokeStyle = PAPER; ctx.lineWidth = 2; for (let i=0;i<8;i++){ ctx.rotate(Math.PI/4); line(0, 6, 0, 13); } ctx.restore();
+  ctx.restore();
+}
+// --- thống kê từng khu + combo + trợ giúp thích ứng ---
+const ENG = {lvT:0, lvDeaths:0, lvHits:0, combo:0, comboT:0, spamT:[], spotDeaths:{}, shownAssist:{}};
+function engLevelStart(){ ENG.lvT = 0; ENG.lvDeaths = 0; ENG.lvHits = 0; ENG.combo = 0; }
+function engUpdate(dt){
+  if (state==='play') ENG.lvT += dt;
+  if (ENG.comboT > 0){ ENG.comboT -= dt; if (ENG.comboT <= 0) ENG.combo = 0; }
+  updateAch(dt);
+  if (player && player.dashT > 0) award('firstdash');
+  if (gotPages.size >= 10) award('pages10'); if (gotSecrets.size >= 5) award('cranes5');
+  if (player && player.sit) award('night');
+  if (boss && boss.dead) award('vuamuc'); if (cboss && cboss.dead && !cboss.def.training) award('core');
+  if (mboss && mboss.dead) award(mboss.def.kind==='plotter' ? 'plotter' : 'sphinx');
+}
+function engKill(){ ENG.combo++; ENG.comboT = 4;
+  if (ENG.combo >= 2){ const bonus = Math.min(20, ENG.combo*4); mana = Math.min(MANA_MAX, mana + bonus); popups.push({x:player.x+11, y:player.y-40, text:`CHUỖI ×${ENG.combo} · +${bonus} mực`, life:1.4, big:ENG.combo >= 3}); }
+  if (ENG.combo >= 3) award('combo3'); if (ENG.combo >= 6) award('combo6'); }
+function engHurt(){ ENG.lvHits++; if (ENG.combo >= 2) popups.push({x:player.x+11, y:player.y-40, text:'đứt chuỗi', life:1}); ENG.combo = 0; }
+function engThrow(){ const now = ENG.lvT; ENG.spamT.push(now); ENG.spamT = ENG.spamT.filter(t=>now - t < 3); if (ENG.spamT.length >= 8) award('spam'); }
+function engDeath(){ ENG.lvDeaths++; if (deaths >= 10) award('persist'); const key = lvl + ':' + cpSeg; ENG.spotDeaths[key] = (ENG.spotDeaths[key]||0) + 1; }
+// gọi sau khi hồi sinh: trợ giúp + thông điệp "suýt thắng"
+function engRespawn(){
+  const key = lvl + ':' + cpSeg, n = ENG.spotDeaths[key] || 0;
+  if (n >= 3){ player.shield = n >= 6 ? 2 : 1;
+    if (!ENG.shownAssist[key + ':' + player.shield]){ ENG.shownAssist[key + ':' + player.shield] = true;
+      showTip('assist_' + key + player.shield, [], player.shield > 1 ? 'Ngã nhiều lần ở đây rồi. Giáo sư để lại HAI lớp mực bảo vệ: chịu thêm 2 đòn. Không ai phải qua chỗ khó một mình.' : 'Chỗ này khó thật. Giáo sư để lại một lớp mực bảo vệ: chịu thêm 1 đòn (vòng sáng quanh Bấc).', null, 8); } }
+  const near = engNearMiss(); if (near) popups.push({x:player.x+11, y:player.y-70, text:near, life:3.2, big:true});
+}
+function engNearMiss(){
+  if (ENG.lastVM){ const v = ENG.lastVM; ENG.lastVM = null; const prog = Math.round(((v.ph - 1) + (1 - v.fr))/4*100); return `Lần này bạn đã đi được ${prog}% trận Vua Mực. Thử lại nào!`; }
+  if (ENG.lastBoss){ const s = ENG.lastBoss; ENG.lastBoss = null; return `${s.name} chỉ còn ${s.left} vạch nữa thôi!`; }
+  return null;
+}
+function engBossSnapshot(){   // chụp tiến độ boss ngay lúc Bấc ngã
+  if (boss && boss.engaged && !boss.dead){ const fr = boss.phase===1 ? boss.armor/BOSS_HP.armor : boss.phase===2 ? boss.body/BOSS_HP.body : boss.phase===3 ? boss.core/BOSS_HP.core : boss.heart/BOSS_HP.heart; ENG.lastVM = {ph:boss.phase, fr:clamp(fr, 0, 1)}; }
+  else if (mboss && mboss.engaged && !mboss.dead) ENG.lastBoss = {name:mboss.def.name, left:mboss.hp};
+  else if (cboss && cboss.engaged && !cboss.dead) ENG.lastBoss = {name:'Lõi Nhiệt Động', left:cboss.hp};
+}
+// --- tổng kết khu: sao + kỷ lục cá nhân ---
+let summary = null, bestRec = {}, skipSummary = false;
+try { bestRec = JSON.parse(localStorage.getItem('phongkin_best_v1')||'{}'); } catch(e){}
+function makeSummary(){
+  const L = LEVELS[lvl], pg = diary.length, pgGot = diary.filter(d=>d.got).length, cr = secrets.length, crGot = secrets.filter(q=>q.got).length;
+  const stars = 1 + (ENG.lvDeaths === 0 ? 1 : 0) + (pgGot === pg && crGot === cr ? 1 : 0);
+  const prev = bestRec[L.name], best = !prev || stars > prev.stars || (stars === prev.stars && ENG.lvT < prev.time);
+  if (best && !dev.god){ bestRec[L.name] = {stars, time:ENG.lvT}; try { localStorage.setItem('phongkin_best_v1', JSON.stringify(bestRec)); } catch(e){} }
+  if (ENG.lvHits === 0 && !dev.god) award('nohit'); if (stars === 3) award('stars3');
+  return {name:L.name, time:ENG.lvT, deaths:ENG.lvDeaths, hits:ENG.lvHits, pg, pgGot, cr, crGot, stars, best, prev, t:0};
+}
+function drawSummary(){
+  const S = summary; if (!S) return; const k = Math.min(1, S.t/.4), W = Math.min(420, innerWidth - 40), H = 230, x = innerWidth/2 - W/2, y = innerHeight/2 - H/2 + (1-k)*30;
+  ctx.save(); ctx.globalAlpha = .55*k; ctx.fillStyle = INK; ctx.fillRect(0, 0, innerWidth, innerHeight); ctx.globalAlpha = k;
+  ctx.fillStyle = PAPER; ctx.fillRect(x, y, W, H); ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.strokeRect(x, y, W, H); ctx.fillStyle = INK; ctx.fillRect(x + 6, y + H, W, 6);
+  ctx.textAlign = 'center'; ctx.font = `700 10px ${FONT}`; ctx.fillText('XONG KHU', x + W/2, y + 24); ctx.font = `400 26px ${HAND}`; ctx.fillText(S.name, x + W/2, y + 54);
+  for (let i=0;i<3;i++){ const on = i < S.stars, pop = clamp((S.t - .5 - i*.35)/.25, 0, 1); if (pop <= 0) continue; const sx = x + W/2 + (i-1)*52, sy = y + 92, r = 18*(on ? (1 + (1-pop)*.6) : 1);
+    if (pop === 1 && on && S.t - .5 - i*.35 < .3 && !S['s'+i]){ S['s'+i] = true; SFX.play('key'); }
+    ctx.beginPath(); for (let j=0;j<10;j++){ const a = -Math.PI/2 + j*Math.PI/5, rr = j%2 ? r*.45 : r; ctx.lineTo(sx + Math.cos(a)*rr, sy + Math.sin(a)*rr); } ctx.closePath(); ctx.lineWidth = 2; if (on) ctx.fill(); ctx.stroke(); }
+  ctx.font = `400 10px ${FONT}`; const mm = Math.floor(S.time/60), ss = Math.floor(S.time%60);
+  const rows = [['★ Hoàn thành khu', '✓'], ['★ Không ngã lần nào', S.deaths ? `ngã ${S.deaths} lần` : '✓'], ['★ Nhặt hết trang & hạc', `${S.pgGot}/${S.pg} trang · ${S.crGot}/${S.cr} hạc`]];
+  rows.forEach((r, i)=>{ ctx.textAlign = 'left'; ctx.fillText(r[0], x + 30, y + 132 + i*17); ctx.textAlign = 'right'; ctx.fillText(r[1], x + W - 30, y + 132 + i*17); });
+  ctx.textAlign = 'center'; ctx.font = `700 11px ${FONT}`; ctx.fillText(`thời gian ${mm}:${String(ss).padStart(2,'0')}  ·  trúng đòn ${S.hits}` + (S.best && S.prev ? '  ·  KỶ LỤC MỚI!' : ''), x + W/2, y + 194);
+  ctx.font = `400 9px ${FONT}`; ctx.globalAlpha = k*(.5 + .5*Math.sin(S.t*4)); ctx.fillText(S.t > .9 ? 'Enter / chạm để đi tiếp' : '', x + W/2, y + H - 12);
+  ctx.restore();
+}
+addEventListener('keydown', e=>{ if (state==='summary' && summary && summary.t > .9 && ['Enter','Space','KeyE','KeyJ','ArrowRight'].includes(e.code)) summary.go = true; });
+addEventListener('pointerdown', ()=>{ if (state==='summary' && summary && summary.t > .9) summary.go = true; });
+
 const SAVE_KEY = 'phongkin_save_v1';
 let saveT = 0;
 function saveGame(){
@@ -4483,12 +4583,14 @@ function die(){
   if (state!=='play') return;
   if (dev.god){ player.x = cp.x; player.y = cp.y; player.vx = player.vy = 0; updateCam(0, true, true); popups.push({x:player.x+11, y:player.y-14, text:'(bất tử) về điểm lưu', life:1.2}); return; }
   bossLoss = !!(boss && boss.engaged && !boss.dead);
-  deaths++; state='dying'; tState=0; SFX.play('death');
+  engBossSnapshot(); deaths++; engDeath(); state='dying'; tState=0; SFX.play('death');
   showTip('death', ['R'], 'Bạn sẽ hồi sinh ở điểm lưu gần nhất (ô vuông trên cùng). Nhấn R nếu muốn chơi lại cả khu.', null, 8);
   SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0);
   for (let i=0;i<16;i++) parts.push({x:player.x+11,y:player.y+17,vx:(Math.random()-.5)*420,vy:-Math.random()*420,a:Math.random()*6,va:(Math.random()-.5)*12,l:6+Math.random()*10,life:1});
 }
-function win(){ const L0 = LEVELS[lvl]; if (L0 && L0.secret && L0.ret){ transTo = {lvl:L0.ret.lvl, x:L0.ret.x, row:L0.ret.row, face:-1, sfx:'door'}; } state='trans'; tState=0; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); }
+function win(){ const L0 = LEVELS[lvl]; if (L0 && L0.secret && L0.ret){ transTo = {lvl:L0.ret.lvl, x:L0.ret.x, row:L0.ret.row, face:-1, sfx:'door'}; }
+  if (!transTo && !skipSummary){ summary = makeSummary(); state = 'summary'; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); return; }
+  skipSummary = false; state='trans'; tState=0; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); }
 function dust(x,y,n,dirx=0){
   for (let i=0;i<n;i++) parts.push({x,y,vx:dirx*80+(Math.random()-.5)*120,vy:-Math.random()*120,a:Math.random()*6,va:(Math.random()-.5)*8,l:3+Math.random()*4,life:.5});
 }
@@ -4663,7 +4765,8 @@ function update(dt){
   clock += dt;
   if (swapFx){ swapFx.t += dt; if (swapFx.t > SWAP_DUR) swapFx = null; }
   if (state==='play'){ saveT -= dt; if (saveT <= 0){ saveT = 5; saveGame(); } }
-  updateTnt(dt); updateRopes(dt);
+  updateTnt(dt); updateRopes(dt); engUpdate(dt);
+  if (state==='summary'){ summary.t += dt; if (summary.go || summary.t > 9){ summary = null; state = 'play'; skipSummary = true; win(); } return; }
   { const night = state==='play' && LEVELS[lvl] && LEVELS[lvl].theme==='night'; if (night) updateNight(dt);
     SFX.loop('rain', night ? 1 : 0); SFX.loop('city', night ? 1 : 0); SFX.loop('hiss', night ? 1 : 0); SFX.loop('vinyl', night ? 1 : 0);
     if (night && Math.random() < dt*1.4) SFX.play('drip'); }
@@ -4686,7 +4789,7 @@ function update(dt){
     for (const b of bubbles){ b.y += b.vy*dt; b.life -= dt; } bubbles = bubbles.filter(b=>b.life>0); return; }
   if (state==='dying'){ tState+=dt;
     if (bossLoss){ if (tState>2.4){ bossLoss=false; const pg = gotPages; load(lvl); gotPages = pg; state='play'; SFX.play('start');
-      const gl = Math.min(...(tiles.G||[]).map(t=>t.x)); if (isFinite(gl)){ const sp = devSpawnAt(gl-2); player.x = sp.x; player.y = sp.y; cp = {x:sp.x, y:sp.y}; cpSeg = curSeg = Math.max(0, Math.floor((gl-INTRO)/SEG)); updateCam(0,true,true); } } return; }
+      const gl = Math.min(...(tiles.G||[]).map(t=>t.x)); if (isFinite(gl)){ const sp = devSpawnAt(gl-2); player.x = sp.x; player.y = sp.y; cp = {x:sp.x, y:sp.y}; cpSeg = curSeg = Math.max(0, Math.floor((gl-INTRO)/SEG)); updateCam(0,true,true); } engRespawn(); } return; }
     if (tState>.7){ respawn(); state='play'; } return; }
   if (state==='trans'){
     tState+=dt;
@@ -7836,6 +7939,8 @@ function draw(){
   ctx.setTransform(DPR,0,0,DPR,0,0);
   if ((dev.god || dev.ink) && state==='play'){ ctx.fillStyle=INK; ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillText('DEV' + (dev.god?' · BẤT TỬ':'') + (dev.ink?' · MỰC ∞':''), OX, innerHeight-8); }
   if (state==='play'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawTip(); if (helpOpen) drawHelp(); }
+  if (state==='summary'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawSummary(); }
+  ctx.setTransform(DPR,0,0,DPR,0,0); drawAch();
   drawDevMenu();
 }
 function drawGame(){
@@ -7946,6 +8051,7 @@ function drawGame(){
     ctx.save(); if (player.invT>0 && Math.floor(clock*20)%2) ctx.globalAlpha=.35;
     if (player.rope){ const hx = player.x+11, hy = player.y+6; ctx.translate(hx, hy); ctx.rotate(-player.ropeTh); ctx.translate(-hx, -hy); }
     glowDraw(()=>drawHero(player), player.x+11, player.y+17, 300, 240, 'rgba(255,255,255,.95)', 7); ctx.restore();
+    if (player.shield > 0){ ctx.save(); ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.setLineDash([4,4]); ctx.lineDashOffset = -clock*20; for (let i=0;i<player.shield;i++){ ctx.globalAlpha = .55; ctx.beginPath(); ctx.ellipse(player.x+11, player.y+17, 22 + i*6, 26 + i*6, 0, 0, Math.PI*2); ctx.stroke(); } ctx.restore(); }
     drawItemGetFront();
     drawSwapFx();
   }
