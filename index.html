@@ -619,6 +619,59 @@ const LEVELS = [
   '###########################################################################################xxx#CCC#xxx########################################################',
   '##############################################################################################################################################################',
  ]},
+ // ===== HAI MÀN LUYỆN TẬP TRƯỚC BOSS LÕI NHIỆT ĐỘNG =====
+ { name:'Phòng Piston', ch:3, theme:'lab', combat:true,
+   coreBoss:{training:true, name:'LÕI PHỤ · BÀI TẬP 1', hp:3, hitsPerExpose:1, phase:1, scale:.7, cd:2.2, moves:['piston','piston','vent'], pistonOff:6,
+     arena:[14, 45], gateL:[13, 11, 13], gateR:[46, 11, 13], cx:29.5, cy:4.4, pillars:[22, 37], valves:[], vents:[17, 26, 33, 41],
+     introKeys:['Q'], intro:'Bài tập 1 · Piston đập xuống đúng chỗ bạn đứng (đèn đỏ chớp + vạch đứt báo trước). Đứng SÁT CỘT CHỊU LỰC để dụ nó đập trúng cột → piston kẹt, lõi hạ xuống mở ra: LƯỚT (Q) vào lõi. Sóng xung kích chạy dọc sàn: nhảy qua. Khe kêu "xì…": tránh xa.'},
+   pages:[], secrets:[], decor:[['sign', 7, 'PISTON'], ['lamp', 4]],
+   talks:[[6, 13, 'Cạc! Phòng tập của Giáo sư. Lõi phụ này yếu hơn nhiều, cứ thử thoải mái.']],
+   hints:['Phòng Piston: học cách dụ piston đập vào cột chịu lực.', 'Đứng sát cột → piston kẹt → lõi hạ xuống: lướt vào. Sóng sàn: nhảy qua.', 'Xong rồi! Đi tiếp sang phải.'],
+   notes:[['PISTON THUỶ LỰC', 'p = F / S', 'Lực nén lên diện tích nhỏ → áp suất lớn', 'Cột chịu lực chặn được cú đập'], ['SÓNG XUNG KÍCH', 'Năng lượng lan dọc mặt sàn', 'Đang ở trên không thì không trúng', 'Canh lúc piston chạm sàn rồi nhảy']],
+   map:[
+  '##################################################',
+  '##################################################',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#.............................................#..#',
+  '#.....................#..............#........#..#',
+  '#..P..................#..............#........#.E#',
+  '##################################################',
+  '##################################################'
+   ]},
+ { name:'Buồng Làm Mát', ch:3, theme:'lab', combat:true,
+   coreBoss:{training:true, name:'LÕI PHỤ · BÀI TẬP 2', hp:3, hitsPerExpose:1, phase:2, heat0:35, heatRate:6, scale:.7, cd:2.6, moves:['orb','orb','jet','vent'], pistons:0,
+     arena:[14, 45], gateL:[13, 11, 13], gateR:[46, 11, 13], cx:29.5, cy:4.4, pillars:[23, 36], valves:[[15.5, 13.5], [44.5, 13.5], [17.5, 8.5], [41.5, 8.5]], vents:[19, 28, 31, 40],
+     introKeys:['E','Q'], intro:'Bài tập 2 · Nhiệt tăng dần. Nhấn E ở VAN để tạo vùng làm mát; khi nhiệt ≥ 60% van còn ép lõi xả nhiệt và LỘ RA (lướt vào). Tới 100% là NỔ HƠI NƯỚC: phải đứng trong vùng làm mát. Cầu nhiệt Q: LƯỚT vào nó để bật ngược về lõi. Tia nhiệt: trốn sau cột.'},
+   pages:[], secrets:[], decor:[['sign', 7, 'LÀM MÁT'], ['lamp', 4]],
+   talks:[[6, 13, 'Cạc! Bài này về nhiệt. Van làm mát là bạn thân của cậu đấy.']],
+   hints:['Buồng Làm Mát: học van làm mát, nổ hơi nước, cầu nhiệt và tia nhiệt.', 'Van (E): vùng làm mát 7s · nhiệt ≥ 60% thì lõi lộ ra. Cầu Q: lướt vào để bật ngược.', 'Xong rồi! Lõi Nhiệt Động thật đang chờ phía trước.'],
+   notes:[['TRUYỀN NHIỆT', 'Q = m·c·Δt', 'Nước có nhiệt dung riêng lớn', 'Hơi nước ngưng tụ: hút nhiệt quanh van'], ['ĐỘNG LƯỢNG', 'p = m·v', 'Lướt vào cầu nhiệt: đổi chiều vận tốc', 'Cầu bay ngược về lõi']],
+   map:[
+  '##################################################',
+  '##################################################',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#................................#..#',
+  '#............#..____....................____..#..#',
+  '#............#................................#..#',
+  '#.............................................#..#',
+  '#......................#............#.........#..#',
+  '#..P....f..............#............#.........#.E#',
+  '##################################################',
+  '##################################################'
+   ]},
  // ===== BOSS CHƯƠNG 3: LÕI NHIỆT ĐỘNG (nhiệt động lực học) =====
  { name:'Lõi Nhiệt Động', ch:3, theme:'lab', combat:true,
    coreBoss:{arena:[18, 57], gateL:[17, 11, 13], gateR:[58, 11, 13], cx:37.5, cy:4.6, pillars:[29, 46],
@@ -638,8 +691,8 @@ const LEVELS = [
   '#................#........................................#....#',
   '#................#........................................#....#',
   '#................#.._____.........................._____..#....#',
-  '#................#...........#................#...........#....#',
-  '#............................#................#...........#....#',
+  '#................#........................................#....#',
+  '#.........................................................#....#',
   '#............................#................#...........#....#',
   '#..P......f..................#................#...........#...E#',
   '################################################################',
@@ -2078,33 +2131,34 @@ function drawMathHUD(){
 let cboss = null;
 const CORE_HP = 12;
 function makeCore(L){
-  const d = L.coreBoss, b = {def:d, hp:CORE_HP, max:CORE_HP, phase:1, heat:50, x:d.cx*T, y:d.cy*T, hy:d.cy*T, lowY:10.2*T, engaged:false, dead:false, dieT:0, t:0, cd:2, hurtT:0,
-    exposed:0, pistons:[], shots:[], zones:[], valveCd:[0,0,0,0], blast:null, jet:null, sing:null, melt:0, orbit:0, hint:{}};
-  b.pistons = [-1, 1].map(sd=>({side:sd, x:d.cx*T + sd*7*T, home:d.cx*T + sd*7*T, y:0, st:'idle', t:0, tx:0}));
+  const d = L.coreBoss, b = {def:d, hp:d.hp||CORE_HP, max:d.hp||CORE_HP, phase:d.phase||1, heat:d.heat0||50, sc:d.scale||1, x:d.cx*T, y:d.cy*T, hy:d.cy*T, lowY:14*T - 66*(d.scale||1) - 4, engaged:false, dead:false, dieT:0, t:0, cd:2, hurtT:0,
+    exposed:0, expHits:0, pistons:[], shots:[], zones:[], valveCd:[0,0,0,0], blast:null, jet:null, sing:null, melt:0, orbit:0, hint:{}};
+  b.pistons = (d.pistons===0 ? [] : [-1, 1]).map(sd=>({side:sd, x:d.cx*T + sd*(d.pistonOff||7)*T, home:d.cx*T + sd*(d.pistonOff||7)*T, y:0, st:'idle', t:0, tx:0}));
   return b;
 }
 function resetCoreBoss(){ const L = LEVELS[lvl]; if (!cboss || cboss.dead) return; const d = L.coreBoss; cboss = makeCore(L); setGate(d.gateL, false); }
 function setGate(g, closed){ for (let y=g[1]; y<=g[2]; y++) grid[y][g[0]] = closed ? '#' : '.'; tileCache.clear(); }
-const coreSay = (text, big=true, life=2.4)=>{ const b = cboss; popups.push({x:b.x, y:b.y - 90, text, life, big}); };
+const coreSay = (text, big=true, life=2.4)=>{ const b = cboss; popups.push({x:b.x, y: b.y - camY < 200 ? b.y + 110 : b.y - 90, text, life, big}); };   // lõi ở sát mép trên thì chữ hiện bên dưới, khỏi bị thanh máu che
 function coreHurt(n, why){
   const b = cboss; if (b.dead || b.hurtT > 0) return; b.hp -= n; b.hurtT = .45; shakeT = Math.max(shakeT, .3); SFX.play('bosshit');
   popups.push({x:b.x, y:b.y - 70, text: why || 'lõi nứt!', life:1.6, big:true});
   for (let i=0;i<16;i++){ const a = i/16*Math.PI*2; parts.push({x:b.x, y:b.y, vx:Math.cos(a)*280, vy:Math.sin(a)*280, a, va:0, l:5, life:.6}); }
-  if (b.hp <= 0){ b.dead = true; b.dieT = 0; b.shots = []; b.jet = null; b.sing = null; b.blast = null; b.melt = 0; SFX.play('crash'); coreSay('LÕI NGUỘI DẦN · cân bằng nhiệt', true, 3.5); saveGame(); }
+  if (b.hp <= 0){ b.dead = true; b.dieT = 0; b.shots = []; b.jet = null; b.sing = null; b.blast = null; b.melt = 0; SFX.play('crash'); coreSay(b.def.training ? 'XONG BÀI TẬP! Cửa đã mở.' : 'LÕI NGUỘI DẦN · cân bằng nhiệt', true, 3.5); saveGame(); }
 }
 function updateCoreBoss(dt){
   const b = cboss; if (!b) return; const d = b.def, p = player, px = p.x+11, py = p.y+17, A0 = d.arena[0]*T, A1 = (d.arena[1]+1)*T, floorY = 14*T;
-  if (!b.engaged){ if (px > A0 + 2*T && px < A1){ b.engaged = true; setGate(d.gateL, true); cp = {x:(d.gateL[0]-2)*T, y:13*T + T - 34}; SFX.play('roar'); coreSay('LÕI NHIỆT ĐỘNG'); } else return; }
+  if (!b.engaged){ if (px > A0 + 2*T && px < A1){ b.engaged = true; setGate(d.gateL, true); cp = {x:(d.gateL[0]-2)*T, y:13*T + T - 34}; SFX.play('roar'); coreSay(d.name || 'LÕI NHIỆT ĐỘNG'); if (d.intro) showTip('train_' + lvl, d.introKeys || [], d.intro, null, 12); } else return; }
   if (b.dead){ b.dieT += dt; b.heat = Math.max(0, b.heat - dt*30); b.y += (b.hy - b.y)*Math.min(1, dt*2); if (b.dieT > 2.5 && !b.opened){ b.opened = true; setGate(d.gateR, false); setGate(d.gateL, false); SFX.play('door'); } return; }
   b.t += dt; b.hurtT -= dt; b.cd -= dt; b.exposed = Math.max(0, b.exposed - dt); b.orbit += dt;
   for (let i=0;i<4;i++) b.valveCd[i] = Math.max(0, b.valveCd[i] - dt);
   // giai đoạn theo máu
-  const ph = b.hp > 8 ? 1 : b.hp > 3 ? 2 : 3;
+  const ph = d.phase || (b.hp > 8 ? 1 : b.hp > 3 ? 2 : 3);
   if (ph !== b.phase){ b.phase = ph; SFX.play('roar'); shakeT = .5; b.cd = 2.5; b.exposed = 0;
     if (ph === 2){ coreSay('QUÁ NHIỆT! pV = nRT: nhiệt tăng → áp suất tăng'); showTip('core2', ['E'], 'Lõi nóng dần. Mở VAN LÀM MÁT (E) khi nhiệt ≥ 60% để ép lõi xả nhiệt và lộ ra. Tới 100% là nổ hơi nước: trốn vào vùng làm mát!', null, 9); }
     if (ph === 3){ b.melt = 45; coreSay('SỤP ĐỔ HỆ THỐNG · 45 giây!'); showTip('core3', ['Q'], 'Entropy cực đại! Lõi chỉ còn bị phá bằng chính nhiệt của nó: LƯỚT vào cầu nhiệt để bật ngược vào lõi.', null, 9); } }
   // nhiệt độ
-  if (b.phase === 1) b.heat += (50 + Math.sin(b.t*.8)*8 - b.heat)*Math.min(1, dt*2);
+  if (d.phase === 2 && d.heatRate){ if (!b.blast) b.heat = Math.min(100, b.heat + dt*d.heatRate); }
+  else if (b.phase === 1) b.heat += (50 + Math.sin(b.t*.8)*8 - b.heat)*Math.min(1, dt*2);
   else if (b.phase === 2){ if (!b.blast) b.heat = Math.min(100, b.heat + dt*(b.jet ? 7.5 : 5)); }
   else b.heat = 100;
   // lõi: lơ lửng; khi lộ ra thì hạ thấp, mở cửa chớp
@@ -2112,12 +2166,20 @@ function updateCoreBoss(dt){
   b.y += (wantY - b.y)*Math.min(1, dt*(b.exposed > 0 ? 6 : 2.5));
   // va chạm với lõi
   const dc = Math.hypot(px - b.x, py - b.y);
-  if (dc < 66){
-    if (b.exposed > 0 && p.dashT > 0){ if (!p.dashHit.has(b)){ p.dashHit.add(b); coreHurt(1, 'lướt trúng lõi trần!'); p.vx = -p.dashDir*300; p.vy = -300; p.dashT = 0; p.canDash = true; } }
+  if (dc < 66*b.sc){
+    if (b.exposed > 0 && p.dashT > 0){ if (!p.dashHit.has(b)){ p.dashHit.add(b); coreHurt(1, 'lướt trúng lõi trần!'); if (++b.expHits >= (b.def.hitsPerExpose || 2)) b.exposed = Math.min(b.exposed, .4); p.vx = -p.dashDir*300; p.vy = -300; p.dashT = 0; p.canDash = true; } }
+    else if (b.exposed > 0){ moveX(p, Math.sign(px - b.x)*120*(1/60)); }   // lõi đang lộ: chạm vào không mất máu, chỉ bị đẩy nhẹ
     else if (p.invT <= 0){ hurtPlayer(1, b.x); p.vx = Math.sign(px - b.x)*360; p.vy = -260; }
   }
   // ---- ra đòn ----
-  if (b.cd <= 0 && !b.blast && !b.sing){
+  if (b.cd <= 0 && !b.blast && !b.sing && d.moves){   // màn luyện tập: chỉ dùng các chiêu được liệt kê
+    const mv = d.moves[Math.floor(Math.random()*d.moves.length)];
+    if (mv==='piston') pistonSlam(b, px); else if (mv==='vent') steamVents(b, px, 2);
+    else if (mv==='jet' && !b.jet){ b.jet = {t:0, a0: px < b.x ? Math.PI*.95 : Math.PI*.05, a1: px < b.x ? Math.PI*.05 : Math.PI*.95}; SFX.play('pulse'); coreSay('tia nhiệt sắp quét… TRỐN SAU CỘT!', false, 1.6); }
+    else if (mv==='orb'){ const a = Math.atan2(py - b.y, px - b.x); b.shots.push({kind:'orb', x:b.x + Math.cos(a)*50, y:b.y + Math.sin(a)*50, vx:Math.cos(a)*120, vy:Math.sin(a)*120, life:8}); SFX.play('throw'); }
+    b.cd = d.cd || 2.4;
+  }
+  else if (b.cd <= 0 && !b.blast && !b.sing){
     const P = b.phase, r = Math.random();
     if (P === 1){ if (r < .6) pistonSlam(b, px); else steamVents(b, px, 3); b.cd = 2.1; }
     else if (P === 2){ if (r < .35){ pistonSlam(b, px); if (Math.random() < .5) pistonSlam(b, px + (Math.random()<.5?-1:1)*4*T, true); } else if (r < .65 && !b.jet){ b.jet = {t:0, a0: px < b.x ? Math.PI*.95 : Math.PI*.05, a1: px < b.x ? Math.PI*.05 : Math.PI*.95}; SFX.play('pulse'); coreSay('tua-bin gầm rú… TRỐN SAU CỘT!', false, 1.6); } else steamVents(b, px, 4); b.cd = 1.8; }
@@ -2153,8 +2215,9 @@ function updateCoreBoss(dt){
     else if (s.kind==='orb'){
       if (!s.ref){ const a = Math.atan2(py - s.y, px - s.x); s.vx += Math.cos(a)*90*dt; s.vy += Math.sin(a)*90*dt; const sp = Math.hypot(s.vx, s.vy); if (sp > 190){ s.vx *= 190/sp; s.vy *= 190/sp; }
         if (Math.hypot(px - s.x, py - s.y) < 22){ if (p.dashT > 0){ s.ref = true; const a2 = Math.atan2(b.y - s.y, b.x - s.x); s.vx = Math.cos(a2)*620; s.vy = Math.sin(a2)*620; SFX.play('clank'); popups.push({x:s.x, y:s.y - 20, text:'bật ngược! p = m·v', life:1.2}); p.canDash = true; } else if (p.invT <= 0){ s.life = 0; hurtPlayer(1, s.x); } } }
+      if (s.ref){ const a3 = Math.atan2(b.y - s.y, b.x - s.x); s.vx = Math.cos(a3)*620; s.vy = Math.sin(a3)*620; }   // cầu đã bật ngược: tự bám theo lõi
       s.x += s.vx*dt; s.y += s.vy*dt;
-      if (s.ref && Math.hypot(b.x - s.x, b.y - s.y) < 60){ s.life = 0; coreHurt(1, 'nhiệt trả về lõi!'); }
+      if (s.ref && Math.hypot(b.x - s.x, b.y - s.y) < 60*b.sc){ s.life = 0; coreHurt(1, 'nhiệt trả về lõi!'); }
       if (!s.ref && solid(Math.floor(s.x/T), Math.floor(s.y/T))) s.life = 0; }
   }
   b.shots = b.shots.filter(s=>s.life > 0);
@@ -2163,18 +2226,20 @@ function updateCoreBoss(dt){
 }
 function pistonSlam(b, x, quick){
   const ps = b.pistons.filter(q=>q.st==='idle').sort((a, c)=>Math.abs(a.x - x) - Math.abs(c.x - x))[0]; if (!ps) return;
-  const d = b.def; ps.tx = clamp(x, (d.arena[0]+1.5)*T, (d.arena[1]-.5)*T); ps.st = 'aim'; ps.t = 0; ps.quick = !!quick;
+  const d = b.def; ps.tx = clamp(x, (d.arena[0]+1.5)*T, (d.arena[1]-.5)*T);
+  for (const c of d.pillars){ const pc = c*T + T/2; if (Math.abs(ps.tx - pc) < 66) ps.tx = pc; }   // đứng sát cột: piston ngắm trúng đỉnh cột
+  ps.st = 'aim'; ps.t = 0; ps.quick = !!quick;
 }
 function updatePiston(b, ps, dt, px, py, floorY){
   ps.t += dt; const d = b.def, top = 2*T;
-  const stopY = ()=>{ for (const c of d.pillars) if (Math.abs(ps.tx - (c*T + T/2)) < 50) return 10*T; return floorY; };
+  const stopY = ()=>{ for (const c of d.pillars) if (Math.abs(ps.tx - (c*T + T/2)) < 50){ for (let r=2; r<14; r++) if (grid[r][c]==='#') return r*T; } return floorY; };
   if (ps.st==='idle'){ ps.x += (ps.home - ps.x)*Math.min(1, dt*2); ps.y += (top - ps.y)*Math.min(1, dt*4); }
   else if (ps.st==='aim'){ ps.x += (ps.tx - ps.x)*Math.min(1, dt*6); if (ps.t > .55){ ps.st = 'tell'; ps.t = 0; } }
   else if (ps.st==='tell'){ if (ps.t > (ps.quick ? .55 : .85)){ ps.st = 'slam'; ps.t = 0; SFX.play('swoosh'); } }
   else if (ps.st==='slam'){ const sy = stopY(); ps.y += 1900*dt;
     if (Math.abs(px - ps.x) < 34 && py > ps.y - 10 && py < ps.y + 40 && player.invT <= 0){ hurtPlayer(1, ps.x); player.vy = -300; }
     if (ps.y >= sy){ ps.y = sy; shakeT = Math.max(shakeT, .25); SFX.play('stomp'); dust(ps.x, sy, 10);
-      if (sy < floorY){ ps.st = 'stuck'; ps.t = 0; b.exposed = 5; SFX.play('clank'); coreSay('Piston kẹt vào cột chịu lực! LÕI LỘ RA!', true, 2); if (!b.hint.exp){ b.hint.exp = true; showTip('coreexp', ['Q','F'], 'Lõi hạ xuống và mở cửa chớp: LƯỚT vào lõi hoặc NÉM lọ hoá chất để gây sát thương!', null, 7); } }
+      if (sy < floorY){ ps.st = 'stuck'; ps.t = 0; b.exposed = 5; b.expHits = 0; SFX.play('clank'); coreSay('Piston kẹt vào cột chịu lực! LÕI LỘ RA!', true, 2); if (!b.hint.exp){ b.hint.exp = true; showTip('coreexp', ['Q','F'], 'Lõi hạ xuống và mở cửa chớp: LƯỚT vào lõi hoặc NÉM lọ hoá chất để gây sát thương!', null, 7); } }
       else { ps.st = 'hold'; ps.t = 0; for (const dir of [-1, 1]) b.shots.push({kind:'wave', x:ps.x + dir*30, dir, life:3}); } } }
   else if (ps.st==='hold'){ if (ps.t > .35){ ps.st = 'rise'; ps.t = 0; } }
   else if (ps.st==='stuck'){ ps.x += Math.sin(ps.t*60)*.6; if (ps.t > 5){ ps.st = 'rise'; ps.t = 0; } }
@@ -2198,7 +2263,7 @@ function useCoreValve(){
   if (b.valveCd[i] > 0){ popups.push({x:px, y:py - 30, text:`van đang nạp lại ${Math.ceil(b.valveCd[i])}s`, life:1}); return true; }
   const v = b.def.valves[i]; b.valveCd[i] = 7; player.actT = .3; SFX.play('valve'); SFX.play('steam');
   b.zones.push({x:v[0]*T, y:v[1]*T - 20, r:100, life:7, max:7});
-  if (b.heat >= 60 && b.phase === 2){ b.heat = Math.max(20, b.heat - 40); b.exposed = 4; coreSay('Q tỏa ra: lõi xả nhiệt, cửa chớp mở!', true, 2); }
+  if (b.heat >= 60 && b.phase === 2){ b.heat = Math.max(20, b.heat - 40); b.exposed = 4; b.expHits = 0; coreSay('Q tỏa ra: lõi xả nhiệt, cửa chớp mở!', true, 2); }
   else popups.push({x:px, y:py - 40, text: b.phase === 1 ? 'nước mát phun ra · vùng an toàn 7s' : 'vùng làm mát · 7s', life:1.6});
   return true;
 }
@@ -2211,8 +2276,8 @@ function drawCoreBoss(){
     ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('VÙNG LÀM MÁT ' + Math.ceil(z.life) + 's', z.x, z.y - z.r - 6); }
   // ống dẫn nhiệt từ trần xuống lõi (phình theo áp suất)
   const bulge = b.phase >= 2 ? 1 + Math.sin(t*8)*.15*H : 1;
-  for (const sd of [-1, -.4, .4, 1]){ const x0 = b.x + sd*170, y0 = 2*T; ctx.lineWidth = 8*bulge; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x0, b.y - 30, b.x + sd*48, b.y - 20); ctx.stroke();
-    ctx.strokeStyle = PAPER; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x0, b.y - 30, b.x + sd*48, b.y - 20); ctx.stroke(); ctx.strokeStyle = INK; }
+  for (const sd of [-1, -.4, .4, 1]){ const x0 = b.x + sd*170*b.sc, y0 = 2*T; ctx.lineWidth = 8*bulge; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x0, b.y - 30, b.x + sd*48*b.sc, b.y - 20*b.sc); ctx.stroke();
+    ctx.strokeStyle = PAPER; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(x0, b.y - 30, b.x + sd*48*b.sc, b.y - 20*b.sc); ctx.stroke(); ctx.strokeStyle = INK; }
   // van làm mát
   b.def.valves.forEach((v, i)=>{ const X = v[0]*T, Y = v[1]*T, rd = b.valveCd[i] <= 0; ctx.lineWidth = 3; line(X, Y + 12, X, Y - 6); ctx.fillStyle = PAPER; ctx.beginPath(); ctx.arc(X, Y - 10, 9, 0, Math.PI*2); ctx.fill(); ctx.stroke();
     ctx.save(); ctx.translate(X, Y - 10); ctx.rotate(rd ? 0 : t*6); ctx.lineWidth = 2; line(-7, 0, 7, 0); line(0, -7, 0, 7); ctx.restore();
@@ -2250,7 +2315,7 @@ function drawCoreBoss(){
   ctx.globalAlpha = .25 + H*.35; ctx.lineWidth = 1.5; for (let k=0;k<5;k++){ ctx.beginPath(); for (let y = 0; y < 90; y += 6){ const xx = b.x - 40 + k*20 + Math.sin(y*.12 - t*6 + k)*4*(1+H); y ? ctx.lineTo(xx, b.y - 70 - y) : ctx.moveTo(xx, b.y - 70); } ctx.stroke(); } ctx.globalAlpha = 1;
   // THÂN LÕI: bình cầu tán đinh, ô kính tròn thấy lõi nóng, nhiệt kế bên hông
   const shk = (b.hurtT > 0 ? (Math.random()-.5)*8 : 0) + (b.blast && !b.blast.done ? (Math.random()-.5)*b.blast.t*4 : 0), inv = b.hurtT > 0 && Math.floor(t*20)%2, F = inv ? PAPER : INK, Bc = inv ? INK : PAPER;
-  ctx.save(); ctx.translate(b.x + shk, b.y); ctx.globalAlpha = b.dead ? Math.max(.35, 1 - b.dieT/3) : 1;
+  ctx.save(); ctx.translate(b.x + shk, b.y); ctx.scale(b.sc, b.sc); ctx.globalAlpha = b.dead ? Math.max(.35, 1 - b.dieT/3) : 1;
   ctx.fillStyle = F; ctx.beginPath(); ctx.arc(0, 0, 62, 0, Math.PI*2); ctx.fill();
   ctx.fillStyle = Bc; for (let k=0;k<16;k++){ const a = k/16*Math.PI*2; ctx.beginPath(); ctx.arc(Math.cos(a)*55, Math.sin(a)*55, 2.2, 0, Math.PI*2); ctx.fill(); }
   ctx.strokeStyle = Bc; ctx.lineWidth = 2; line(-62, 0, -40, 0); line(40, 0, 62, 0);
@@ -2276,7 +2341,7 @@ function drawCoreBoss(){
 }
 function drawCoreHUD(){
   const b = cboss; if (!b || !b.engaged || b.dead) return; const w = Math.min(300, viewW - 420), x = (viewW - w)/2, y = 24;
-  ctx.save(); ctx.fillStyle = PAPER; ctx.globalAlpha = .85; ctx.fillRect(x - 10, y - 20, w + 20, 62); ctx.globalAlpha = 1; ctx.fillStyle = INK; ctx.font = `700 11px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(`LÕI NHIỆT ĐỘNG · GIAI ĐOẠN ${b.phase}`, viewW/2, y - 6);
+  ctx.save(); ctx.fillStyle = PAPER; ctx.globalAlpha = .85; ctx.fillRect(x - 10, y - 20, w + 20, 62); ctx.globalAlpha = 1; ctx.fillStyle = INK; ctx.font = `700 11px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(b.def.training ? `${b.def.name} · còn ${b.hp} lần` : `LÕI NHIỆT ĐỘNG · GIAI ĐOẠN ${b.phase}`, viewW/2, y - 6);
   ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(x, y, w, 10); for (let i=0;i<b.max;i++) if (i < b.hp) ctx.fillRect(x + 2 + i*(w-4)/b.max, y + 2, (w-4)/b.max - 2, 6);
   // thanh nhiệt
   ctx.strokeRect(x, y + 16, w, 7); ctx.globalAlpha = .7; ctx.fillRect(x + 1, y + 17, (w - 2)*b.heat/100, 5); ctx.globalAlpha = 1; ctx.font = `400 8px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(`nhiệt ${Math.round(b.heat)}%`, x, y + 33);
@@ -3728,7 +3793,12 @@ const STORY = {
         cineShot('forge', [0,140,.9,0], [0,40,1.25,0], 7, 'Nồi luyện vừa ấm lên thì kim áp kế vọt qua vạch đỏ. Một giọt Mực Đen đã chui vào lõi lò.', {tr:'fade'}),
         cineCard('Nhiệt không bao giờ tự đi từ vật lạnh sang vật nóng. Muốn đảo ngược, phải trả giá.', 5),
       ]},
-      {scene:'chapter', title:'Phần 5 · Lõi Nhiệt Động', icon:'lab', lines:['Nơi entropy chỉ có một chiều: tăng.']},
+      {scene:'chapter', title:'Phần 5 · Phòng Piston', icon:'lab', lines:['Trước khi chạm vào lõi thật, Giáo sư bắt Bấc tập với lõi phụ.']},
+    ],
+    [{scene:'chapter', title:'Phần 6 · Buồng Làm Mát', icon:'lab', lines:['Nơi học cách giữ bình tĩnh khi mọi thứ nóng lên.']}],
+    [
+      {shots:[ cineCard('Hai bài tập đã xong. Giờ là lõi thật: ba giai đoạn, và không có lần thứ hai nếu ngã.', 5) ]},
+      {scene:'chapter', title:'Phần 7 · Lõi Nhiệt Động', icon:'lab', lines:['Nơi entropy chỉ có một chiều: tăng.']},
     ],
     [
       {shots:[
@@ -4261,7 +4331,7 @@ function saveGame(){
 function loadSave(){ try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (!s || s.v!==1) return null;
     // bản cũ chưa lưu tên màn: các màn từ vị trí 16 trở đi đã lùi 1 do chèn boss Lõi Nhiệt Động
     if (s.name){ const i = LEVELS.findIndex(L=>L.name===s.name); if (i >= 0) s.lvl = i; }
-    else if (s.lvl >= 16) s.lvl += 1;
+    else if (s.lvl >= 16) s.lvl += 3;   // bản cũ: từ vị trí 16 đã chèn 3 màn (2 màn luyện tập + boss Lõi Nhiệt Động)
     if (LEVELS[s.lvl]) return s; } catch(e){} return null; }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch(e){} }
 function continueGame(){
