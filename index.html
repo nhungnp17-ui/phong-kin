@@ -2802,7 +2802,7 @@ function dashImpact(e, isBoss, forceArmor){
   }
   if (isBoss && boss.phase===4){ boss.heart--; boss.hurtT=.5; SFX.play('bosshit'); SFX.play('heart'); shakeT=.4; p.vx=-p.dashDir*340; p.vy=-320; p.dashT=0; p.canDash=true;
     popups.push({x:boss.x+boss.w/2, y:boss.y-14, text:'Tim Mực nứt!', life:1.4, big:true}); heartHit(); return; }
-  if (isBoss){ const dmg = boss.st==='stun' ? 2 : 1; boss.core -= dmg; boss.hurtT=.35; bossDrop(); SFX.play('bosshit'); shakeT=.25; p.vx=-p.dashDir*300; p.vy=-300; p.dashT=0; p.canDash=true;
+  if (isBoss){ const dmg = boss.st==='stun' ? 2 : 1; stunHit(boss, 2); boss.core -= dmg; boss.hurtT=.35; bossDrop(); SFX.play('bosshit'); shakeT=.25; p.vx=-p.dashDir*300; p.vy=-300; p.dashT=0; p.canDash=true;
     popups.push({x:boss.x+boss.w/2, y:boss.y-14, text: dmg>1 ? 'CHOÁNG! lõi nứt gấp đôi' : 'lõi mực nứt', life:1.4, big:dmg>1}); if (boss.core<=0) bossPhase(4); return; }
   e.vx = clamp(pv/e.mass*.9, -760, 760); e.vy = -260/e.mass; e.hp--; e.hurtT=.3; e.knock = .5;
   SFX.play('enemyhit');
@@ -2816,7 +2816,7 @@ function bossFlask(kind){
   const b = boss; if (b.st==='trans') return;
   const say = (t, big)=>popups.push({x:b.x+b.w/2, y:b.y-14, text:t, life:1.6, big});
   if (b.guard){ SFX.play('clank'); say('vỏ đang xoay kín: đợi nó ra đòn hoặc choáng!'); return; }
-  const dmg = b.st==='stun' ? 2 : 1;
+  const dmg = b.st==='stun' ? 2 : 1; if (b.phase <= 2) stunHit(b, 3);
   if (b.phase===1){
     if (kind!=='acid'){ say('bazơ trượt qua lớp đá vôi'); return; }
     b.armor -= dmg; b.hurtT=.35; bossDrop(); SFX.play('bosshit'); SFX.play('fizz'); co2(b.x+b.w/2, b.y+10);
@@ -2906,7 +2906,7 @@ function drawBossCSOverlay(){
   ctx.restore();
 }
 // ---- AI: chuỗi đòn có báo trước, phủ toàn đấu trường ----
-const BOSS_MOVES = {1:['fan','dive','sweep','rain'], 2:['dive','sweep','rain','flood','fan'], 3:['vortex','dive','rain','sweep'], 4:['pulse','rain','dive','pulse','fan']};
+const BOSS_MOVES = {1:['fan','dive','sweep','rain'], 2:['dive','sweep','rain','flood','fan'], 3:['vortex','dive','rain','sweep','ram','geyser'], 4:['pulse','rain','dive','pulse','fan','geyser','ram']};
 function bossGoto(b, tx, ty, dt, k){ b.x += (tx-b.w/2-b.x)*Math.min(1,dt*k); b.y += (ty-b.h/2-b.y)*Math.min(1,dt*k); }
 function bossStart(b, name){
   const A = b.arena, p = player, px = p.x+11, k = bossK(b);
@@ -2929,6 +2929,11 @@ function bossStart(b, name){
     b.stT = .55/k + .9; b.fanAt = .55/k; b.fired = false;
   } else if (name==='flood'){
     b.stT = 1.5 + 3.2 + .6; b.floodT = 0;
+  } else if (name==='ram'){
+    const side = (px - A.L < A.R - px) ? 1 : -1;   // hạ xuống phía xa Bấc, húc về phía Bấc
+    b.ram = {side, dir:-side, tell:.9, v:640*k, n: b.phase===4 ? 2 : 1}; b.stT = 9;
+  } else if (name==='geyser'){
+    b.gey = {t:0, i:0}; b.stT = 3.6;
   } else if (name==='vortex'){
     b.stT = 4.5; b.vort = {a:0, r:96};
   } else if (name==='pulse'){      // sóng xung từ tim: lướt xuyên qua (Q) hoặc nhảy qua gợn thấp
@@ -2938,6 +2943,22 @@ function bossStart(b, name){
   }
 }
 function bossHz(h){ boss.hz.push(h); }
+// CHOÁNG: boss đứng yên, mọi đòn đang bay bị huỷ, va chạm thân vô hại → người chơi yên tâm lao vào
+let stunBan = null;
+function bossStun(b, dur, why){
+  b.st = 'stun'; b.stT = dur; b.stunMax = dur; b.stunHits = 0; b.guard = false; b.recoverT = 0; b.hz = []; b.vort = null; b.flood = 0; blobs = []; b.ram = null;
+  shakeT = Math.max(shakeT, .35); SFX.play('bosshit'); SFX.play('shield');
+  stunBan = {t:0, why: why || ''}; popups.push({x:b.x+b.w/2, y:b.y-16, text:'CHOÁNG! đánh ngay!', life:1.4, big:true});
+}
+function stunHit(b, max){ if (b.st!=='stun') return; b.stunHits = (b.stunHits||0) + 1; if (b.stunHits >= max){ b.stT = Math.min(b.stT, .25); popups.push({x:b.x+b.w/2, y:b.y-40, text:'nó tỉnh lại rồi!', life:1.2}); } }
+function drawStunBanner(){
+  const b = boss; if (!b || b.dead || b.st!=='stun' || state!=='play'){ stunBan = null; return; } if (!stunBan) stunBan = {t:0, why:''};
+  stunBan.t += 1/60; const k = clamp(b.stT/(b.stunMax||1.8), 0, 1), w = Math.min(460, innerWidth - 40), x = (innerWidth - w)/2, y = 70 + Math.min(0, (stunBan.t - .2)*120), pulse = .5 + .5*Math.sin(clock*18);
+  ctx.save(); ctx.fillStyle = INK; ctx.fillRect(x, y, w, 50); ctx.strokeStyle = PAPER; ctx.lineWidth = 2; ctx.strokeRect(x + 4, y + 4, w - 8, 42);
+  ctx.fillStyle = PAPER; ctx.textAlign = 'center'; ctx.font = `700 ${18 + pulse*2}px ${FONT}`; ctx.fillText('⚡ VUA MỰC BỊ CHOÁNG ⚡', innerWidth/2, y + 24);
+  ctx.font = `400 10px ${FONT}`; ctx.fillText((stunBan.why ? stunBan.why + ' · ' : '') + 'TẤN CÔNG NGAY: mọi đòn ×2 · chạm thân không mất máu', innerWidth/2, y + 39);
+  ctx.fillRect(x + 8, y + 44, (w - 16)*k, 3); ctx.restore();
+}
 function updateBoss(dt){
   const b = boss, p = player; if (!b || b.dead) return;
   const A = b.arena, px = p.x+11, py = p.y+17, k = bossK(b);
@@ -2957,7 +2978,7 @@ function updateBoss(dt){
       if (p.dashT>0 && Math.abs(px-c.x) < 34 && Math.abs(py-c.y) < 30){ c.st = 'fall'; c.vy = 0; SFX.play('chain'); popups.push({x:c.x, y:c.y-30, text:'đứt xích!', life:1}); } }
     else if (c.st==='fall'){ c.vy += G*dt; c.y += c.vy*dt;
       if (!b.dead && c.x > b.x-10 && c.x < b.x+b.w+10 && c.y+14 > b.y && c.y < b.y+b.h){ c.st='gone'; SFX.play('crash');
-        const h = ((c.y - c.ay)/T).toFixed(1); bossHurt(2, `E = m·g·h (h≈${h} ô): đèn chùm ×2!`); if (b.st!=='trans' && b.st!=='exposed'){ b.st='stun'; b.stT=1.2; b.guard=false; } }
+        const h = ((c.y - c.ay)/T).toFixed(1); bossHurt(2, `E = m·g·h (h≈${h} ô): đèn chùm ×2!`); if (b.st!=='trans' && b.st!=='exposed') bossStun(b, 2, 'đèn chùm rơi trúng'); }
       else if (Math.abs(px-c.x) < 26 && Math.abs(py-c.y) < 26) hurtPlayer(bossDmg(), c.x);
       if (c.y > A.floor-14){ c.st='gone'; SFX.play('crash'); shakeT=.3; for (let i=0;i<16;i++) parts.push({x:c.x,y:A.floor-6,vx:(Math.random()-.5)*400,vy:-Math.random()*300,a:Math.random()*6,va:6,l:5,life:.6}); } }
   }
@@ -3010,11 +3031,24 @@ function updateBoss(dt){
           for (const dir of [-1,1]) bossHz({type:'wave', x:b.x+b.w/2, dir, y0:A.floor-22, y1:A.floor, v:470*k});
           d.n--;
           if (d.n > 0){ d.go = false; d.tell = .5/k; b.y -= 4*T; }
-          else { b.st = 'stun'; b.stT = 1.1; b.guard = false; popups.push({x:b.x+b.w/2, y:b.y-16, text:'CHOÁNG! đánh ngay!', life:1.4, big:true}); }
+          else bossStun(b, 1.8, 'đập sàn kiệt sức');
         }
       }
       break; }
-    case 'stun': b.tell = 0; b.guard = false; if (b.stT<=0){ b.st='idle'; b.stT=.5; } break;
+    case 'stun': b.tell = 0; b.guard = false; p.graceT = Math.max(p.graceT||0, .35); if (Math.random() < dt*6) parts.push({x:b.x+b.w/2 + (Math.random()-.5)*b.w, y:b.y, vx:0, vy:-60, a:0, va:3, l:3, life:.5}); if (b.stT<=0){ b.st='idle'; b.stT=.6; } break;
+    case 'ram': {   // HÚC NGANG: hạ xuống sàn một bên, rung lắc báo trước, lao sang tường bên kia → đâm tường thì choáng
+      const r = b.ram;
+      if (r.tell > 0){ r.tell -= dt; b.tell = 1; b.guard = true; bossGoto(b, r.side<0 ? A.L + b.w/2 + 8 : A.R - b.w/2 - 8, A.floor - b.h/2, dt, 6); }
+      else { b.tell = 0; b.guard = false; b.x += r.dir*r.v*dt; b.y = A.floor - b.h; if (Math.random() < dt*30) parts.push({x:b.x+b.w/2 - r.dir*b.w/2, y:A.floor - 4, vx:-r.dir*80, vy:-80, a:0, va:0, l:3, life:.4});
+        if ((r.dir>0 && b.x + b.w >= A.R) || (r.dir<0 && b.x <= A.L)){ b.x = clamp(b.x, A.L, A.R - b.w); SFX.play('boom'); shakeT = .5; for (let i=0;i<5;i++) bossHz({type:'drop', x:A.L + Math.random()*(A.R-A.L), y:A.top + 20, vy:0, r:7});
+          r.n--; if (r.n > 0){ r.dir = -r.dir; r.tell = .45; r.side = -r.side; } else { b.ram = null; bossStun(b, 2, 'đâm sầm vào tường'); } } }
+      break; }
+    case 'geyser': {   // MẠCH PHUN: 3 đợt cột mực phun từ sàn đuổi theo vị trí Bấc, vạch báo trước 0.7s
+      bossGoto(b, cxm, A.top + 2.5*T, dt, 3); const G = b.gey; G.t += dt; b.tell = 1;
+      if (G.i < 3 && G.t >= G.i*.95){ const xs = [px]; if (G.i>=1) xs.push(px + (Math.random()<.5?-1:1)*3*T); if (b.phase===4) xs.push(px - 5*T, px + 5*T);
+        for (const x of xs) bossHz({type:'gey', x:clamp(x, A.L + 20, A.R - 20), t:0}); G.i++; SFX.play('blob'); }
+      if (b.stT<=0){ b.st='idle'; b.stT=.9; }
+      break; }
     case 'pulse': {
       bossGoto(b, cxm, A.floor - 4*T, dt, 3); const el = 3.4 - b.stT; b.tell = el < .8 ? 1 : 0;
       const P = b.pulse; if (P.i < P.at.length && el >= P.at[P.i]){ P.i++; SFX.play('pulse'); SFX.play('heart'); shakeT = .15;
@@ -3072,6 +3106,8 @@ function updateBoss(dt){
     else if (h.type==='ring'){ h.r += h.v*dt; const d = Math.hypot(px-h.x, py-h.y);
       if (Math.abs(d-h.r) < 12 && p.dashT<=0) hurtPlayer(bossDmg(), h.x);
       if (h.r > 900) h.dead = true; }
+    else if (h.type==='gey'){ h.t += dt; if (h.t > .7 && h.t < 1.25 && Math.abs(px - h.x) < 22 && py > A.floor - 4*T){ hurtPlayer(bossDmg(), h.x); p.vy = -420; }
+      if (h.t > .7 && h.t < .76 && !h.sfx){ h.sfx = true; SFX.play('fizz'); } if (h.t > 1.45) h.dead = true; }
     else if (h.type==='wave'){ h.x += h.dir*h.v*dt;
       if (ov(p, {x:h.x-14, y:h.y0, w:28, h:h.y1-h.y0})) hurtPlayer(bossDmg(), h.x - h.dir*20);
       if (h.x < A.L || h.x > A.R) h.dead = true; }
@@ -6442,6 +6478,13 @@ function drawBossFX(){
   // xúc tu quét: vạch báo trước dọc sàn
   if (b.st==='sweep'){ for (const t of b.sweep.list) if (!t.started){ ctx.globalAlpha=.3+.3*Math.sin(clock*24); ctx.fillRect(A.L, t.y0, A.R-A.L, t.y1-t.y0); ctx.globalAlpha=1;
       ctx.font=`700 10px ${FONT}`; ctx.textAlign='center'; ctx.fillText(t.y1 >= A.floor ? '↑ NHẢY' : '↓ ĐỨNG YÊN', (A.L+A.R)/2, t.y0-6); } }
+  // húc ngang: vạch báo trên sàn + mũi tên hướng lao
+  if (b.st==='ram' && b.ram && b.ram.tell > 0){ ctx.globalAlpha = .25 + .25*Math.sin(clock*26); ctx.fillRect(A.L, A.floor - b.h, A.R - A.L, b.h); ctx.globalAlpha = 1; ctx.font = `700 11px ${FONT}`; ctx.textAlign = 'center';
+    ctx.fillText(b.ram.dir > 0 ? 'HÚC →  ↑ NHẢY QUA' : '←  HÚC  ↑ NHẢY QUA', (A.L+A.R)/2, A.floor - b.h - 10); }
+  // choáng: sao quay quanh đầu
+  if (b.st==='stun'){ const cx = b.x + b.w/2, cy = b.y - 6; ctx.lineWidth = 2; for (let i=0;i<4;i++){ const a = clock*5 + i*Math.PI/2, sx = cx + Math.cos(a)*b.w*.55, sy = cy + Math.sin(a)*8;
+      ctx.save(); ctx.translate(sx, sy); ctx.rotate(clock*6); ctx.beginPath(); for (let k=0;k<5;k++){ const r = k%2 ? 3 : 8, aa = k*Math.PI*2/5*2; ctx.lineTo(Math.cos(aa)*r*(k%2?1:1), Math.sin(aa)*r); } ctx.closePath(); ctx.fill(); ctx.restore(); }
+    ctx.font = `700 12px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('CHOÁNG', cx, cy - 16); }
   // lao đập: đường ngắm khoá mục tiêu
   if (b.st==='dive' && b.dive && !b.dive.go){ const cx=b.x+b.w/2, cy=b.y+b.h/2;
     const frozen = b.dive.tell <= .3; ctx.setLineDash(frozen ? [] : [6,6]); ctx.lineWidth = frozen ? 3 : 2; ctx.globalAlpha=.6+.4*Math.sin(clock*(frozen?50:30)); line(cx,cy,b.dive.lock.x,b.dive.lock.y); ctx.setLineDash([]);
@@ -6453,6 +6496,9 @@ function drawBossFX(){
       for (let x=xa; x<=xb; x+=12) ctx.lineTo(x, h.y0 + Math.sin(x*.08+clock*12)*3);
       ctx.lineTo(xb, h.y0+hh/2); for (let x=xb; x>=xa; x-=12) ctx.lineTo(x, h.y1 - Math.sin(x*.08+clock*12)*3); ctx.closePath(); ctx.fill();
       ctx.fillStyle=PAPER; for (let x=xa+10; x<xb-6; x+=22){ ctx.beginPath(); ctx.arc(x, h.y0+hh/2, 2.5, 0, Math.PI*2); ctx.fill(); } ctx.fillStyle=INK; }
+    else if (h.type==='gey'){ if (h.t < .7){ ctx.globalAlpha = .35 + .35*Math.sin(clock*30); ctx.fillRect(h.x - 18, A.floor - 5, 36, 5); ctx.font = `700 10px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('!', h.x, A.floor - 10); ctx.globalAlpha = 1; }
+      else { const q = Math.min(1, (h.t - .7)/.12), fade = h.t > 1.25 ? Math.max(0, 1 - (h.t - 1.25)/.2) : 1, H = 4*T*q; ctx.globalAlpha = fade; ctx.beginPath(); ctx.moveTo(h.x - 16, A.floor);
+        for (let y = 0; y <= H; y += 10) ctx.lineTo(h.x - 14 + Math.sin(y*.15 + clock*20)*4, A.floor - y); ctx.lineTo(h.x, A.floor - H - 14); for (let y = H; y >= 0; y -= 10) ctx.lineTo(h.x + 14 + Math.sin(y*.15 + clock*20 + 2)*4, A.floor - y); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; } }
     else if (h.type==='wave'){ ctx.beginPath(); ctx.moveTo(h.x-16, h.y1); ctx.quadraticCurveTo(h.x, h.y0-6, h.x+16, h.y1); ctx.fill(); ctx.lineWidth=1.5; ctx.globalAlpha=.4; line(h.x-h.dir*20, h.y1-10, h.x-h.dir*44, h.y1-6); ctx.globalAlpha=1; }
   }
   // lũ axit
@@ -8193,7 +8239,7 @@ function draw(){
   if ((dev.god || dev.ink) && state==='play'){ ctx.fillStyle=INK; ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillText('DEV' + (dev.god?' · BẤT TỬ':'') + (dev.ink?' · MỰC ∞':''), OX, innerHeight-8); }
   if (state==='play'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawTip(); if (helpOpen) drawHelp(); if (achOpen) drawAchPanel(); }
   if (state==='summary'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawSummary(); }
-  ctx.setTransform(DPR,0,0,DPR,0,0); drawAch();
+  ctx.setTransform(DPR,0,0,DPR,0,0); if (boss && boss.engaged) drawStunBanner(); drawAch();
   drawDevMenu();
 }
 function drawGame(){
