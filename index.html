@@ -4398,6 +4398,8 @@ addEventListener('keydown', e=>{
   if (devMenu){ e.preventDefault(); if (!e.repeat || e.code.startsWith('Arrow')) devKey(e); return; }
   if (e.code==='KeyM' && !e.repeat){ SFX.toggle(); return; }
   if (e.code==='KeyN' && state==='title' && !e.repeat){ begin(); return; }
+  if (achOpen){ e.preventDefault(); if (['KeyT','Escape','Enter','Space'].includes(e.code) && !e.repeat){ achOpen = false; SFX.play('page'); } return; }
+  if (e.code==='KeyT' && !e.repeat && state==='play' && !reading){ achOpen = true; SFX.play('page'); for (const k in inp) inp[k]=false; return; }
   if (helpOpen){ e.preventDefault(); if (['KeyH','Escape','Enter','Space'].includes(e.code) && !e.repeat) toggleHelp(); return; }
   if (e.code==='KeyH' && !e.repeat && state==='play'){ toggleHelp(); return; }
   if (e.code==='KeyN' && !e.repeat && state==='play'){ toggleNotes(); return; }
@@ -4435,8 +4437,10 @@ cv.addEventListener('pointerdown', e=>{
   if (devMenu){ devClick(e.clientX, e.clientY); return; }
   if (e.clientX < 90 && e.clientY < 50){ devTap(); if (devMenu) return; }
   if (Math.hypot(e.clientX-(OX+212*S*HK), e.clientY-(OY+29*S*HK)) < 16*S*HK && state==='play'){ SFX.toggle(); return; }
+  if (Math.hypot(e.clientX-(OX+244*S*HK), e.clientY-(OY+29*S*HK)) < 16*S*HK && state==='play' && !achOpen){ achOpen = true; SFX.play('page'); for (const k in inp) inp[k]=false; return; }
   if (e.pointerType==='touch' && !touchUI){ touchUI=true; resize(); }
   if (state==='title' && loadSave() && titleNewBtn && e.clientX>titleNewBtn.x && e.clientX<titleNewBtn.x+titleNewBtn.w && e.clientY>titleNewBtn.y && e.clientY<titleNewBtn.y+titleNewBtn.h){ begin(); return; }
+  if (achOpen){ achOpen = false; return; }
   if (helpOpen){ toggleHelp(); return; }
   if (state==='play' && notesBox && noteT > 0){ const k = S*HK, nx = OX + notesBox.x*k, ny = OY + notesBox.y*k; if (e.clientX > nx && e.clientX < nx + notesBox.w*k && e.clientY > ny && e.clientY < ny + notesBox.h*k){ toggleNotes(); return; } }
   if (state!=='play' || reading){ trigger('jump'); return; }
@@ -4478,6 +4482,30 @@ let achGot = new Set(), achQ = [], achShow = null;
 try { achGot = new Set(JSON.parse(localStorage.getItem('phongkin_ach_v1')||'[]')); } catch(e){}
 function award(id){ if (achGot.has(id) || !ACH[id] || dev.god) return; achGot.add(id); try { localStorage.setItem('phongkin_ach_v1', JSON.stringify([...achGot])); } catch(e){} achQ.push(id); }
 function updateAch(dt){ if (!achShow && achQ.length){ achShow = {id:achQ.shift(), t:0}; SFX.play('fanfare'); } if (achShow){ achShow.t += dt; if (achShow.t > 3.6) achShow = null; } }
+let achOpen = false;
+function drawAchPanel(){
+  const W = Math.min(720, innerWidth - 30), H = Math.min(innerHeight - 40, 470), x = (innerWidth - W)/2, y = (innerHeight - H)/2, ids = Object.keys(ACH);
+  ctx.save(); ctx.globalAlpha = .6; ctx.fillStyle = INK; ctx.fillRect(0, 0, innerWidth, innerHeight); ctx.globalAlpha = 1;
+  ctx.fillStyle = PAPER; ctx.fillRect(x, y, W, H); ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.strokeRect(x, y, W, H);
+  ctx.fillStyle = INK; ctx.fillRect(x, y, W, 30); ctx.fillStyle = PAPER; ctx.font = `700 13px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(`✦ THÀNH TỰU  ${achGot.size}/${ids.length}`, x + 14, y + 20);
+  ctx.textAlign = 'right'; ctx.font = `400 10px ${FONT}`; ctx.fillText('T / Esc để đóng', x + W - 14, y + 20);
+  // cột trái: thành tựu
+  const colW = W*.6 - 20, rowH = Math.min(26, (H - 50)/ids.length);
+  ids.forEach((id, i)=>{ const got = achGot.has(id), [nm, ds] = ACH[id], ry = y + 44 + i*rowH;
+    ctx.fillStyle = INK; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x + 22, ry + rowH/2 - 4, 7, 0, Math.PI*2); got ? ctx.fill() : ctx.stroke();
+    if (got){ ctx.strokeStyle = PAPER; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x + 18.5, ry + rowH/2 - 4); ctx.lineTo(x + 21, ry + rowH/2 - 1.5); ctx.lineTo(x + 26, ry + rowH/2 - 7.5); ctx.stroke(); }
+    ctx.globalAlpha = got ? 1 : .45; ctx.fillStyle = INK; ctx.textAlign = 'left'; ctx.font = `700 11px ${FONT}`; ctx.fillText(nm, x + 36, ry + rowH/2 - 5);
+    ctx.font = `400 9px ${FONT}`; ctx.fillText(ds, x + 36, ry + rowH/2 + 6, colW - 30); ctx.globalAlpha = 1; });
+  // cột phải: sao từng khu đã chơi
+  const rx = x + W*.6, rw = W*.4 - 14; ctx.strokeStyle = INK; ctx.lineWidth = 1; line(rx - 8, y + 40, rx - 8, y + H - 12);
+  ctx.fillStyle = INK; ctx.font = `700 11px ${FONT}`; ctx.textAlign = 'left'; const names = LEVELS.filter(L=>!L.secret).map(L=>L.name).filter(n=>bestRec[n]);
+  const totalStars = names.reduce((a, n)=>a + bestRec[n].stars, 0); ctx.fillText(`KỶ LỤC KHU · ${totalStars}★`, rx, y + 52);
+  ctx.font = `400 9px ${FONT}`; if (!names.length) ctx.fillText('Xong một khu để có kỷ lục đầu tiên.', rx, y + 72, rw);
+  const lh = Math.min(16, (H - 80)/Math.max(1, names.length));
+  names.forEach((n, i)=>{ const r = bestRec[n], ry = y + 72 + i*lh, mm = Math.floor(r.time/60), ss = Math.floor(r.time%60);
+    ctx.textAlign = 'left'; ctx.fillText(n, rx, ry, rw - 90); ctx.textAlign = 'right'; ctx.fillText('★'.repeat(r.stars) + '☆'.repeat(3 - r.stars) + `  ${mm}:${String(ss).padStart(2,'0')}`, rx + rw, ry); });
+  ctx.restore();
+}
 function drawAch(){   // thẻ thành tựu trượt xuống từ trên (toạ độ màn hình)
   if (!achShow) return; const [nm, ds] = ACH[achShow.id], t = achShow.t, k = Math.min(1, t/.35, (3.6 - t)/.35), w = 300, h = 46, x = innerWidth/2 - w/2, y = 8 + (k - 1)*60;
   ctx.save(); ctx.globalAlpha = Math.max(0, k); ctx.fillStyle = INK; ctx.fillRect(x, y, w, h); ctx.strokeStyle = PAPER; ctx.lineWidth = 1; ctx.strokeRect(x+3, y+3, w-6, h-6);
@@ -4783,7 +4811,7 @@ function update(dt){
     else if (c1 > c0 && c1 <= panelLen(P) && c1 % 2 === 0) SFX.play('tick');
     updateSceneHero(dt); return; }
   if (reading){ reading.t += dt; return; }
-  if (helpOpen && state==='play') return;
+  if ((helpOpen || achOpen) && state==='play') return;
   if (bossCS && state==='play'){ shakeT -= dt; updateAmbience(dt); updateZoom(dt); updateBossCS(dt); updateCam(dt, false); updateCrow(dt);
     for (const u of popups){ u.life-=dt; u.y-=dt*24; } popups = popups.filter(u=>u.life>0);
     for (const b of bubbles){ b.y += b.vy*dt; b.life -= dt; } bubbles = bubbles.filter(b=>b.life>0); return; }
@@ -7869,7 +7897,7 @@ function drawHelp(){
   const L = LEVELS[lvl]; ctx.textAlign='left'; ctx.font=`700 12px ${FONT}`; ctx.fillText('MỤC TIÊU', x+20, y+60);
   ctx.font=`400 13px ${FONT}`; const goal = wrapText(`Đi tới cửa LỐI RA ở cuối khu (mũi tên ở mép màn hình chỉ hướng). Gợi ý lúc này: ${L.hints[curSeg]}`, w-40); goal.forEach((l,i)=>ctx.fillText(l, x+20, y+78+i*17));
   const two = w > 640, cw = two ? (w-60)/2 : w-40, top = y + 90 + goal.length*17;
-  const controls = [[['←','→'],'Đi (A / D)'],[['↑','Space'],'Nhảy · giữ lâu nhảy cao · nhảy vào tường để bám'],[['Q'],'Lướt · trên không: lần đầu miễn phí, sau đó tốn 35 mực'],[['↓'],'Cúi chui chỗ thấp · rơi khỏi kệ · ↓ + Q trượt (tốn mực)'],[['E'],'Gạt cần, van, thắp đèn · GIỮ E xoay gương'],[['F','X'],'Chương chiến đấu: ném lọ · đổi lọ. Số lọ có hạn (×n dưới mỗi lọ)'],[['V'],'Kính Lúp Số: giữ để soi ô số (khi đã có)'],[['C'],'Thước Kẻ Phấn: kẻ ván 3 ô (khi đã có)'],[['R'],'Chơi lại cả khu'],[['N'],'Đóng / mở sổ tay khoa học'],[['M'],'Tắt / bật tiếng'],[['Esc'],'Bỏ qua cảnh phim']];
+  const controls = [[['←','→'],'Đi (A / D)'],[['↑','Space'],'Nhảy · giữ lâu nhảy cao · nhảy vào tường để bám'],[['Q'],'Lướt · trên không: lần đầu miễn phí, sau đó tốn 35 mực'],[['↓'],'Cúi chui chỗ thấp · rơi khỏi kệ · ↓ + Q trượt (tốn mực)'],[['E'],'Gạt cần, van, thắp đèn · GIỮ E xoay gương'],[['F','X'],'Chương chiến đấu: ném lọ · đổi lọ. Số lọ có hạn (×n dưới mỗi lọ)'],[['V'],'Kính Lúp Số: giữ để soi ô số (khi đã có)'],[['C'],'Thước Kẻ Phấn: kẻ ván 3 ô (khi đã có)'],[['R'],'Chơi lại cả khu'],[['N'],'Đóng / mở sổ tay khoa học'],[['T'],'Xem thành tựu & kỷ lục từng khu'],[['M'],'Tắt / bật tiếng'],[['Esc'],'Bỏ qua cảnh phim']];
   const mech = [['MỰC','Thanh góc trái. Lướt thêm, trượt, đẩy thùng đều tốn mực. Đứng trên đất để hồi.'],['ĐIỂM LƯU','Đầu mỗi đoạn (ô vuông trên cùng). Chết sẽ quay lại đây, máu hồi đầy.'],['HẠT SÁNG','Chạm giữa không trung: thêm 1 nhảy + 1 lướt.'],['GIỌT MỰC','Hồi 30 mực.'],['LÒ XO','Rơi càng cao, bật càng cao.'],['THÙNG','Đi vào để đẩy. Thùng gỗ xốp nổi trên nước.'],['CẦN GẠT','Đóng/mở các khối có vạch. Camera chỉ chỗ thay đổi.'],['GƯƠNG','Góc tới = góc phản xạ. Chiếu tia sáng vào cảm biến tròn.'],['GIÓ / DÂY ĐU','Gió đẩy theo mũi tên. Dây đu: lấy đà rồi buông.']];
   let cy = top + 14; ctx.font=`700 12px ${FONT}`; ctx.fillText('ĐIỀU KHIỂN', x+20, cy); cy += 22;
   for (const [ks, d] of controls){ let kx = x+20; for (const k of ks) kx += keycap(kx, cy, k) + 5; ctx.font=`400 12px ${FONT}`; ctx.fillStyle=INK; ctx.textAlign='left'; const ls = wrapText(d, cw - (kx-x-20) - 8); ls.forEach((l,i)=>ctx.fillText(l, kx+6, cy+4+i*14)); cy += Math.max(30, ls.length*14+16); }
@@ -7938,7 +7966,7 @@ function draw(){
   drawGame();
   ctx.setTransform(DPR,0,0,DPR,0,0);
   if ((dev.god || dev.ink) && state==='play'){ ctx.fillStyle=INK; ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillText('DEV' + (dev.god?' · BẤT TỬ':'') + (dev.ink?' · MỰC ∞':''), OX, innerHeight-8); }
-  if (state==='play'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawTip(); if (helpOpen) drawHelp(); }
+  if (state==='play'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawTip(); if (helpOpen) drawHelp(); if (achOpen) drawAchPanel(); }
   if (state==='summary'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawSummary(); }
   ctx.setTransform(DPR,0,0,DPR,0,0); drawAch();
   drawDevMenu();
@@ -8095,6 +8123,10 @@ function drawGame(){
     if (SFX.muted){ line(sx+2,sy-4,sx+8,sy+4); line(sx+8,sy-4,sx+2,sy+4); }
     else { ctx.beginPath(); ctx.arc(sx+1,sy,4,-.8,.8); ctx.stroke(); ctx.beginPath(); ctx.arc(sx+1,sy,7.5,-.8,.8); ctx.stroke(); }
     ctx.restore(); }
+  // nút thành tựu (cạnh nút loa): bấm hoặc nhấn T
+  { const ax = 244, ay = 29; ctx.save(); ctx.fillStyle = PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(ax, ay, 13, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = INK; ctx.beginPath(); for (let j=0;j<10;j++){ const a = -Math.PI/2 + j*Math.PI/5, rr = j%2 ? 3.2 : 7.5; ctx.lineTo(ax + Math.cos(a)*rr, ay + 1 + Math.sin(a)*rr); } ctx.closePath(); ctx.fill();
+    ctx.font = `700 7px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('T', ax + 11, ay + 13); ctx.restore(); }
   } finally { viewW = vw0; viewH = vh0; ctx.restore(); }
   if (state==='dying' && bossLoss && tState>.5){
     const a = Math.min(1,(tState-.5)*2);
