@@ -388,7 +388,7 @@ const LEVELS = [
   '###################...#####..####......###########################.....####....#################################................######',
   '###################^^^#####^^####^^^^^^###########################^^^^^####^^^^#################################^^^^^^^^^^^^^^^^######',
  ]},
- { name:'Phố Chợ', ch:2, theme:'outside', combat:true,
+ { name:'Phố Chợ', ch:2, theme:'outside', combat:true, warp:{x:11.8, y:9.4, w:2.6, h:2.6, to:'Quán Cà Phê Góc Phố', look:'cafe', say:'vào quán'},
    pages:['Người trong phố treo gương để đón nắng vào hẻm tối. Ánh sáng đi thẳng, nhưng gương bẻ được nó.',
           'Góc tới bằng góc phản xạ. Một định luật giản dị đến mức ta từng nghĩ nó chẳng đáng ghi lại.',
           'Bóng mực trốn trong hẻm, nơi nắng không tới. Hãy mang nắng tới chỗ nó.'],
@@ -423,7 +423,7 @@ const LEVELS = [
   '##############################################################################################################',
   '##############################################################################################################',
  ]},
- { name:'Bến Cảng', ch:2, theme:'outside', combat:true,
+ { name:'Bến Cảng', ch:2, theme:'outside', combat:true, warp:{x:13, y:8.6, w:1.6, h:2.4, to:'Ban Công Hải Đăng', look:'hatch', say:'mở cửa sập'},
    pages:['Bến cảng là nơi mọi dòng chảy gặp nhau: nước, gió, và cả mực.',
           'Ngọn hải đăng không cần to. Nó chỉ cần đủ sáng, và đặt đúng chỗ.',
           'Bấc à, ánh sáng của con không phải để đốt cháy. Nó để người khác tìm thấy đường về.'],
@@ -698,7 +698,7 @@ const LEVELS = [
   '################################################################',
   '################################################################'
    ]},
- { name:"Sảnh Đếm", ch:4, numRule:"even", item:"lens", pages:["Tối nào Hạ cũng đếm bậc cầu thang trước khi ngủ. Mười hai bậc. Không bao giờ sai.", "Mực Đen ăn mất con số nào, thứ đó quên luôn mình là gì. Cầu thang không còn biết mình cao bao nhiêu."], talks:[[5, 13, "Cạc! Chỗ này toàn số. Cửa có dấu ? chỉ mở khi trả lời đúng."], [38, 13, "Ô số lẻ sẽ vỡ! Chỉ đặt chân lên số chẵn."], [88, 13, "Đếm ngược kìa: trừ đi bao nhiêu mỗi lần?"]], hints:["Đọc câu đố trên cửa ?, rồi chạm quả cầu có đáp án đúng. Sai sẽ bị đẩy lùi và mất mực.", "Ô SỐ: chỉ số CHẴN mới đứng vững. Số lẻ vỡ ngay khi bạn đặt chân.", "Giải đúng thì cầu phấn hiện ra. Mẹo Gauss: ghép số đầu với số cuối.", "Cấp số cộng cũng có thể đi lùi."], notes:[["CẤP SỐ CỘNG", "uₙ = u₁ + (n − 1)·d", "3, 7, 11, 15…: d = 4", "Chạm quả cầu đúng để mở cửa"], ["SỐ CHẴN · LẺ", "Chẵn: chia hết cho 2", "Lẻ: chia 2 dư 1", "0, 2, 4, 6… đều chẵn"], ["TỔNG GAUSS", "1 + 2 + … + n = n(n + 1) ÷ 2", "n = 10 → 55", "Ghép cặp đầu–cuối"], ["ĐẾM NGƯỢC", "d có thể âm", "100, 91, 82…: d = −9", ""]], secrets:["Hạc giấy kẹp trong cuốn sổ đếm: “Một, hai, ba… con đếm tới đâu thì ta đợi tới đó.”"], decor:[["sign", 8, "SẢNH ĐẾM"], ["board", 40, 3], ["board", 90, 3]], combat:true, theme:"math", math:true, nums:[2, 3, 13, 14, 3, 8, 3, 17, 14, 1, 20, 3, 8, 21, 24, 19, 1, 20, 19, 14], quiz:[{q:"3, 7, 11, ?, 19", opts:["13", "15", "17"], ans:1, kind:"door", hint:"mỗi số hơn số trước 4", why:"cấp số cộng, công sai d = 4"}, {q:"1 + 2 + 3 + … + 10 = ?", opts:["45", "55", "100"], ans:1, kind:"bridge", hint:"ghép cặp: 1+10, 2+9… có 5 cặp", why:"Gauss: (1 + 10) × 10 ÷ 2 = 55"}, {q:"100, 91, 82, ?", opts:["72", "74", "73"], ans:2, kind:"door", hint:"mỗi bước bớt đi 9", why:"công sai d = −9"}],
+ { name:"Sảnh Đếm", ch:4, warp:{x:13, y:12, w:2, h:3, to:"Góc Đọc Sách", look:"shelf", say:"đẩy kệ sách"}, numRule:"even", item:"lens", pages:["Tối nào Hạ cũng đếm bậc cầu thang trước khi ngủ. Mười hai bậc. Không bao giờ sai.", "Mực Đen ăn mất con số nào, thứ đó quên luôn mình là gì. Cầu thang không còn biết mình cao bao nhiêu."], talks:[[5, 13, "Cạc! Chỗ này toàn số. Cửa có dấu ? chỉ mở khi trả lời đúng."], [38, 13, "Ô số lẻ sẽ vỡ! Chỉ đặt chân lên số chẵn."], [88, 13, "Đếm ngược kìa: trừ đi bao nhiêu mỗi lần?"]], hints:["Đọc câu đố trên cửa ?, rồi chạm quả cầu có đáp án đúng. Sai sẽ bị đẩy lùi và mất mực.", "Ô SỐ: chỉ số CHẴN mới đứng vững. Số lẻ vỡ ngay khi bạn đặt chân.", "Giải đúng thì cầu phấn hiện ra. Mẹo Gauss: ghép số đầu với số cuối.", "Cấp số cộng cũng có thể đi lùi."], notes:[["CẤP SỐ CỘNG", "uₙ = u₁ + (n − 1)·d", "3, 7, 11, 15…: d = 4", "Chạm quả cầu đúng để mở cửa"], ["SỐ CHẴN · LẺ", "Chẵn: chia hết cho 2", "Lẻ: chia 2 dư 1", "0, 2, 4, 6… đều chẵn"], ["TỔNG GAUSS", "1 + 2 + … + n = n(n + 1) ÷ 2", "n = 10 → 55", "Ghép cặp đầu–cuối"], ["ĐẾM NGƯỢC", "d có thể âm", "100, 91, 82…: d = −9", ""]], secrets:["Hạc giấy kẹp trong cuốn sổ đếm: “Một, hai, ba… con đếm tới đâu thì ta đợi tới đó.”"], decor:[["sign", 8, "SẢNH ĐẾM"], ["board", 40, 3], ["board", 90, 3]], combat:true, theme:"math", math:true, nums:[2, 3, 13, 14, 3, 8, 3, 17, 14, 1, 20, 3, 8, 21, 24, 19, 1, 20, 19, 14], quiz:[{q:"3, 7, 11, ?, 19", opts:["13", "15", "17"], ans:1, kind:"door", hint:"mỗi số hơn số trước 4", why:"cấp số cộng, công sai d = 4"}, {q:"1 + 2 + 3 + … + 10 = ?", opts:["45", "55", "100"], ans:1, kind:"bridge", hint:"ghép cặp: 1+10, 2+9… có 5 cặp", why:"Gauss: (1 + 10) × 10 ÷ 2 = 55"}, {q:"100, 91, 82, ?", opts:["72", "74", "73"], ans:2, kind:"door", hint:"mỗi bước bớt đi 9", why:"công sai d = −9"}],
    map:[
   '##############################################################################################################',
   '##############################################################################################################',
@@ -1019,7 +1019,65 @@ const LEVELS = [
   '####..................#############.##.############################.....',
   '########################################################################',
   '########################################################################'
-   ]}
+   ]},
+ // ===== GÓC CHILL BÍ MẬT: quán cà phê (Phố Chợ), mái hải đăng (Bến Cảng), góc đọc sách (Sảnh Đếm) =====
+ { name:'Quán Cà Phê Góc Phố', theme:'cafe', secret:true, side:true, ret:{name:'Phố Chợ', x:13.2, row:12}, bench:[35.5, 3],
+   pages:[], talks:[], secrets:[], decor:[],
+   quotes:['Mưa ngoài kia. Trong này có mùi cà phê và tiếng đĩa than.', 'Con mèo trên quầy chẳng quan tâm ai thắng ai thua.', 'Hồi trước, ông hay gọi một ly đen không đường, rồi để nguội.', 'Ngồi yên một lúc cũng là một cách đi tiếp.', 'Cửa kính mờ hơi nước. Ai đó đã vẽ một mặt cười lên đó.', 'Mưa sẽ tạnh. Cà phê sẽ nguội. Bấc vẫn ở đây.'],
+   hints:['Một quán nhỏ trốn mưa. Leo lên gác lửng, có chỗ ngồi bên cửa sổ.', 'Không có gì phải vội.', 'Cửa ra ở bên trái.'],
+   map:[
+  '##############################################',
+  '#............................................#',
+  '#............................................#',
+  '#............................................#',
+  '#.................................___........#',
+  '#............................................#',
+  '#..........................______............#',
+  '#............................................#',
+  '#...............########___..................#',
+  '#E..P...........########.....................#',
+  '##############################################',
+  '##############################################'
+ ]},
+ { name:'Ban Công Hải Đăng', theme:'sea', secret:true, side:true, ret:{name:'Bến Cảng', x:13.8, row:11}, bench:[23, 4],
+   pages:[], talks:[], secrets:[], decor:[],
+   quotes:['Hoàng hôn trên biển. Sóng cứ vỗ, chẳng cần ai đếm.', 'Ngọn hải đăng không đi tìm tàu. Nó chỉ đứng đó và sáng.', 'Có lẽ mình cũng vậy. Chỉ cần sáng thôi.', 'Hải âu bay về phía mặt trời. Mai nó lại bay về.', 'Gió mặn. Nhưng dễ chịu.', 'Mặt trời lặn mỗi ngày, và chưa ngày nào giống ngày nào.'],
+   hints:['Ban công trên ngọn hải đăng. Leo lên cao, có một chiếc ghế nhìn ra biển.', 'Không có gì phải vội.', 'Cửa sập bên trái để quay về bến.'],
+   map:[
+  '##..........................................',
+  '##..........................................',
+  '##..........................................',
+  '##..........................................',
+  '##..........................................',
+  '##..................______..................',
+  '##..........................................',
+  '##............____..........................',
+  '##..........................................',
+  '##......____................................',
+  '##E..P..............................########',
+  '############################################',
+  '############################################',
+  '############################################'
+ ]},
+ { name:'Góc Đọc Sách', theme:'nook', secret:true, side:true, ret:{name:'Sảnh Đếm', x:14, row:15}, bench:[17, 2],
+   pages:[], talks:[], secrets:[], decor:[],
+   quotes:['Sau kệ sách là một căn phòng nhỏ. Lửa tí tách. Ngoài trời có tuyết.', 'Hạ từng trốn ở đây đọc truyện, quên cả giờ ăn.', 'Đồng hồ cứ tích tắc. Nhưng ở đây, thời gian chẳng đuổi theo ai.', 'Mỗi cuốn sách là một ô cửa khác.', 'Ấm thật. Như một cái chăn dày.', 'Đọc thêm một trang nữa thôi. Rồi lại một trang nữa.'],
+   hints:['Căn phòng bí mật sau kệ sách. Có chỗ ngồi đọc sách trên cao, cạnh ngọn nến.', 'Không có gì phải vội.', 'Kệ sách bên trái là lối ra.'],
+   map:[
+  '############################################',
+  '#..........................................#',
+  '#..........................................#',
+  '#.............______#......................#',
+  '#.....____.................................#',
+  '#..........................................#',
+  '#.........____.............................#',
+  '#..........................................#',
+  '#.....____.................................#',
+  '#..........................................#',
+  '#E..P......................................#',
+  '############################################',
+  '############################################'
+ ]},
 ];
 
 // ===================================================================
@@ -1225,12 +1283,43 @@ const SFX = (() => {
       if (st===0 || st===10) drum('k', tt, .055); if (st===4 || st===12) drum('b', tt, .035);
       if (st%4===2) drum('sh', tt, .006);
     }},
+
+    // Quán cà phê: bossa lofi, guitar nylon giả lập + brush
+    cafe: {bpm:84, tense:false, fn(s,t){
+      const bar = Math.floor(s/16) % 4, st = s % 16, sw = (s%2) ? .045 : 0, tt = t + sw;
+      const CH = [[38,[53,57,60,64]],[43,[53,59,62,64]],[36,[52,55,59,62]],[45,[52,55,58,61]]];
+      const [bs, vc] = CH[bar]; const gt = (m, w, d, v)=>{ nt('triangle', m, w, d, v, {a:.004, lp:1800}); nt('sine', m+12, w, d*.5, v*.25, {a:.004}); };
+      if ([0,3,6,10,12].includes(st)) vc.forEach((m,i)=>gt(m, tt + i*.012, st===12 ? .5 : .28, st===0 ? .02 : .014));
+      if (st===0 || st===8) nt('sine', bs-12, tt, .5, .1, {a:.01}); if (st===6 || st===14) nt('sine', bs-12+7, tt, .35, .07, {a:.01});
+      const MEL = [{4:69,8:72,11:71,14:69},{2:67,6:71,10:74},{0:72,6:71,8:67,12:64},{4:66,8:67,12:69}];
+      if (Math.floor(s/64)%2){ const m = MEL[bar][st]; if (m) nt('sine', m+12, tt, .7, .018, {a:.02}); }
+      if (st===0 || st===10) drum('k', tt, .04); if (st%4===2) drum('b', tt, .022); if (st%2===0) drum('sh', tt, .004);
+    }},
+    // Ban công hải đăng: pad biển chậm + đàn hạc rải
+    sea: {bpm:60, tense:false, fn(s,t){
+      const bar = Math.floor(s/16) % 4, st = s % 16;
+      const CH = [[41,[57,60,64,67]],[45,[57,60,64,67]],[38,[57,60,62,65]],[36,[55,59,64,67]]];
+      const [bs, vc] = CH[bar];
+      if (st===0){ vc.forEach(m=>{ nt('sine', m, t, 4.6, .012, {a:1.4}); nt('sine', m, t, 4.6, .008, {a:1.6, det:7}); }); nt('sine', bs-12, t, 4, .06, {a:.8}); }
+      if (st%2===0){ const ar = [...vc, vc[0]+12, vc[1]+12]; const idx = (st/2 + bar*3) % ar.length; nt('triangle', ar[idx]+12, t, 1.6, .012, {a:.003, lp:2400}); }
+      if (st===9 && bar%2) nt('sine', vc[3]+24, t, 2.2, .008, {a:.05});
+    }},
+    // Góc đọc sách: hộp nhạc + đồng hồ quả lắc
+    nook: {bpm:66, tense:false, fn(s,t){
+      const bar = Math.floor(s/16) % 8, st = s % 16;
+      const CH = [[43,[55,59,62]],[40,[52,55,59]],[36,[52,55,60]],[38,[54,57,62]],[43,[55,59,62]],[40,[52,55,59]],[45,[52,57,60]],[38,[54,57,62]]];
+      const [bs, vc] = CH[bar]; const mb = (m, w, v)=>{ nt('sine', m, w, 1.4, v, {a:.002}); nt('triangle', m+12, w, .25, v*.3, {a:.002}); };
+      const MEL = [{0:79,4:78,8:74,12:71},{0:76,6:74,8:71,12:67},{0:72,4:76,8:79,12:84},{0:81,8:78,12:74},{0:79,4:83,8:81,12:79},{0:76,4:74,8:71,12:74},{0:72,6:76,8:81,12:79},{0:78,4:74,8:81,14:79}];
+      const m = MEL[bar][st]; if (m) mb(m, t, .022);
+      if (st===0) nt('sine', bs-12, t, 2.4, .05, {a:.05}); if (st===4 || st===10) vc.forEach((n,i)=>nt('sine', n+12, t + i*.04, .6, .006, {a:.01}));
+      if (st%4===0) drum('sh', t, st%8 ? .003 : .005);
+    }},
     // Tim Mực: chỉ còn nhịp tim và tiếng ù chói
     heart: {bpm:72, fn(s,t){ if (s%8===0) drum('k', t, .3); if (s%8===2) drum('k', t, .2);
       if (s%32===0){ nt('sine', 74, t, 7, .02, {a:2}); nt('sine', 75, t, 7, .02, {a:2}); nt('sawtooth', 26, t, 7, .05, {a:1, lp:200}); } }},
   };
   // lớp căng thẳng phủ lên nhạc khám phá khi có nguy hiểm: bass dồn móc, hi-hat 16 phách, dây cao chói nửa cung, trống nhịp tim
-  const TRACKS_NOTENSE = new Set(['boss','heart','story','night']);
+  const TRACKS_NOTENSE = new Set(['boss','heart','story','night','cafe','sea','nook']);
   function tension(s, t, I){
     const root = [38, 38, 41, 36][Math.floor(s/32)%4];
     if (s%2===0) nt('sawtooth', root - (s%8===6 ? -1 : 0), t, .16, I >= 3 ? .05 : .035, {lp:700, lp2:160, q:5});
@@ -1256,7 +1345,7 @@ const SFX = (() => {
     init(){ init(); musInit(); },
     music(name, inten){ M.want = name; M.inten = inten || 1; if (ac && !M.bus) musInit(); },
     play(name, arg){ if (!ac || muted || !lib[name]) return; try { lib[name](arg); } catch(e){} },
-    loop(name, level){ if (!ac) return; const C = {slide:{type:'bandpass',f:2600,q:2,v:.07}, belt:{type:'bandpass',f:180,q:3,v:.12}, gale:{type:'bandpass',f:600,q:.5,v:.08}, push:{type:'lowpass',f:260,v:.16}, steam:{type:'highpass',f:2800,v:.08}, wind:{type:'bandpass',f:900,q:.6,v:.05}, rain:{type:'highpass',f:1800,v:.03}, vinyl:{type:'bandpass',f:2400,q:.4,v:.008}, city:{type:'lowpass',f:220,v:.09}, hiss:{type:'bandpass',f:4200,q:.25,v:.018}}[name]; loop(name, muted?0:level, C); },
+    loop(name, level){ if (!ac) return; const C = {slide:{type:'bandpass',f:2600,q:2,v:.07}, belt:{type:'bandpass',f:180,q:3,v:.12}, gale:{type:'bandpass',f:600,q:.5,v:.08}, push:{type:'lowpass',f:260,v:.16}, steam:{type:'highpass',f:2800,v:.08}, wind:{type:'bandpass',f:900,q:.6,v:.05}, rain:{type:'highpass',f:1800,v:.03}, vinyl:{type:'bandpass',f:2400,q:.4,v:.008}, city:{type:'lowpass',f:220,v:.09}, rainin:{type:'lowpass',f:1400,v:.05}, waves:{type:'lowpass',f:480,v:.16}, fire:{type:'bandpass',f:700,q:.7,v:.035}, hiss:{type:'bandpass',f:4200,q:.25,v:.018}}[name]; loop(name, muted?0:level, C); },
     toggle(){ muted = !muted; try { localStorage.setItem('phongkin_mute', muted?'1':'0'); } catch(e){} if (master) master.gain.setTargetAtTime(muted?0:.55, now(), .02); if (muted) for (const k in loops) loops[k].g.gain.value = 0; },
     get muted(){ return muted; },
   };
@@ -4475,7 +4564,12 @@ const ACH = {
   reflect:    ['Định Luật Bảo Toàn', 'Bật ngược một cầu nhiệt'],
   pages10:    ['Người Đọc Nhật Ký', 'Nhặt 10 trang nhật ký'],
   cranes5:    ['Đàn Hạc Giấy', 'Tìm 5 hạc giấy bí mật'],
-  night:      ['Thành Phố Không Ngủ', 'Ngồi ngắm thành phố trên Hiên Đêm'],
+  night:      ['Thành Phố Không Ngủ', 'Tìm ra Hiên Đêm', true],
+  cafe:       ['Một Ly Đen Không Đường', 'Tìm ra quán cà phê trốn mưa', true],
+  sea:        ['Người Giữ Hải Đăng', 'Tìm ra ban công hải đăng', true],
+  nook:       ['Sau Kệ Sách', 'Tìm ra góc đọc sách bí mật', true],
+  chill_sit:  ['Chẳng Cần Vội', 'Ngồi xuống ở một góc chill', true],
+  chill4:     ['Bản Đồ Những Nơi Bình Yên', 'Tìm đủ 4 góc chill bí mật', true],
   spam:       ['Phòng Thí Nghiệm Di Động', 'Ném 8 lọ trong 3 giây'],
 };
 let achGot = new Set(), achQ = [], achShow = null;
@@ -4484,14 +4578,14 @@ function award(id){ if (achGot.has(id) || !ACH[id] || dev.god) return; achGot.ad
 function updateAch(dt){ if (!achShow && achQ.length){ achShow = {id:achQ.shift(), t:0}; SFX.play('fanfare'); } if (achShow){ achShow.t += dt; if (achShow.t > 3.6) achShow = null; } }
 let achOpen = false;
 function drawAchPanel(){
-  const W = Math.min(720, innerWidth - 30), H = Math.min(innerHeight - 40, 470), x = (innerWidth - W)/2, y = (innerHeight - H)/2, ids = Object.keys(ACH);
+  const W = Math.min(720, innerWidth - 30), H = Math.min(innerHeight - 30, 580), x = (innerWidth - W)/2, y = (innerHeight - H)/2, ids = Object.keys(ACH);
   ctx.save(); ctx.globalAlpha = .6; ctx.fillStyle = INK; ctx.fillRect(0, 0, innerWidth, innerHeight); ctx.globalAlpha = 1;
   ctx.fillStyle = PAPER; ctx.fillRect(x, y, W, H); ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.strokeRect(x, y, W, H);
   ctx.fillStyle = INK; ctx.fillRect(x, y, W, 30); ctx.fillStyle = PAPER; ctx.font = `700 13px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(`✦ THÀNH TỰU  ${achGot.size}/${ids.length}`, x + 14, y + 20);
   ctx.textAlign = 'right'; ctx.font = `400 10px ${FONT}`; ctx.fillText('T / Esc để đóng', x + W - 14, y + 20);
   // cột trái: thành tựu
   const colW = W*.6 - 20, rowH = Math.min(26, (H - 50)/ids.length);
-  ids.forEach((id, i)=>{ const got = achGot.has(id), [nm, ds] = ACH[id], ry = y + 44 + i*rowH;
+  ids.forEach((id, i)=>{ const got = achGot.has(id), hid = ACH[id][2] && !got, [nm, ds] = hid ? ['???', 'Thành tựu ẩn · một nơi bình yên đâu đó…'] : ACH[id], ry = y + 44 + i*rowH;
     ctx.fillStyle = INK; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x + 22, ry + rowH/2 - 4, 7, 0, Math.PI*2); got ? ctx.fill() : ctx.stroke();
     if (got){ ctx.strokeStyle = PAPER; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x + 18.5, ry + rowH/2 - 4); ctx.lineTo(x + 21, ry + rowH/2 - 1.5); ctx.lineTo(x + 26, ry + rowH/2 - 7.5); ctx.stroke(); }
     ctx.globalAlpha = got ? 1 : .45; ctx.fillStyle = INK; ctx.textAlign = 'left'; ctx.font = `700 11px ${FONT}`; ctx.fillText(nm, x + 36, ry + rowH/2 - 5);
@@ -4523,7 +4617,7 @@ function engUpdate(dt){
   updateAch(dt);
   if (player && player.dashT > 0) award('firstdash');
   if (gotPages.size >= 10) award('pages10'); if (gotSecrets.size >= 5) award('cranes5');
-  if (player && player.sit) award('night');
+  if (LEVELS[lvl] && LEVELS[lvl].theme==='night' && state==='play') award('night');
   if (boss && boss.dead) award('vuamuc'); if (cboss && cboss.dead && !cboss.def.training) award('core');
   if (mboss && mboss.dead) award(mboss.def.kind==='plotter' ? 'plotter' : 'sphinx');
 }
@@ -4616,7 +4710,7 @@ function die(){
   SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0);
   for (let i=0;i<16;i++) parts.push({x:player.x+11,y:player.y+17,vx:(Math.random()-.5)*420,vy:-Math.random()*420,a:Math.random()*6,va:(Math.random()-.5)*12,l:6+Math.random()*10,life:1});
 }
-function win(){ const L0 = LEVELS[lvl]; if (L0 && L0.secret && L0.ret){ transTo = {lvl:L0.ret.lvl, x:L0.ret.x, row:L0.ret.row, face:-1, sfx:'door'}; }
+function win(){ const L0 = LEVELS[lvl]; if (L0 && L0.secret && L0.ret){ transTo = {lvl:L0.ret.lvl ?? LEVELS.findIndex(L=>L.name===L0.ret.name), x:L0.ret.x, row:L0.ret.row, face:-1, sfx:'door'}; }
   if (!transTo && !skipSummary){ summary = makeSummary(); state = 'summary'; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); return; }
   skipSummary = false; state='trans'; tState=0; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); }
 function dust(x,y,n,dirx=0){
@@ -4795,8 +4889,10 @@ function update(dt){
   if (state==='play'){ saveT -= dt; if (saveT <= 0){ saveT = 5; saveGame(); } }
   updateTnt(dt); updateRopes(dt); engUpdate(dt);
   if (state==='summary'){ summary.t += dt; if (summary.go || summary.t > 9){ summary = null; state = 'play'; skipSummary = true; win(); } return; }
-  { const night = state==='play' && LEVELS[lvl] && LEVELS[lvl].theme==='night'; if (night) updateNight(dt);
-    SFX.loop('rain', night ? 1 : 0); SFX.loop('city', night ? 1 : 0); SFX.loop('hiss', night ? 1 : 0); SFX.loop('vinyl', night ? 1 : 0);
+  { const night = state==='play' && LEVELS[lvl] && LEVELS[lvl].theme==='night', ch = state==='play' && LEVELS[lvl] && CHILL[LEVELS[lvl].theme]; if (night || ch) updateNight(dt);
+    for (const k of ['rainin','waves','fire']) SFX.loop(k, ch && ch.loops[k] ? ch.loops[k]*(k==='waves' ? .55 + .45*Math.sin(clock*.9) : k==='fire' ? .8 + .2*Math.random() : 1) : 0);
+    if (ch){ ch.amb(dt); if (ch.loops.vinyl) SFX.loop('vinyl', 1); if (ch.loops.hiss) SFX.loop('hiss', ch.loops.hiss); award(ch.ach); if (player.sit) award('chill_sit'); if (CHILL_ACH.every(k=>achGot.has(k))) award('chill4'); }
+    SFX.loop('rain', night ? 1 : 0); SFX.loop('city', night ? 1 : 0); if (!ch){ SFX.loop('hiss', night ? 1 : 0); SFX.loop('vinyl', night ? 1 : 0); }
     if (night && Math.random() < dt*1.4) SFX.play('drip'); }
   if (bestiary){ updateBestiary(dt); return; }
   if (devMenu) return;
@@ -5097,7 +5193,7 @@ function drawForeground(){
     if (hash2(i,3) < .35) continue;
     const x = i*sp - ox + hash2(i,5)*200, len = 50 + hash2(i,9)*90, sw = Math.sin(clock*1.2+i)*.05;
     ctx.save(); ctx.translate(x, -4); ctx.rotate(sw);
-    if (th==='outside' || th==='night'){ ctx.restore(); continue; }
+    if (th==='outside' || th==='night' || CHILL[th]){ ctx.restore(); continue; }
     if (th==='fallen'){              // xúc tu mực rủ xuống
       ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(0,0); for (let k=1;k<=8;k++) ctx.lineTo(Math.sin(clock*1.4+i+k*.6)*8*k/8, k*len/8); ctx.stroke();
       ctx.beginPath(); ctx.arc(Math.sin(clock*1.4+i+4.8)*8, len+4, 4, 0, Math.PI*2); ctx.fill();
@@ -5133,17 +5229,143 @@ let vigCv = null, lampConeCv = null;
 const NIGHT_LINES = ['Dưới kia, cả nghìn ô cửa đang sáng.', 'Sau mỗi ô cửa là một người. Chẳng ai biết có một sợi bấc đang nhìn họ.', 'Mưa nhỏ thôi. Đủ để thành phố dịu lại.', 'Có lẽ Hạ cũng từng ngồi đây. Đếm đèn thay vì đếm sao.', 'Ở lại thêm một chút cũng được.'];
 let nightQ = null;
 function sitDown(){ const p = player, [bx, br] = LEVELS[lvl].bench; p.sit = true; p.sitT = 0; p.x = bx*T - 11; p.y = (br+1)*T - p.h; p.vx = p.vy = 0; p.face = 1; nightQ = {i:0, t:0}; SFX.play('step'); }
+const nightLines = ()=> (LEVELS[lvl] && LEVELS[lvl].quotes) || NIGHT_LINES;
 function updateNight(dt){
-  if (!LEVELS[lvl] || LEVELS[lvl].theme !== 'night') return;
-  if (player.sit && nightQ){ nightQ.t += dt; if (nightQ.t > 6.5 && nightQ.i < NIGHT_LINES.length - 1){ nightQ.i++; nightQ.t = 0; } }
+  if (!LEVELS[lvl] || !LEVELS[lvl].bench) return;
+  if (player.sit && nightQ){ nightQ.t += dt; if (nightQ.t > 6.5 && nightQ.i < nightLines().length - 1){ nightQ.i++; nightQ.t = 0; } }
   if (!player.sit) nightQ = null;
 }
 function drawNightQuote(){
-  if (!nightQ || state!=='play') return; const a = clamp(Math.min(nightQ.t/1.2, (6.5 - nightQ.t)/1.2), 0, 1); if (nightQ.i === NIGHT_LINES.length-1) { if (nightQ.t > 1.2) {} }
-  const aa = nightQ.i === NIGHT_LINES.length-1 ? clamp(nightQ.t/1.2, 0, 1) : a;
-  ctx.save(); ctx.globalAlpha = aa; ctx.fillStyle = PAPER; ctx.textAlign = 'center'; ctx.font = `400 ${Math.min(22, viewW/32)}px ${HAND}`; ctx.fillText(NIGHT_LINES[nightQ.i], viewW/2, viewH - 40);
+  if (!nightQ || state!=='play') return; const a = clamp(Math.min(nightQ.t/1.2, (6.5 - nightQ.t)/1.2), 0, 1); if (nightQ.i === nightLines().length-1) { if (nightQ.t > 1.2) {} }
+  const aa = nightQ.i === nightLines().length-1 ? clamp(nightQ.t/1.2, 0, 1) : a;
+  ctx.save(); ctx.globalAlpha = aa; ctx.fillStyle = PAPER; ctx.textAlign = 'center'; ctx.font = `400 ${Math.min(22, viewW/32)}px ${HAND}`; ctx.fillText(nightLines()[nightQ.i], viewW/2, viewH - 40);
   ctx.globalAlpha = aa*.5; ctx.font = `400 9px ${FONT}`; ctx.fillText('← → để đứng dậy', viewW/2, viewH - 20); ctx.restore();
 }
+// ===== CÁC GÓC CHILL BÍ MẬT (quán cà phê · mái hải đăng · góc đọc sách) — dùng chung cơ chế với Hiên Đêm =====
+function rimTiles(alpha){   // viền sáng mép khối cho cảnh tối
+  const x0 = Math.max(0, Math.floor(camX/T)), x1 = Math.min(GW-1, Math.ceil((camX+viewW)/T)), y0 = Math.max(0, Math.floor(camY/T)), y1 = Math.min(GH-1, Math.ceil((camY+viewH)/T));
+  ctx.save(); ctx.strokeStyle = `rgba(255,248,235,${alpha})`; ctx.lineWidth = 1.5;
+  for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c = grid[y][x]; if (c === '_'){ line(x*T, y*T+1, x*T+T, y*T+1); continue; } if (c !== '#') continue; if (y>0 && grid[y-1][x] !== '#') line(x*T, y*T+.5, x*T+T, y*T+.5); }
+  ctx.restore();
+}
+function warmGlow(x, y, r, a){ const g = ctx.createRadialGradient(x, y, 2, x, y, r); g.addColorStop(0, `rgba(255,244,222,${a})`); g.addColorStop(1, 'rgba(255,244,222,0)'); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r*2, r*2); }
+function rainWindow(X, Y, w, h, t, o={}){   // ô cửa nhìn ra phố mưa: đèn đường nhoè (bokeh), vệt mưa, người che ô đi qua
+  ctx.save(); ctx.beginPath(); ctx.rect(X, Y, w, h); ctx.clip();
+  const g = ctx.createLinearGradient(0, Y, 0, Y + h); g.addColorStop(0, '#1a1c22'); g.addColorStop(1, '#3a3b40'); ctx.fillStyle = g; ctx.fillRect(X, Y, w, h);
+  for (let i=0;i<14;i++){ const bx = X + ((hash2(i, 3)*w + t*(o.drift||4)) % w), by = Y + h*.35 + hash2(i, 5)*h*.5, r = 4 + hash2(i, 7)*9; ctx.fillStyle = `rgba(255,240,215,${.12 + hash2(i,9)*.25})`; ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI*2); ctx.fill(); }
+  ctx.fillStyle = 'rgba(10,10,12,.85)'; for (let i=0;i<3;i++){ const px = X + (((t*18 + i*90) % (w + 60)) - 30), py = Y + h - 10; ctx.fillRect(px - 2, py - 16, 4, 16); ctx.beginPath(); ctx.ellipse(px, py - 20, 10, 5, 0, Math.PI, 0); ctx.fill(); }
+  ctx.strokeStyle = 'rgba(255,255,255,.28)'; ctx.lineWidth = 1; for (let i=0;i<24;i++){ const rx = X + hash2(i, 11)*w, ry = Y + ((hash2(i, 13)*h + t*(60 + hash2(i,15)*40)) % h); line(rx, ry, rx - 1, ry + 7); }
+  ctx.fillStyle = 'rgba(255,255,255,.3)'; for (let i=0;i<10;i++){ const rx = X + hash2(i, 21)*w, ry = Y + ((hash2(i, 23)*h + t*12*(1 + hash2(i,25))) % h); ctx.beginPath(); ctx.ellipse(rx, ry, 1.6, 2.4, 0, 0, Math.PI*2); ctx.fill(); }
+  ctx.restore(); ctx.strokeStyle = '#0c0b0a'; ctx.lineWidth = 6; ctx.strokeRect(X, Y, w, h); ctx.lineWidth = 3; line(X + w/2, Y, X + w/2, Y + h); line(X, Y + h*.45, X + w, Y + h*.45);
+}
+// ---------- QUÁN CÀ PHÊ ----------
+function cafeBack(){ const g = ctx.createLinearGradient(0, 0, 0, viewH); g.addColorStop(0, '#1b1916'); g.addColorStop(1, '#2b2723'); ctx.fillStyle = g; ctx.fillRect(0, 0, viewW, viewH);
+  ctx.strokeStyle = 'rgba(255,240,220,.05)'; ctx.lineWidth = 1; const ox = camX*.6; for (let x = -((ox) % 22); x < viewW; x += 22) line(x, 0, x, viewH); }
+function cafeWorld(){
+  const t = clock; ctx.save(); ctx.lineCap = 'round';
+  rainWindow(4*T, 2*T, 9*T, 5*T, t); rainWindow(33*T, 1*T, 7*T, 2.6*T, t, {drift:3});
+  // bảng menu phấn
+  ctx.fillStyle = '#121110'; ctx.fillRect(16.4*T, 2.4*T, 6.6*T, 3.2*T); ctx.strokeStyle = 'rgba(255,240,220,.6)'; ctx.lineWidth = 2; ctx.strokeRect(16.4*T, 2.4*T, 6.6*T, 3.2*T);
+  ctx.fillStyle = 'rgba(255,245,230,.85)'; ctx.font = `400 15px ${HAND}`; ctx.textAlign = 'center'; ctx.fillText('~ Góc Phố ~', 19.7*T, 3.2*T);
+  ctx.font = `400 11px ${HAND}`; ['cà phê đen ........ 15k', 'bạc xỉu ............ 20k', 'cacao nóng ........ 22k', 'trà đào .............. 25k'].forEach((s, i)=>ctx.fillText(s, 19.7*T, 3.75*T + i*14));
+  // đèn thả trên quầy
+  for (const lx of [17.5, 20, 22.5]){ const X = lx*T, Y = 5.6*T; ctx.strokeStyle = 'rgba(255,240,220,.4)'; ctx.lineWidth = 1; line(X, T, X, Y - 10); warmGlow(X, Y + 30, 120, .22); ctx.fillStyle = '#0d0c0b'; ctx.beginPath(); ctx.moveTo(X - 12, Y); ctx.lineTo(X + 12, Y); ctx.lineTo(X + 6, Y - 12); ctx.lineTo(X - 6, Y - 12); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#fff6e0'; ctx.beginPath(); ctx.arc(X, Y + 3, 4, 0, Math.PI*2); ctx.fill(); }
+  // quầy: mặt gỗ + máy pha + tách + mèo ngủ
+  ctx.strokeStyle = 'rgba(255,240,220,.7)'; ctx.lineWidth = 2; line(16*T - 4, 8*T, 24*T + 4, 8*T);
+  { const X = 17.2*T, Y = 8*T; ctx.fillStyle = '#d9d3c7'; ctx.fillRect(X, Y - 30, 34, 30); ctx.fillStyle = '#111'; ctx.fillRect(X + 4, Y - 26, 26, 8); ctx.fillRect(X + 14, Y - 14, 6, 6);
+    for (let k=0;k<3;k++){ const q = ((t*.6 + k/3) % 1); ctx.strokeStyle = `rgba(255,255,255,${(1-q)*.5})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X + 17 + Math.sin(q*6 + k)*4, Y - 32 - q*30); ctx.quadraticCurveTo(X + 17 + Math.sin(q*6 + k + 1)*6, Y - 40 - q*30, X + 17, Y - 48 - q*30); ctx.stroke(); } }
+  for (const cx of [19.8, 21.1]){ const X = cx*T, Y = 8*T; ctx.fillStyle = '#efe9dc'; ctx.fillRect(X - 6, Y - 10, 12, 10); ctx.strokeStyle = '#efe9dc'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X + 7, Y - 5, 3, -1.2, 1.2); ctx.stroke(); ctx.fillRect(X - 9, Y - 1, 18, 2); }
+  { const X = 23.1*T, Y = 8*T, br = Math.sin(t*1.8)*1.2; ctx.fillStyle = '#0b0a09'; ctx.beginPath(); ctx.ellipse(X, Y - 9 - br*.4, 15, 9 + br*.3, 0, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(X + 12, Y - 10, 6.5, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(X + 8, Y - 15); ctx.lineTo(X + 10, Y - 21); ctx.lineTo(X + 13, Y - 16); ctx.fill(); ctx.beginPath(); ctx.moveTo(X + 14, Y - 16); ctx.lineTo(X + 17, Y - 21); ctx.lineTo(X + 18, Y - 14); ctx.fill();
+    ctx.strokeStyle = '#0b0a09'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X - 14, Y - 3); ctx.quadraticCurveTo(X - 22, Y - 2 + Math.sin(t*1.3)*3, X - 16, Y + 2); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.font = `400 9px ${FONT}`; ctx.textAlign = 'center'; ctx.globalAlpha = .4 + .4*Math.sin(t*1.8); ctx.fillText('z', X + 20, Y - 22 - (t*6 % 10)); ctx.globalAlpha = 1; }
+  // ghế cao trước quầy
+  for (const sx of [12.6, 14.2]){ const X = sx*T, Y = 10*T; ctx.strokeStyle = 'rgba(255,240,220,.6)'; ctx.lineWidth = 2; line(X, Y - 26, X, Y); line(X - 8, Y, X + 8, Y); ctx.fillStyle = '#0d0c0b'; ctx.fillRect(X - 10, Y - 30, 20, 5); }
+  // gác lửng: dây đèn, chậu cây
+  ctx.strokeStyle = 'rgba(255,240,220,.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(26*T, 1.2*T); for (let x = 26; x <= 44; x += .5) ctx.lineTo(x*T, 1.2*T + Math.sin((x - 26)*.5)*10 + 14); ctx.stroke();
+  for (let i=0;i<18;i++){ const x = 26*T + i*T, y = 1.2*T + Math.sin(i*.5)*10 + 14; const on = .4 + .6*Math.abs(Math.sin(t*.7 + i*1.7)); ctx.fillStyle = `rgba(255,244,220,${on})`; ctx.beginPath(); ctx.arc(x, y + 3, 2.4, 0, Math.PI*2); ctx.fill(); }
+  for (const px of [28, 31.5]){ const X = px*T, Y = 6*T; ctx.fillStyle = '#d9d3c7'; ctx.fillRect(X - 9, Y - 14, 18, 14); ctx.strokeStyle = 'rgba(230,230,220,.8)'; ctx.lineWidth = 2; for (let k=0;k<5;k++){ const a = -1 + k*.5 + Math.sin(t + k)*.05; ctx.beginPath(); ctx.moveTo(X, Y - 14); ctx.quadraticCurveTo(X + Math.sin(a)*14, Y - 26, X + Math.sin(a)*20, Y - 32 + (k%2)*6); ctx.stroke(); } }
+  // ghế đệm bên cửa sổ trên kệ cao
+  ctx.fillStyle = '#d9d3c7'; ctx.fillRect(34*T + 4, 4*T - 8, 3*T - 8, 8); ctx.fillStyle = '#efe9dc'; ctx.beginPath(); ctx.ellipse(36.4*T, 4*T - 12, 10, 6, 0, 0, Math.PI*2); ctx.fill();
+  rimTiles(.45); ctx.restore();
+}
+// ---------- MÁI HẢI ĐĂNG (hoàng hôn) ----------
+function seaBack(){ const W = viewW, H = viewH, t = clock, hz = H*.62 - camY*.1;
+  const g = ctx.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, '#26262b'); g.addColorStop(.6, '#5d5c5d'); g.addColorStop(1, '#b9b6ae'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, hz + 1);
+  const sx = W*.62 - camX*.05; warmGlow(sx, hz, 260, .35); ctx.fillStyle = '#f4efe2'; ctx.beginPath(); ctx.arc(sx, hz, 34, Math.PI, 0); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.07)'; for (let i=0;i<5;i++){ const x = ((i*300 - t*5 - camX*.08) % (W + 400) + W + 400) % (W + 400) - 200, y = 40 + (i%3)*36; ctx.beginPath(); ctx.ellipse(x, y, 170, 12, 0, 0, Math.PI*2); ctx.fill(); }
+  ctx.fillStyle = '#2f2f33'; ctx.beginPath(); ctx.moveTo(0, hz); for (let x = 0; x <= W; x += 20) ctx.lineTo(x, hz - Math.max(0, Math.sin((x + camX*.15)*.012)*14 + Math.sin((x + camX*.15)*.031)*6)); ctx.lineTo(W, hz); ctx.fill();
+  const sg = ctx.createLinearGradient(0, hz, 0, H); sg.addColorStop(0, '#4a4a4c'); sg.addColorStop(1, '#151517'); ctx.fillStyle = sg; ctx.fillRect(0, hz, W, H - hz);
+  ctx.strokeStyle = 'rgba(255,250,235,.6)'; ctx.lineWidth = 1.5; for (let i=0;i<40;i++){ const y = hz + 4 + i*i*.18, w = (30 - i*.5)*(1 + .4*Math.sin(t*2 + i)), x = sx + Math.sin(t*1.3 + i*1.7)*i*2; if (w > 2) line(x - w, y, x + w, y); }
+  ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 1; for (let i=0;i<30;i++){ const y = hz + 10 + hash2(i, 2)*(H - hz), x = ((hash2(i, 4)*W + t*10*(1 + hash2(i,6))) % W); line(x, y, x + 14, y); }
+  ctx.strokeStyle = '#18181a'; ctx.lineWidth = 1.6; for (let i=0;i<5;i++){ const bx = ((i*170 + t*(22 + i*3)) % (W + 100)) - 50, by = 70 + i*16 + Math.sin(t + i)*6, f = Math.sin(t*6 + i)*4; ctx.beginPath(); ctx.moveTo(bx - 7, by - f); ctx.quadraticCurveTo(bx - 3, by - 3, bx, by); ctx.quadraticCurveTo(bx + 3, by - 3, bx + 7, by - f); ctx.stroke(); }
+}
+function seaWorld(){
+  const t = clock; ctx.save(); ctx.lineCap = 'round';
+  // thân & đèn hải đăng bên trái, chùm sáng quay
+  const LX = 1*T, LY = 1*T, a = t*.5; ctx.save(); ctx.translate(LX + T, LY); ctx.rotate(Math.sin(a)*1.1); const bg = ctx.createLinearGradient(0, 0, 900, 0); bg.addColorStop(0, 'rgba(255,250,235,.35)'); bg.addColorStop(1, 'rgba(255,250,235,0)'); ctx.fillStyle = bg; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(900, -70); ctx.lineTo(900, 70); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.fillStyle = '#f4efe2'; ctx.beginPath(); ctx.arc(LX + T, LY, 14, 0, Math.PI*2); ctx.fill(); warmGlow(LX + T, LY, 80, .5);
+  ctx.fillStyle = 'rgba(255,255,255,.25)'; for (let y = 2*T; y < 11*T; y += 2*T) ctx.fillRect(0, y, 2*T, 14);
+  // lan can + chuông + cuộn dây
+  ctx.strokeStyle = 'rgba(255,250,235,.7)'; ctx.lineWidth = 2; line(2*T, 10*T + 6, 36*T, 10*T + 6); ctx.lineWidth = 1.2; for (let x = 2*T + 12; x < 36*T; x += 16) line(x, 10*T + 6, x, 11*T);
+  { const X = 6*T, Y = 10*T - 4; ctx.strokeStyle = 'rgba(255,250,235,.7)'; ctx.lineWidth = 2; line(X, Y - 30, X, Y - 6); ctx.save(); ctx.translate(X, Y - 30); ctx.rotate(Math.sin(t*1.5)*.15); ctx.fillStyle = '#d8d2c4'; ctx.beginPath(); ctx.moveTo(-9, 22); ctx.quadraticCurveTo(-8, 4, 0, 2); ctx.quadraticCurveTo(8, 4, 9, 22); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  { const X = 30*T, Y = 11*T; ctx.strokeStyle = 'rgba(230,225,210,.8)'; ctx.lineWidth = 3; for (let k=0;k<4;k++){ ctx.beginPath(); ctx.ellipse(X, Y - 4 - k*3, 16 - k, 5, 0, 0, Math.PI*2); ctx.stroke(); } }
+  // sóng vỗ mỏm đá + bụi nước
+  for (let i=0;i<3;i++){ const q = ((t*.4 + i/3) % 1); ctx.strokeStyle = `rgba(255,255,255,${(1-q)*.6})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(36*T, 11*T, 20 + q*60, Math.PI*.9, Math.PI*1.5); ctx.stroke(); }
+  if (Math.random() < .08) for (let k=0;k<6;k++) parts.push({x:36*T + Math.random()*20, y:10*T, vx:(Math.random()-.5)*140, vy:-200 - Math.random()*150, a:0, va:0, l:2, life:.6});
+  // ghế băng trên bệ cao
+  { const [bx, br] = LEVELS[lvl].bench, X = bx*T, Y = (br+1)*T; ctx.strokeStyle = 'rgba(255,250,235,.85)'; ctx.lineWidth = 2; line(X - 22, Y - 12, X + 22, Y - 12); line(X - 18, Y - 12, X - 18, Y); line(X + 18, Y - 12, X + 18, Y); line(X - 22, Y - 26, X + 22, Y - 26); line(X - 20, Y - 26, X - 20, Y - 12); line(X + 20, Y - 26, X + 20, Y - 12); }
+  rimTiles(.55); ctx.restore();
+}
+// ---------- GÓC ĐỌC SÁCH (thư viện đêm tuyết) ----------
+function nookBack(){ const g = ctx.createLinearGradient(0, 0, 0, viewH); g.addColorStop(0, '#171513'); g.addColorStop(1, '#24201c'); ctx.fillStyle = g; ctx.fillRect(0, 0, viewW, viewH);
+  const ox = camX*.4; for (let s = Math.floor(ox/120) - 1; s*120 - ox < viewW + 120; s++){ const X = s*120 - ox; ctx.fillStyle = 'rgba(255,240,220,.05)'; ctx.fillRect(X, 0, 110, viewH);
+    for (let r = 0; r < 6; r++){ let x = X + 4; const y = 20 + r*58; while (x < X + 104){ const w = 5 + hash2(Math.floor(x), r + s*9)*7, h = 30 + hash2(Math.floor(x)+1, r)*18; ctx.fillStyle = `rgba(255,240,220,${.05 + hash2(Math.floor(x), r*3 + s)*.08})`; ctx.fillRect(x, y + 50 - h, w, h); x += w + 1; } } } }
+function nookWorld(){
+  const t = clock; ctx.save(); ctx.lineCap = 'round';
+  // cửa sổ tròn: tuyết rơi trên mái nhà dưới trăng
+  { const cx = 34*T, cy = 4.4*T, r = 3.2*T; ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.clip(); const g = ctx.createLinearGradient(0, cy - r, 0, cy + r); g.addColorStop(0, '#1d2026'); g.addColorStop(1, '#4b4d52'); ctx.fillStyle = g; ctx.fillRect(cx - r, cy - r, r*2, r*2);
+    ctx.fillStyle = '#f4efe2'; ctx.beginPath(); ctx.arc(cx + r*.4, cy - r*.45, 14, 0, Math.PI*2); ctx.fill(); warmGlow(cx + r*.4, cy - r*.45, 60, .25);
+    ctx.fillStyle = '#121214'; for (let i=0;i<6;i++){ const x = cx - r + i*r*.4, h = 20 + hash2(i, 31)*40; ctx.beginPath(); ctx.moveTo(x - 4, cy + r); ctx.lineTo(x - 4, cy + r - h); ctx.lineTo(x + r*.2, cy + r - h - 16); ctx.lineTo(x + r*.4 + 4, cy + r - h); ctx.lineTo(x + r*.4 + 4, cy + r); ctx.fill(); ctx.fillStyle = 'rgba(255,240,215,.7)'; if (hash2(i,33) > .4) ctx.fillRect(x + 6, cy + r - h + 10, 5, 6); ctx.fillStyle = '#121214'; }
+    ctx.fillStyle = 'rgba(255,255,255,.85)'; for (let i=0;i<50;i++){ const sx = cx - r + ((hash2(i, 41)*r*2 + Math.sin(t*.8 + i)*10) % (r*2)), sy = cy - r + ((hash2(i, 43)*r*2 + t*(14 + hash2(i,45)*16)) % (r*2)); ctx.beginPath(); ctx.arc(sx, sy, .8 + hash2(i,47)*1.6, 0, Math.PI*2); ctx.fill(); }
+    ctx.restore(); ctx.strokeStyle = '#0c0b0a'; ctx.lineWidth = 8; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke(); ctx.lineWidth = 3; line(cx - r, cy, cx + r, cy); line(cx, cy - r, cx, cy + r); }
+  // lò sưởi
+  { const X = 23*T, Y = 11*T; warmGlow(X + 2*T, Y - 30, 230, .32 + Math.sin(t*9)*.03); ctx.fillStyle = '#d6d0c3'; ctx.fillRect(X, Y - 3*T, 4*T, 3*T); ctx.fillStyle = '#0d0c0b'; ctx.fillRect(X + 18, Y - 2.2*T, 4*T - 36, 2.2*T); ctx.fillStyle = '#d6d0c3'; ctx.fillRect(X - 10, Y - 3*T - 10, 4*T + 20, 12);
+    for (let k=0;k<3;k++) flameD(X + 2*T + (k-1)*16, Y - 6, 26 + Math.sin(t*7 + k*2)*6, '#f4efe2', '#ffffff');
+    ctx.fillStyle = '#0d0c0b'; ctx.fillRect(X + 30, Y - 8, 4*T - 60, 6);
+    if (Math.random() < .25) parts.push({x:X + 2*T + (Math.random()-.5)*30, y:Y - 20, vx:(Math.random()-.5)*30, vy:-60 - Math.random()*60, a:0, va:0, l:1.5, life:.8}); }
+  // đồng hồ quả lắc
+  { const X = 40*T, Y = 7*T; ctx.fillStyle = '#d6d0c3'; ctx.fillRect(X - 14, Y - 2*T, 28, 4*T); ctx.fillStyle = '#121110'; ctx.beginPath(); ctx.arc(X, Y - 1.4*T, 10, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = '#d6d0c3'; ctx.lineWidth = 1.5; line(X, Y - 1.4*T, X + Math.cos(t*.1)*7, Y - 1.4*T + Math.sin(t*.1)*7);
+    const th = Math.sin(t*Math.PI)*.35; ctx.strokeStyle = '#121110'; ctx.lineWidth = 2; line(X, Y - .6*T, X + Math.sin(th)*44, Y - .6*T + Math.cos(th)*44); ctx.fillStyle = '#121110'; ctx.beginPath(); ctx.arc(X + Math.sin(th)*44, Y - .6*T + Math.cos(th)*44, 6, 0, Math.PI*2); ctx.fill(); }
+  // ghế bành + thảm + chồng sách
+  { const X = 17*T, Y = 11*T; ctx.fillStyle = 'rgba(255,240,220,.12)'; ctx.beginPath(); ctx.ellipse(X + 5*T, Y - 2, 4*T, 8, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#d6d0c3'; ctx.beginPath(); ctx.moveTo(X, Y); ctx.lineTo(X, Y - 46); ctx.quadraticCurveTo(X + 4, Y - 60, X + 18, Y - 58); ctx.lineTo(X + 18, Y - 24); ctx.lineTo(X + 52, Y - 24); ctx.lineTo(X + 52, Y - 34); ctx.lineTo(X + 60, Y - 34); ctx.lineTo(X + 60, Y); ctx.closePath(); ctx.fill(); }
+  for (let k=0;k<5;k++){ ctx.fillStyle = k%2 ? '#d6d0c3' : '#9e988d'; ctx.fillRect(29*T + (k%2)*4, 11*T - 8 - k*8, 34 - k*2, 7); }
+  // nến trên kệ cao (chỗ ngồi đọc)
+  { const [bx, br] = LEVELS[lvl].bench, X = bx*T + 24, Y = (br+1)*T; ctx.fillStyle = '#efe9dc'; ctx.fillRect(X - 3, Y - 16, 6, 16); flameD(X, Y - 16, 12, '#f4efe2', '#fff'); warmGlow(X, Y - 20, 90, .25);
+    ctx.fillStyle = '#d6d0c3'; ctx.fillRect(bx*T - 20, Y - 8, 26, 8); }
+  rimTiles(.45); ctx.restore();
+}
+// ---------- dấu vết lối vào (vẽ trong màn chủ) ----------
+function drawWarpCue(){
+  const L = LEVELS[lvl], w = L.warp; if (!w || !w.look) return; const X = w.x*T, Y = w.y*T, W = w.w*T, H = w.h*T, t = clock;
+  ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.fillStyle = INK;
+  if (w.look==='cafe'){ ctx.globalAlpha = .9; ctx.fillStyle = PAPER; ctx.fillRect(X + 6, Y + 10, W - 12, H - 10); ctx.lineWidth = 2.5; ctx.strokeRect(X + 6, Y + 10, W - 12, H - 10);
+    ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(X - 4, Y + 12); ctx.lineTo(X + W + 4, Y + 12); ctx.lineTo(X + W - 4, Y); ctx.lineTo(X + 4, Y); ctx.closePath(); ctx.fill(); ctx.fillStyle = PAPER; for (let i=0;i<5;i++) ctx.fillRect(X + 4 + i*16, Y + 2, 8, 9);
+    ctx.globalAlpha = .25 + .15*Math.sin(t*2); ctx.fillStyle = INK; ctx.fillRect(X + 12, Y + H - 4, W - 24, 3); ctx.globalAlpha = 1;
+    ctx.lineWidth = 1.5; ctx.strokeRect(X + W/2 - 7, Y + 26, 14, 10); ctx.beginPath(); ctx.arc(X + W/2 + 8, Y + 31, 3, -1.2, 1.2); ctx.stroke(); for (let k=0;k<2;k++){ const q = ((t*.7 + k/2) % 1); ctx.globalAlpha = 1 - q; ctx.beginPath(); ctx.moveTo(X + W/2 - 3 + k*5, Y + 24 - q*12); ctx.quadraticCurveTo(X + W/2 + k*5, Y + 20 - q*12, X + W/2 - 3 + k*5, Y + 16 - q*12); ctx.stroke(); } }
+  else if (w.look==='hatch'){ ctx.fillStyle = PAPER; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(X + 8, Y + H); ctx.lineTo(X + 8, Y + 16); ctx.arc(X + W/2, Y + 16, W/2 - 8, Math.PI, 0); ctx.lineTo(X + W - 8, Y + H); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(X + W/2, Y + 26, 7, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = .5 + .4*Math.sin(t*1.5); ctx.beginPath(); ctx.arc(X + W/2, Y + 26, 3, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(X + W - 16, Y + H*.6, 2.5, 0, Math.PI*2); ctx.fill(); }
+  else if (w.look==='shelf'){ ctx.lineWidth = 2; ctx.strokeRect(X, Y, W, H); for (let r=0;r<3;r++){ const yy = Y + r*H/3; line(X, yy + H/3, X + W, yy + H/3); let x = X + 3; let i = 0; while (x < X + W - 6){ const bw = 6 + hash2(i, r)*5, bh = H/3 - 6 - hash2(i+3, r)*8; const tilt = r===1 && i===3; ctx.save(); ctx.translate(x, yy + H/3); if (tilt) ctx.rotate(-.25 + Math.sin(t*2)*.03); ctx.fillStyle = (i+r)%2 ? INK : PAPER; ctx.fillRect(0, -bh, bw, bh); ctx.strokeRect(0, -bh, bw, bh); ctx.restore(); x += bw + 1; i++; } } }
+  ctx.restore();
+}
+const CHILL = {
+  cafe: {back:cafeBack, world:cafeWorld, music:'cafe', loops:{rainin:1, vinyl:1, hiss:.5}, amb:dt=>{ if (Math.random() < dt*.35) SFX.play('tick'); }, ach:'cafe'},
+  sea:  {back:seaBack,  world:seaWorld,  music:'sea',  loops:{waves:1}, amb:dt=>{ if (Math.random() < dt*.12) SFX.play('caw'); }, ach:'sea'},
+  nook: {back:nookBack, world:nookWorld, music:'nook', loops:{fire:1}, amb:dt=>{ if (Math.random() < dt*2.5) SFX.play('drip'); }, ach:'nook'},
+};
+const CHILL_ACH = ['night', 'cafe', 'sea', 'nook'];
+
 // bầu trời + thành phố nhiều lớp (vẽ trong toạ độ khung nhìn)
 function drawNightSky(){
   const W = viewW, H = viewH, t = clock;
@@ -5302,8 +5524,8 @@ function contactShadow(e, k){
 function drawPrompts(){
   const px = player.x+11, py = player.y+17, LL = LEVELS[lvl];
   const pr = (x, y, d, lab)=>{ const a = clamp((90-d)/40, 0, 1); if (a <= 0) return; const yy = y + Math.sin(clock*4)*2; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.8;
-    ctx.fillRect(x-9,yy-9,18,18); ctx.strokeRect(x-9,yy-9,18,18); ctx.fillStyle=INK; ctx.font=`700 11px ${FONT}`; ctx.textAlign='center'; ctx.fillText('E', x, yy+4); if (lab){ ctx.font=`400 9px ${FONT}`; ctx.fillStyle = LL.theme==='night' ? PAPER : INK; ctx.fillText(lab, x, yy-14); } ctx.restore(); };
-  if (LL.warp){ const w = LL.warp, cx = (w.x + w.w/2)*T, cy = (w.y + w.h/2)*T; pr(cx, w.y*T - 16, Math.hypot(cx-px, cy-py) - 40, 'mở cửa sổ'); }
+    ctx.fillRect(x-9,yy-9,18,18); ctx.strokeRect(x-9,yy-9,18,18); ctx.fillStyle=INK; ctx.font=`700 11px ${FONT}`; ctx.textAlign='center'; ctx.fillText('E', x, yy+4); if (lab){ ctx.font=`400 9px ${FONT}`; ctx.fillStyle = (LL.theme==='night' || CHILL[LL.theme]) ? PAPER : INK; ctx.fillText(lab, x, yy-14); } ctx.restore(); };
+  if (LL.warp){ const w = LL.warp, cx = (w.x + w.w/2)*T, cy = (w.y + w.h/2)*T; pr(cx, w.y*T - 16, Math.hypot(cx-px, cy-py) - 40, w.say || 'mở cửa sổ'); }
   if (LL.bench && !player.sit){ const [bx, br] = LL.bench; pr(bx*T, br*T - 30, Math.hypot(bx*T-px, (br+.5)*T-py), 'ngồi'); }
   for (const c of ['l','v','n','F']) for (const t of tiles[c]||[]){
     if (c==='F' && (forgeDone || forgeSeq)) continue;
@@ -8033,7 +8255,7 @@ function drawGame(){
   ctx.setTransform(S*DPR,0,0,S*DPR,OX*DPR,OY*DPR);
   ctx.save(); ctx.beginPath(); ctx.rect(0,0,viewW,viewH); ctx.clip();
   ctx.fillStyle = L.theme==='fallen' ? '#d4d4cf' : L.theme==='outside' ? '#f2f1ec' : WALL; ctx.fillRect(0,0,viewW,viewH);
-  if (L.theme==='night') drawNightSky(); else drawBackdrop();
+  if (L.theme==='night') drawNightSky(); else if (CHILL[L.theme]) CHILL[L.theme].back(); else drawBackdrop();
   if (!PERF.low) drawMotes();
   const shk = shakeT>0 ? shakeT*16 : 0;
   ctx.translate(-Math.round(camX*S)/S + (Math.random()-.5)*shk, -Math.round(camY*S)/S + (Math.random()-.5)*shk);
@@ -8046,7 +8268,7 @@ function drawGame(){
   const y0=Math.max(0,Math.floor(camY/T)), y1=Math.min(GH-1,Math.ceil((camY+viewH)/T));
   cachedWalls(x0, x1);
   for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c=grid[y][x]; if (c!=='.' && c!=='#') drawTile(c,x,y); }
-  if (L.theme==='night') drawNightWorld();
+  if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
   if (pulley) drawPulley();
   if (heaterOn) drawSteam();
   for (const k of keyItems) if (!k.got) drawKey(k);
@@ -8173,7 +8395,7 @@ function pickMusic(){
   const th = LEVELS[lvl] && LEVELS[lvl].theme;
   if (mboss && mboss.engaged && !mboss.dead) return ['boss', 1 + Math.min(2, Math.floor((mboss.max - mboss.hp)/2))];
   if (cboss && cboss.engaged && !cboss.dead) return ['boss', cboss.phase];
-  if (th==='night') return ['night', 1];
+  if (th==='night') return ['night', 1]; if (CHILL[th]) return [CHILL[th].music, 1];
   return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', dangerLevel()];
 }
 function loop(now){ const dt=Math.min(1/30,(now-last)/1000); last=now;
