@@ -619,58 +619,58 @@ const LEVELS = [
   '###########################################################################################xxx#CCC#xxx########################################################',
   '##############################################################################################################################################################',
  ]},
- // ===== HAI MÀN LUYỆN TẬP TRƯỚC BOSS LÕI NHIỆT ĐỘNG =====
+ // ===== HAI MÀN THƯỜNG ĐỂ LÀM QUEN CƠ CHẾ TRƯỚC BOSS LÕI NHIỆT ĐỘNG =====
  { name:'Phòng Piston', ch:3, theme:'lab', combat:true,
-   coreBoss:{training:true, name:'LÕI PHỤ · BÀI TẬP 1', hp:3, hitsPerExpose:1, phase:1, scale:.7, cd:2.2, moves:['piston','piston','vent'], pistonOff:6,
-     arena:[14, 45], gateL:[13, 11, 13], gateR:[46, 11, 13], cx:29.5, cy:4.4, pillars:[22, 37], valves:[], vents:[17, 26, 33, 41],
-     introKeys:['Q'], intro:'Bài tập 1 · Piston đập xuống đúng chỗ bạn đứng (đèn đỏ chớp + vạch đứt báo trước). Đứng SÁT CỘT CHỊU LỰC để dụ nó đập trúng cột → piston kẹt, lõi hạ xuống mở ra: LƯỚT (Q) vào lõi. Sóng xung kích chạy dọc sàn: nhảy qua. Khe kêu "xì…": tránh xa.'},
-   pages:[], secrets:[], decor:[['sign', 7, 'PISTON'], ['lamp', 4]],
-   talks:[[6, 13, 'Cạc! Phòng tập của Giáo sư. Lõi phụ này yếu hơn nhiều, cứ thử thoải mái.']],
-   hints:['Phòng Piston: học cách dụ piston đập vào cột chịu lực.', 'Đứng sát cột → piston kẹt → lõi hạ xuống: lướt vào. Sóng sàn: nhảy qua.', 'Xong rồi! Đi tiếp sang phải.'],
-   notes:[['PISTON THUỶ LỰC', 'p = F / S', 'Lực nén lên diện tích nhỏ → áp suất lớn', 'Cột chịu lực chặn được cú đập'], ['SÓNG XUNG KÍCH', 'Năng lượng lan dọc mặt sàn', 'Đang ở trên không thì không trúng', 'Canh lúc piston chạm sàn rồi nhảy']],
+   machine:{floor:12,
+     pistons:[{x:12, mode:'rhythm', period:1.6, phase:0}, {x:16, mode:'rhythm', period:1.6, phase:.8}, {x:20, mode:'rhythm', period:1.6, phase:1.6},
+              {x:28, mode:'rhythm', period:2.2, phase:.5, waves:true},
+              {x:44, mode:'track', x0:41, x1:51, period:1.4, pillars:[49], gate:[52, 2, 11]}],
+     vents:[{x:35, period:3.4, phase:0}, {x:39, period:3.4, phase:1.7}]},
+   pages:[], secrets:[], decor:[['sign', 7, 'PISTON'], ['lamp', 4], ['lamp', 34], ['clock', 58, 3]],
+   talks:[[5, 11, 'Cạc! Phòng tập của Giáo sư. Đèn đỏ trên piston chớp là sắp đập đấy.'], [26, 11, 'Piston này đập ra sóng chạy dọc sàn: nhảy qua!'], [42, 11, 'Cái piston này đuổi theo cậu. Thử đứng sát cái cột xem?']],
+   hints:['Đèn đỏ trên piston chớp + vạch đứt = sắp đập. Chạy qua lúc nó vừa nhấc lên.', 'Sóng xung kích chạy dọc sàn: nhảy qua. Khe "xì…" sắp phun hơi: đứng xa.', 'Piston đuổi theo bạn. Đứng SÁT CỘT để nó đập trúng cột → kẹt → xả áp, cửa mở.'],
+   notes:[['PISTON THUỶ LỰC', 'p = F / S', 'Lực nén lên diện tích nhỏ → áp suất lớn', 'Đèn đỏ chớp: sắp đập'], ['SÓNG XUNG KÍCH', 'Năng lượng lan dọc mặt sàn', 'Đang ở trên không thì không trúng', 'Khe hơi: xì 1,5s rồi phun'], ['CỘT CHỊU LỰC', 'Piston đập trúng cột thì kẹt', 'Lõi Nhiệt Động cũng vậy', 'Đứng sát cột để dụ']],
    map:[
-  '##################################################',
-  '##################################################',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#.............................................#..#',
-  '#.....................#..............#........#..#',
-  '#..P..................#..............#........#.E#',
-  '##################################################',
-  '##################################################'
+  '######################################################################',
+  '######################################################################',
+  '#...................................................#................#',
+  '#...................................................#................#',
+  '#...................................................#................#',
+  '#...................................................#................#',
+  '#...................................................#................#',
+  '#...................................................#................#',
+  '#.............................____..................#................#',
+  '#...................................................#................#',
+  '#................................................#..#................#',
+  '#..P....................f........................#..#.............E..#',
+  '######################################################################',
+  '######################################################################'
    ]},
  { name:'Buồng Làm Mát', ch:3, theme:'lab', combat:true,
-   coreBoss:{training:true, name:'LÕI PHỤ · BÀI TẬP 2', hp:3, hitsPerExpose:1, phase:2, heat0:35, heatRate:6, scale:.7, cd:2.6, moves:['orb','orb','jet','vent'], pistons:0,
-     arena:[14, 45], gateL:[13, 11, 13], gateR:[46, 11, 13], cx:29.5, cy:4.4, pillars:[23, 36], valves:[[15.5, 13.5], [44.5, 13.5], [17.5, 8.5], [41.5, 8.5]], vents:[19, 28, 31, 40],
-     introKeys:['E','Q'], intro:'Bài tập 2 · Nhiệt tăng dần. Nhấn E ở VAN để tạo vùng làm mát; khi nhiệt ≥ 60% van còn ép lõi xả nhiệt và LỘ RA (lướt vào). Tới 100% là NỔ HƠI NƯỚC: phải đứng trong vùng làm mát. Cầu nhiệt Q: LƯỚT vào nó để bật ngược về lõi. Tia nhiệt: trốn sau cột.'},
-   pages:[], secrets:[], decor:[['sign', 7, 'LÀM MÁT'], ['lamp', 4]],
-   talks:[[6, 13, 'Cạc! Bài này về nhiệt. Van làm mát là bạn thân của cậu đấy.']],
-   hints:['Buồng Làm Mát: học van làm mát, nổ hơi nước, cầu nhiệt và tia nhiệt.', 'Van (E): vùng làm mát 7s · nhiệt ≥ 60% thì lõi lộ ra. Cầu Q: lướt vào để bật ngược.', 'Xong rồi! Lõi Nhiệt Động thật đang chờ phía trước.'],
-   notes:[['TRUYỀN NHIỆT', 'Q = m·c·Δt', 'Nước có nhiệt dung riêng lớn', 'Hơi nước ngưng tụ: hút nhiệt quanh van'], ['ĐỘNG LƯỢNG', 'p = m·v', 'Lướt vào cầu nhiệt: đổi chiều vận tốc', 'Cầu bay ngược về lõi']],
+   machine:{floor:12,
+     blast:{x0:7, x1:31, period:8},
+     valves:[[10.5, 11.6], [19.5, 11.6], [28.5, 11.6]],
+     jets:[{x:40, y:2, a0:Math.PI*.8, a1:Math.PI*.2, period:4.4, phase:0}],
+     turrets:[{x:67, y:4, period:2.6}], targets:[{x:58, y:3, hp:3, max:3, gate:[70, 2, 11]}]},
+   pages:[], secrets:[], decor:[['sign', 4, 'LÀM MÁT'], ['lamp', 34], ['lamp', 50]],
+   talks:[[5, 11, 'Cạc! Phòng này cứ vài giây lại nổ hơi nước. Van làm mát là bạn thân của cậu.'], [33, 11, 'Súng tia nhiệt trên trần. Nấp dưới mái che!'], [50, 11, 'Cầu nhiệt Q bay tới thì đừng né: LƯỚT vào nó!']],
+   hints:['Nổ hơi nước theo chu kỳ: mở VAN (E) → đứng trong vùng làm mát → chờ nổ xong → sang van kế.', 'Súng tia nhiệt quét theo chu kỳ: nấp dưới MÁI CHE khi nó bắn.', 'Lướt vào cầu nhiệt Q để bật ngược nó vào BIA KÍNH. Vỡ bia → cửa mở.'],
+   notes:[['TRUYỀN NHIỆT', 'Q = m·c·Δt', 'Nước có nhiệt dung riêng lớn', 'Hơi nước ngưng tụ: hút nhiệt quanh van'], ['BỨC XẠ & CHE CHẮN', 'Tia nhiệt đi thẳng', 'Vật cản chắn được tia', 'Nấp dưới mái che / sau cột'], ['ĐỘNG LƯỢNG', 'p = m·v', 'Lướt vào cầu: đổi chiều vận tốc', 'Cầu bay ngược về bia']],
    map:[
-  '##################################################',
-  '##################################################',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#................................#..#',
-  '#............#..____....................____..#..#',
-  '#............#................................#..#',
-  '#.............................................#..#',
-  '#......................#............#.........#..#',
-  '#..P....f..............#............#.........#.E#',
-  '##################################################',
-  '##################################################'
+  '############################################################################',
+  '############################################################################',
+  '#.....................................................................#....#',
+  '#.....................................................................#....#',
+  '#.....................................................................#....#',
+  '#.....................................................................#....#',
+  '#...........................................................___.......#....#',
+  '#.....................................................................#....#',
+  '#...................................................____..............#....#',
+  '#.................................###.......###.......................#....#',
+  '#.....................................................................#....#',
+  '#..P.............................f....................................#..E.#',
+  '############################################################################',
+  '############################################################################'
    ]},
  // ===== BOSS CHƯƠNG 3: LÕI NHIỆT ĐỘNG (nhiệt động lực học) =====
  { name:'Lõi Nhiệt Động', ch:3, theme:'lab', combat:true,
@@ -2349,8 +2349,133 @@ function drawCoreHUD(){
   if (b.melt > 0){ ctx.font = `700 ${b.melt < 10 ? 26 : 20}px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(`SỤP ĐỔ HỆ THỐNG · ${b.melt.toFixed(1)}s`, viewW/2, 92 + 4); }
   ctx.restore();
 }
-function updateMath(dt){ updateGear(dt); updateCoreBoss(dt); if (!LEVELS[lvl].math) return; updateNumTiles(dt); updateLaunchers(dt); updateMathFx(dt); updateMathBoss(dt); }
-function drawMathWorld(){ drawGearWorld(); drawCoreBoss(); if (!LEVELS[lvl].math) return; drawGraphZones(); drawGoneNums(); drawSines(); drawLaunchers(); drawMathOrbs(); drawQuizBoards(); drawMathFx(); drawMathBoss(); }
+// ===== MÀN CƠ CHẾ (luyện trước boss Lõi Nhiệt Động): piston theo nhịp / bám theo người, khe hơi, nổ hơi nước + van làm mát, súng tia nhiệt, súng cầu nhiệt + bia kính =====
+let mach = null;
+function makeMachine(L){
+  const m = L.machine, F = m.floor*T;
+  return { def:m, t:0, floorY:F,
+    pistons:(m.pistons||[]).map(q=>({...q, x:q.x*T + T/2, tx:q.x*T + T/2, y:2*T, st:'idle', t:0, cd:q.phase||0, done:false})),
+    vents:(m.vents||[]).map(v=>({x:v.x*T + T/2, period:v.period, t:-(v.phase||0)})),
+    valves:(m.valves||[]).map(v=>({x:v[0]*T, y:v[1]*T, cd:0})), zones:[],
+    blast:m.blast ? {x0:m.blast.x0*T, x1:m.blast.x1*T, period:m.blast.period, t:-2, hit:false} : null,
+    jets:(m.jets||[]).map(j=>({...j, x:j.x*T + T/2, y:j.y*T, t:-(j.phase||0), a:j.a0})),
+    turrets:(m.turrets||[]).map(u=>({...u, x:u.x*T + T/2, y:u.y*T + T/2, t:0})),
+    targets:(m.targets||[]).map(g=>({...g, x:g.x*T + T/2, y:g.y*T + T/2, hp:g.hp, hurtT:0})),
+    waves:[], orbs:[], said:{} };
+}
+const machSay = (key, x, y, text)=>{ if (mach.said[key]) return; mach.said[key] = true; showTip('mach_' + key + '_' + lvl, key==='orb' ? ['Q'] : key==='blast' ? ['E'] : [], text, null, 7); };   // lời dặn hiện ở khung MẸO (tự xuống dòng), không tràn màn hình
+function openGateCells(g){ for (let y=g[1]; y<=g[2]; y++) if (grid[y][g[0]]==='#') grid[y][g[0]] = '.'; tileCache.clear(); SFX.play('door'); for (let i=0;i<14;i++) parts.push({x:g[0]*T + T/2, y:(g[1] + Math.random()*(g[2]-g[1]+1))*T, vx:(Math.random()-.5)*200, vy:-Math.random()*200, a:0, va:3, l:4, life:.6}); }
+function pillarTop(c){ for (let r=2; r<14; r++) if (grid[r][c]==='#') return r*T; return 14*T; }
+function updateMachine(dt){
+  const M = mach; if (!M) return; const p = player, px = p.x+11, py = p.y+17, F = M.floorY; M.t += dt;
+  // piston
+  for (const q of M.pistons){ q.t += dt;
+    if (q.st==='idle'){ q.y += (2*T - q.y)*Math.min(1, dt*4);
+      if (q.mode==='rhythm'){ q.cd -= dt; if (q.cd <= 0){ q.cd = q.period; q.st = 'tell'; q.t = 0; } }
+      else if (q.mode==='track' && !q.done && px > q.x0*T && px < q.x1*T && Math.abs(py - F) < 3*T){ q.cd -= dt; q.tx = clamp(px, q.x0*T + T, q.x1*T);
+        for (const c of q.pillars||[]){ const pc = c*T + T/2; if (Math.abs(q.tx - pc) < 66) q.tx = pc; }
+        q.x += (q.tx - q.x)*Math.min(1, dt*6); if (q.cd <= 0){ q.cd = q.period; q.st = 'tell'; q.t = 0; } } }
+    else if (q.st==='tell'){ if (q.mode==='track') q.x += (q.tx - q.x)*Math.min(1, dt*8); if (q.t > .8){ q.st = 'slam'; q.t = 0; SFX.play('swoosh'); } }
+    else if (q.st==='slam'){ let stop = F; for (const c of q.pillars||[]) if (Math.abs(q.x - (c*T + T/2)) < 50) stop = pillarTop(c);
+      q.y += 1900*dt; if (Math.abs(px - q.x) < 34 && py > q.y - 10 && py < q.y + 40 && p.invT <= 0){ hurtPlayer(1, q.x); p.vx = Math.sign(px - q.x || 1)*300; p.vy = -300; }
+      if (q.y >= stop){ q.y = stop; shakeT = Math.max(shakeT, .18); SFX.play('stomp'); dust(q.x, stop, 8);
+        if (stop < F){ q.st = 'stuck'; q.t = 0; SFX.play('clank'); if (q.gate && !q.done){ q.done = true; openGateCells(q.gate); popups.push({x:q.x, y:stop - 60, text:'KẸT! · CỬA MỞ', life:2.6, big:true}); popups.push({x:q.x, y:stop - 40, text:'piston kẹt vào cột → xả áp suất', life:2.6}); } }
+        else { q.st = 'hold'; q.t = 0; if (q.waves) for (const dir of [-1, 1]) M.waves.push({x:q.x + dir*30, dir, life:2.2}); } } }
+    else if (q.st==='hold'){ if (q.t > .3){ q.st = 'rise'; q.t = 0; } }
+    else if (q.st==='stuck'){ if (q.t > 4){ q.st = 'rise'; q.t = 0; } }
+    else if (q.st==='rise'){ q.y += (2*T - q.y)*Math.min(1, dt*4); if (q.t > .7){ q.st = 'idle'; q.t = 0; } } }
+  // sóng xung kích
+  for (const w of M.waves){ w.life -= dt; w.x += w.dir*340*dt; if (p.ground && Math.abs(px - w.x) < 14 && Math.abs(p.y + p.h - F) < 8 && p.invT <= 0) hurtPlayer(1, w.x); if (solid(Math.floor(w.x/T), Math.floor((F - 4)/T))) w.life = 0; }
+  M.waves = M.waves.filter(w=>w.life > 0);
+  // khe hơi theo chu kỳ: 1.5s xì báo trước, 1.1s phun
+  for (const v of M.vents){ v.t += dt; if (v.t > v.period) v.t -= v.period; const ph = v.t;
+    if (ph > 1.5 && ph < 2.6 && Math.abs(px - v.x) < 20 && py > F - 4*T && p.invT <= 0){ hurtPlayer(1, v.x); p.vy = -460; }
+    if (ph > 1.5 && ph < 2.6 && Math.random() < dt*30) parts.push({x:v.x + (Math.random()-.5)*16, y:F - 4, vx:(Math.random()-.5)*40, vy:-300 - Math.random()*200, a:0, va:0, l:4, life:.6});
+    if (Math.abs(px - v.x) < 5*T) machSay('vent', v.x, F - 5*T, 'Nghe tiếng "xì…" là sắp phun: đứng xa ra!', false); }
+  // van làm mát → vùng an toàn
+  for (const v of M.valves) v.cd = Math.max(0, v.cd - dt);
+  for (const z of M.zones) z.life -= dt; M.zones = M.zones.filter(z=>z.life > 0);
+  // nổ hơi nước định kỳ trong khu vực
+  const B = M.blast; if (B){ const inside = px > B.x0 && px < B.x1; if (inside || B.t > 0){ B.t += dt; }
+    if (inside) machSay('blast', px, py - 70, 'Phòng này nổ hơi nước theo chu kỳ! Mở VAN (E) rồi đứng trong vùng làm mát.');
+    if (B.t > B.period){ B.t = 0; B.hit = false; }
+    if (B.t > B.period - .2 && !B.hit){ B.hit = true; shakeT = .5; SFX.play('tnt');
+      const safe = M.zones.some(z=>Math.hypot(px - z.x, py - z.y) < z.r);
+      if (inside && !safe && p.invT <= 0) hurtPlayer(1, px); else if (inside) popups.push({x:px, y:py - 40, text:'hơi nước ngưng tụ che chắn!', life:1.4});
+      for (let i=0;i<30;i++) parts.push({x:B.x0 + Math.random()*(B.x1 - B.x0), y:F - Math.random()*8*T, vx:(Math.random()-.5)*300, vy:-Math.random()*300, a:0, va:3, l:5, life:.7}); } }
+  // súng tia nhiệt treo trần: quét theo chu kỳ, cột chắn được
+  for (const j of M.jets){ j.t += dt; if (j.t > j.period) j.t -= j.period; const on = j.t > 1 && j.t < 2.6; const q = clamp((j.t - 1)/1.6, 0, 1); j.a = j.a0 + (j.a1 - j.a0)*q; j.on = on;
+    if (Math.abs(px - j.x) < 8*T) machSay('jet', j.x, j.y + 50, 'Súng tia nhiệt! Nấp dưới mái che (hoặc sau cột) lúc nó quét.', false);
+    if (on){ const dx = Math.cos(j.a), dy = Math.sin(j.a), along = (px - j.x)*dx + (py - j.y)*dy, perp = Math.abs((px - j.x)*dy - (py - j.y)*dx);
+      if (along > 0 && perp < 15 && p.invT <= 0){ let blocked = false; for (let s = 20; s < along; s += 10){ if (solid(Math.floor((j.x + dx*s)/T), Math.floor((j.y + dy*s)/T))){ blocked = true; break; } } if (!blocked) hurtPlayer(1, j.x); } } }
+  // súng cầu nhiệt + bia kính
+  for (const u of M.turrets){ u.t += dt; const near = Math.abs(px - u.x) < 14*T && M.targets.some(g=>g.hp > 0);
+    if (near && u.t > u.period){ u.t = 0; const a = Math.atan2(py - u.y, px - u.x); M.orbs.push({x:u.x + Math.cos(a)*24, y:u.y + Math.sin(a)*24, vx:Math.cos(a)*130, vy:Math.sin(a)*130, life:7}); SFX.play('throw');
+      machSay('orb', px, py - 70, 'Cầu nhiệt Q! LƯỚT (Q) vào nó để bật ngược về bia kính.'); } }
+  for (const o of M.orbs){ o.life -= dt;
+    if (!o.ref){ const a = Math.atan2(py - o.y, px - o.x); o.vx += Math.cos(a)*80*dt; o.vy += Math.sin(a)*80*dt; const sp = Math.hypot(o.vx, o.vy); if (sp > 170){ o.vx *= 170/sp; o.vy *= 170/sp; }
+      if (Math.hypot(px - o.x, py - o.y) < 22){ if (p.dashT > 0){ o.ref = true; p.canDash = true; SFX.play('clank'); popups.push({x:o.x, y:o.y - 20, text:'bật ngược! p = m·v', life:1.2}); } else if (p.invT <= 0){ o.life = 0; hurtPlayer(1, o.x); } }
+      if (solid(Math.floor(o.x/T), Math.floor(o.y/T))) o.life = 0; }
+    else { const g = M.targets.find(g=>g.hp > 0); if (!g){ o.life = 0; continue; } const a = Math.atan2(g.y - o.y, g.x - o.x); o.vx = Math.cos(a)*600; o.vy = Math.sin(a)*600;
+      if (Math.hypot(g.x - o.x, g.y - o.y) < 26){ o.life = 0; g.hp--; g.hurtT = .4; SFX.play('glass'); shakeT = .2; popups.push({x:g.x, y:g.y - 34, text: g.hp > 0 ? `bia nứt · còn ${g.hp}` : 'BIA VỠ · CỬA MỞ!', life:1.8, big:g.hp <= 0}); if (g.hp <= 0 && g.gate) openGateCells(g.gate); } }
+    o.x += o.vx*dt; o.y += o.vy*dt; }
+  M.orbs = M.orbs.filter(o=>o.life > 0);
+  for (const g of M.targets) g.hurtT -= dt;
+}
+function useMachineValve(){
+  const M = mach; if (!M) return false; const px = player.x+11, py = player.y+17;
+  const v = M.valves.find(v=>Math.hypot(v.x - px, v.y - py) < 50); if (!v) return false;
+  if (v.cd > 0){ popups.push({x:px, y:py - 30, text:`van đang nạp lại ${Math.ceil(v.cd)}s`, life:1}); return true; }
+  v.cd = 7; player.actT = .3; SFX.play('valve'); SFX.play('steam'); M.zones.push({x:v.x, y:v.y - 20, r:100, life:7, max:7});
+  popups.push({x:px, y:py - 40, text:'vùng làm mát · 7s', life:1.6}); return true;
+}
+function drawMachine(){
+  const M = mach; if (!M) return; const t = clock, F = M.floorY;
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = INK; ctx.fillStyle = INK;
+  // vùng làm mát
+  for (const z of M.zones){ const a = Math.min(1, z.life, (z.max - z.life)*3); ctx.globalAlpha = a*.18; ctx.beginPath(); ctx.arc(z.x, z.y, z.r, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = a*.6; ctx.setLineDash([3,6]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(z.x, z.y, z.r, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    for (let k=0;k<8;k++){ const yy = z.y - z.r*.6 + ((t*60 + k*23) % (z.r*1.2)), xx = z.x + Math.sin(k*2.3)*z.r*.6; ctx.beginPath(); ctx.arc(xx, yy, 1.6, 0, Math.PI*2); ctx.fill(); }
+    ctx.globalAlpha = 1; ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('VÙNG LÀM MÁT ' + Math.ceil(z.life) + 's', z.x, z.y - z.r - 6); }
+  // van
+  for (const v of M.valves){ const rd = v.cd <= 0; ctx.lineWidth = 3; line(v.x, v.y + 12, v.x, v.y - 6); ctx.fillStyle = PAPER; ctx.beginPath(); ctx.arc(v.x, v.y - 10, 9, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.save(); ctx.translate(v.x, v.y - 10); ctx.rotate(rd ? 0 : t*6); ctx.lineWidth = 2; line(-7, 0, 7, 0); line(0, -7, 0, 7); ctx.restore();
+    ctx.fillStyle = INK; ctx.font = `700 8px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(rd ? 'VAN · E' : Math.ceil(v.cd) + 's', v.x, v.y - 24);
+    if (rd && Math.hypot(v.x - player.x - 11, v.y - player.y - 17) < 50){ ctx.globalAlpha = .5 + .5*Math.sin(t*8); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(v.x, v.y - 10, 15, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1; } }
+  // khu nổ hơi: đồng hồ đếm ngược
+  const B = M.blast; if (B){ ctx.globalAlpha = .25; ctx.setLineDash([6,8]); ctx.lineWidth = 1.5; line(B.x0, 2*T, B.x0, F); line(B.x1, 2*T, B.x1, F); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    if (B.t > 0){ const left = Math.max(0, B.period - B.t), px = player.x+11; if (px > B.x0 && px < B.x1){ ctx.font = `700 ${left < 2 ? 22 : 14}px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(left < .25 ? 'NỔ!' : `nổ hơi nước sau ${left.toFixed(1)}s`, clamp(px, B.x0 + 120, B.x1 - 120), 3*T); }
+      if (B.period - B.t < .6){ ctx.globalAlpha = (1 - (B.period - B.t)/.6)*.5; ctx.fillStyle = PAPER; ctx.fillRect(B.x0, 2*T, B.x1 - B.x0, F - 2*T); ctx.globalAlpha = 1; ctx.fillStyle = INK; } } }
+  // khe hơi
+  for (const v of M.vents){ ctx.fillStyle = INK; ctx.fillRect(v.x - 12, F - 3, 24, 2); const ph = v.t;
+    if (ph > 0 && ph < 1.5){ ctx.globalAlpha = .5; for (let k=0;k<3;k++){ const q = ((t*2 + k/3) % 1); ctx.beginPath(); ctx.arc(v.x + Math.sin(k*3)*6, F - 6 - q*20, 3 + q*5, 0, Math.PI*2); ctx.stroke(); } ctx.globalAlpha = 1; ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('xì…', v.x, F - 34); }
+    else if (ph >= 1.5 && ph < 2.6){ const h = 4*T*Math.min(1, (ph - 1.5)*6); ctx.fillStyle = PAPER; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(v.x - 12, F); for (let y = 0; y <= h; y += 10) ctx.lineTo(v.x - 12 - Math.sin(y*.1 + t*20)*4 - y*.05, F - y); for (let y = h; y >= 0; y -= 10) ctx.lineTo(v.x + 12 + Math.sin(y*.12 + t*18)*4 + y*.05, F - y); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = INK; } }
+  // sóng xung kích
+  for (const w of M.waves){ ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(w.x - w.dir*22, F); ctx.quadraticCurveTo(w.x, F - 20, w.x + w.dir*6, F); ctx.stroke(); }
+  // piston
+  for (const q of M.pistons){ const X = q.x, Y = q.y; ctx.lineWidth = 4; if (q.mode==='track') line(q.x0*T, 2*T + 4, q.x1*T + T, 2*T + 4);
+    ctx.fillStyle = INK; ctx.fillRect(X - 26, 2*T - 4, 52, 14); ctx.fillStyle = PAPER; ctx.lineWidth = 3; const L = Math.max(0, Y - 2*T - 40); ctx.fillRect(X - 9, 2*T + 10, 18, L); ctx.strokeRect(X - 9, 2*T + 10, 18, L);
+    ctx.fillStyle = INK; ctx.fillRect(X - 32, Y - 32, 64, 32); ctx.fillStyle = PAPER; for (let k=0;k<4;k++) ctx.fillRect(X - 26 + k*15, Y - 26, 8, 3);
+    const tell = q.st==='tell'; ctx.fillStyle = tell && Math.floor(t*14)%2 ? PAPER : INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X, Y - 40, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    if (tell){ ctx.globalAlpha = .4; ctx.setLineDash([5,6]); ctx.lineWidth = 1.5; line(X - 32, F, X + 32, F); line(X, Y, X, F); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    if (q.st==='stuck'){ ctx.fillStyle = INK; ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('KẸT!', X, Y - 52); } }
+  // súng tia nhiệt
+  for (const j of M.jets){ ctx.fillStyle = INK; ctx.fillRect(j.x - 18, j.y - 6, 36, 14); ctx.save(); ctx.translate(j.x, j.y + 8); ctx.rotate(j.a); ctx.fillRect(0, -5, 26, 10); ctx.restore();
+    let L = 20; const dx = Math.cos(j.a), dy = Math.sin(j.a); while (L < 1200 && !solid(Math.floor((j.x + dx*L)/T), Math.floor((j.y + 8 + dy*L)/T))) L += 8;
+    ctx.save(); ctx.translate(j.x, j.y + 8); ctx.rotate(j.a);
+    if (j.on){ ctx.lineWidth = 12; line(26, 0, L, 0); ctx.strokeStyle = PAPER; ctx.lineWidth = 3; line(26, 0, L, 0); }
+    else if (j.t > 0 && j.t <= 1){ ctx.globalAlpha = .4 + .3*Math.sin(t*30); ctx.setLineDash([8,6]); ctx.lineWidth = 1.5; line(26, 0, L, 0); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    ctx.restore(); }
+  // súng cầu nhiệt + bia kính
+  for (const u of M.turrets){ ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(u.x, u.y, 16, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = PAPER; ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('Q', u.x, u.y + 3); }
+  for (const g of M.targets){ if (g.hp <= 0) continue; const sh = g.hurtT > 0 ? (Math.random()-.5)*5 : 0; ctx.save(); ctx.translate(g.x + sh, g.y); ctx.fillStyle = PAPER; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, 22, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, 0, 12, 0, Math.PI*2); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI*2); ctx.fill();
+    for (let k=0;k<(g.max||3) - g.hp;k++){ ctx.lineWidth = 1.2; line(0, 0, Math.cos(k*2.1)*22, Math.sin(k*2.1)*22); }
+    ctx.font = `700 8px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('BIA KÍNH · ' + g.hp, 0, -30); ctx.restore(); }
+  for (const o of M.orbs){ ctx.fillStyle = o.ref ? PAPER : INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(o.x, o.y, 10, 0, Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle = o.ref ? INK : PAPER; ctx.font = `700 8px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('Q', o.x, o.y + 3); }
+  ctx.restore();
+}
+function updateMath(dt){ updateGear(dt); updateCoreBoss(dt); updateMachine(dt); if (!LEVELS[lvl].math) return; updateNumTiles(dt); updateLaunchers(dt); updateMathFx(dt); updateMathBoss(dt); }
+function drawMathWorld(){ drawGearWorld(); drawCoreBoss(); drawMachine(); if (!LEVELS[lvl].math) return; drawGraphZones(); drawGoneNums(); drawSines(); drawLaunchers(); drawMathOrbs(); drawQuizBoards(); drawMathFx(); drawMathBoss(); }
 
 // Đổi lọ: lọ cũ bay ngược vào ba lô, lọ mới bật ra xoay vòng rồi rơi vào tay
 let swapFx = null; const SWAP_DUR = .6;
@@ -3793,11 +3918,11 @@ const STORY = {
         cineShot('forge', [0,140,.9,0], [0,40,1.25,0], 7, 'Nồi luyện vừa ấm lên thì kim áp kế vọt qua vạch đỏ. Một giọt Mực Đen đã chui vào lõi lò.', {tr:'fade'}),
         cineCard('Nhiệt không bao giờ tự đi từ vật lạnh sang vật nóng. Muốn đảo ngược, phải trả giá.', 5),
       ]},
-      {scene:'chapter', title:'Phần 5 · Phòng Piston', icon:'lab', lines:['Trước khi chạm vào lõi thật, Giáo sư bắt Bấc tập với lõi phụ.']},
+      {scene:'chapter', title:'Phần 5 · Phòng Piston', icon:'lab', lines:['Phòng máy của Giáo sư: nơi học cách đọc nhịp của máy móc.']},
     ],
     [{scene:'chapter', title:'Phần 6 · Buồng Làm Mát', icon:'lab', lines:['Nơi học cách giữ bình tĩnh khi mọi thứ nóng lên.']}],
     [
-      {shots:[ cineCard('Hai bài tập đã xong. Giờ là lõi thật: ba giai đoạn, và không có lần thứ hai nếu ngã.', 5) ]},
+      {shots:[ cineCard('Piston, van làm mát, tia nhiệt, cầu nhiệt: Bấc đã gặp đủ cả. Giờ chúng cùng lúc ở một chỗ, quanh một cái lõi đang sôi.', 6) ]},
       {scene:'chapter', title:'Phần 7 · Lõi Nhiệt Động', icon:'lab', lines:['Nơi entropy chỉ có một chiều: tăng.']},
     ],
     [
@@ -4073,6 +4198,7 @@ function load(i){
   secrets.sort((a,b)=>a.x-b.x).forEach((q,k)=>{ q.text = (L.secrets||[])[k] || 'Một con hạc giấy nhỏ.'; });
   buildCeil();
   if (L.coreBoss) cboss = makeCore(L);
+  mach = L.machine ? makeMachine(L) : null;
   computeAmmo(L); if (!reagentList().includes(reagent)) reagent = 'base';
   { const ks = Object.values(numTiles).sort((a,b)=>a.x-b.x || a.y-b.y); ks.forEach((n,i)=>{ n.val = (L.nums||[])[i % Math.max(1,(L.nums||[]).length)] ?? 0; }); }
   initMath(L, orbCells, bossCell);
@@ -4635,6 +4761,7 @@ function update(dt){
   computeBeams();
   // Cần gạt
   if (actPress && cboss && useCoreValve()) actPress = false;
+  if (actPress && mach && useMachineValve()) actPress = false;
   if (actPress && LEVELS[lvl].warp){ const w = LEVELS[lvl].warp, px = player.x+11, py = player.y+17;
     if (px > w.x*T - 34 && px < (w.x+w.w)*T + 20 && py > w.y*T - 30 && py < (w.y+w.h)*T + 30){ actPress = false; const to = LEVELS.findIndex(L=>L.name===w.to);
       const T2 = LEVELS[to]; let sx = 7, sr = 13; T2.map.forEach((r,y)=>{ const i = r.indexOf('P'); if (i >= 0){ sx = i + .5; sr = y + 1; } });
