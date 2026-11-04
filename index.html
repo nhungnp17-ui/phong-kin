@@ -2528,12 +2528,12 @@ function drawSwapFx(){
     ctx.fillStyle = f.to!=='base' ? PAPER : INK; ctx.fillText(lab, p.x+11, ly); }
   ctx.restore();
 }
-const THROW_T = .3;
-function throwFlask(ch){
+const THROW_T = .3, TAP_CH = .2, FLASK_TAP = 7;   // FLASK_TAP: mực tốn cho một lần ném nhanh   // TAP_CH: dưới mức nạp này coi là bấm nhanh
+function throwFlask(ch, cost = FLASK_COST){
   const p = player; if (ch === undefined) ch = p.charge;
-  if (mana < FLASK_COST){ manaFlash=.5; SFX.play('denied'); return; }
+  if (mana < cost){ manaFlash=.5; SFX.play('denied'); return; }
   if (reagent!=='tnt'){ if ((ammo[reagent]||0) <= 0){ SFX.play('denied'); popups.push({x:p.x+11, y:p.y-26, text:`hết lọ ${REAGENT_NAME[reagent]}!`, life:1.4}); showTip('noammo', ['X'], 'Hết loại lọ này rồi. Nhấn X để đổi sang lọ khác. Nhấn R chơi lại khu để được cấp lại đầy đủ.', null, 8); return; } ammo[reagent]--; }
-  mana -= FLASK_COST;
+  mana -= cost;
   const s0 = flaskStart(p), v = flaskVel(ch, p.faceS>=0?1:-1);
   flasks.push({x:s0.x, y:s0.y, vx:v.vx, vy:v.vy, kind:reagent, rot:0});
   SFX.play('throw'); p.sx = 1.12; p.sy = .9;
@@ -3069,9 +3069,13 @@ function updateCombat(dt){
   p.invT -= dt; hurtFlash -= dt;
   // ngắm & ném: giữ F để nạp lực, thả để ném
   p.throwT = Math.max(0, (p.throwT||0) - dt);
-  if (inp.throw && state==='play' && !itemGet && !forgeSeq){ if (!p.charging) SFX.play('grab'); p.charging = true; p.charge = Math.min(1, p.charge + dt/.8); }
-  else if (p.charging){ p.charging = false; p.throwT = THROW_T; p.throwCh = p.charge; p.throwPend = true; p.charge = 0; SFX.play('swoosh'); }
-  if (p.throwPend && p.throwT < THROW_T*.55){ p.throwPend = false; throwFlask(p.throwCh); }
+  // bấm nhanh F = ném ngay (lực trung bình) → spam được; giữ F > 0,15s = nạp lực như cũ
+  if (inp.throw && state==='play' && !itemGet && !forgeSeq){ const was = p.charge; p.charging = true; p.charge = Math.min(1, p.charge + dt/.7); if (was < TAP_CH && p.charge >= TAP_CH) SFX.play('grab'); }
+  else if (p.charging){ p.charging = false;
+    if (p.charge < TAP_CH){ throwFlask(.55, FLASK_TAP); p.throwT = THROW_T*.5; p.throwPend = false; }
+    else { p.throwT = THROW_T; p.throwCh = p.charge; p.throwPend = true; SFX.play('swoosh'); }
+    p.charge = 0; }
+  if (p.throwPend && p.throwT < THROW_T*.75){ p.throwPend = false; throwFlask(p.throwCh); }
   // lọ đang bay
   for (const f of flasks){
     (f.tr ||= []).push([f.x, f.y]); if (f.tr.length > 9) f.tr.shift();
@@ -6142,7 +6146,7 @@ function drawCombatFX(){
   ctx.globalAlpha=1;
   // quỹ đạo ngắm: parabol y = x·tanθ − g·x²/(2v²cos²θ)
   const p = player;
-  if (p.charging){
+  if (p.charging && p.charge >= TAP_CH){
     const pr = predictFlask(p.charge, p.faceS>=0?1:-1);
     ctx.fillStyle=INK;
     pr.pts.forEach((q,i)=>{ ctx.globalAlpha = .75 - i/pr.pts.length*.5; ctx.beginPath(); ctx.arc(q[0], q[1], 2, 0, Math.PI*2); ctx.fill(); });
@@ -6234,7 +6238,7 @@ function heroState(p){
   if (p.recT>0 && p.ground) return 'skid';
   if (p.wall) return 'wall';
   if (p===player && p.throwT > 0) return 'throw';
-  if (p===player && p.charging) return 'aim';
+  if (p===player && p.charging && p.charge >= TAP_CH) return 'aim';
   if (!p.ground) return p.flipT>0 ? 'flip' : p.vy < -120 ? 'rise' : p.vy > 160 ? 'fall' : 'apex';
   if (leverAct && p===player && leverAct.pk > .02) return 'pull';
   if (p.rope) return 'swing';
@@ -7700,7 +7704,7 @@ function updateTips(dt){
   if (nearT('><}{|', 100)) showTip('wind', [], 'Gió đẩy bạn theo chiều mũi tên. Gió giật thổi từng đợt: canh lúc lặng mà đi.', null, 7);
   if (nearT('cC', 100)) showTip('belt', [], 'Băng chuyền kéo bạn đi. Nhảy khỏi băng vẫn giữ được đà.', null, 6);
   if (ropes.some(r=>Math.hypot(r.ax-px, r.ay+r.L-p.y) < 160)) showTip('rope', ['↑'], 'Dây đu: nhảy vào để bám, ←/→ lấy đà, nhảy để buông người bay đi.', ()=>!!p.rope, 8);
-  if (L.combat) showTip('combat', ['F','X'], 'F (J): ném lọ hoá chất · X: đổi axit ⇄ bazơ. Axit phá giáp đá vôi, bazơ trị nhầy axit.', null, 10);
+  if (L.combat) showTip('combat', ['F','X'], 'F (J): bấm nhanh = ném liên tục, giữ = ngắm xa · X: đổi axit ⇄ bazơ. Axit phá giáp đá vôi, bazơ trị nhầy axit.', null, 10);
   if (L.math){
     if (mathOrbs.some(o=>!o.q.solved && Math.hypot(o.x-px, o.y-p.y-17) < 220)) showTip('quiz', [], 'Câu đố toán: đọc đề trên tấm bảng đen, chạm quả cầu có đáp án đúng. Sai sẽ bị đẩy lùi và mất 20 mực.', null, 9);
     if (quizzes.some(q=>q.kind==='graph' && Math.abs(q.bx-px) < 12*T)) showTip('graph', [], 'Cầu đồ thị: chọn hàm số có đồ thị đi qua vòng tròn đích. Đúng thì đồ thị hoá thành bậc phấn để leo.', null, 9);
