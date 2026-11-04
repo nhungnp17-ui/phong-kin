@@ -388,7 +388,7 @@ const LEVELS = [
   '###################...#####..####......###########################.....####....#################################................######',
   '###################^^^#####^^####^^^^^^###########################^^^^^####^^^^#################################^^^^^^^^^^^^^^^^######',
  ]},
- { name:'Phố Chợ', ch:2, theme:'outside', combat:true, warp:{x:11.8, y:9.4, w:2.6, h:2.6, to:'Quán Cà Phê Góc Phố', look:'cafe', say:'vào quán'},
+ { name:'Phố Chợ', ch:2, theme:'outside', combat:true, warp:{x:98.8, y:1.6, w:2.4, h:2.4, to:'Quán Cà Phê Góc Phố', look:'cafe', say:'vào quán'},
    pages:['Người trong phố treo gương để đón nắng vào hẻm tối. Ánh sáng đi thẳng, nhưng gương bẻ được nó.',
           'Góc tới bằng góc phản xạ. Một định luật giản dị đến mức ta từng nghĩ nó chẳng đáng ghi lại.',
           'Bóng mực trốn trong hẻm, nơi nắng không tới. Hãy mang nắng tới chỗ nó.'],
@@ -423,7 +423,7 @@ const LEVELS = [
   '##############################################################################################################',
   '##############################################################################################################',
  ]},
- { name:'Bến Cảng', ch:2, theme:'outside', combat:true, warp:{x:13, y:8.6, w:1.6, h:2.4, to:'Ban Công Hải Đăng', look:'hatch', say:'mở cửa sập'},
+ { name:'Bến Cảng', ch:2, theme:'outside', combat:true, warp:{x:99, y:.6, w:1.6, h:2.4, to:'Ban Công Hải Đăng', look:'hatch', say:'mở cửa sập'},
    pages:['Bến cảng là nơi mọi dòng chảy gặp nhau: nước, gió, và cả mực.',
           'Ngọn hải đăng không cần to. Nó chỉ cần đủ sáng, và đặt đúng chỗ.',
           'Bấc à, ánh sáng của con không phải để đốt cháy. Nó để người khác tìm thấy đường về.'],
@@ -698,7 +698,7 @@ const LEVELS = [
   '################################################################',
   '################################################################'
    ]},
- { name:"Sảnh Đếm", ch:4, warp:{x:13, y:12, w:2, h:3, to:"Góc Đọc Sách", look:"shelf", say:"đẩy kệ sách"}, numRule:"even", item:"lens", pages:["Tối nào Hạ cũng đếm bậc cầu thang trước khi ngủ. Mười hai bậc. Không bao giờ sai.", "Mực Đen ăn mất con số nào, thứ đó quên luôn mình là gì. Cầu thang không còn biết mình cao bao nhiêu."], talks:[[5, 13, "Cạc! Chỗ này toàn số. Cửa có dấu ? chỉ mở khi trả lời đúng."], [38, 13, "Ô số lẻ sẽ vỡ! Chỉ đặt chân lên số chẵn."], [88, 13, "Đếm ngược kìa: trừ đi bao nhiêu mỗi lần?"]], hints:["Đọc câu đố trên cửa ?, rồi chạm quả cầu có đáp án đúng. Sai sẽ bị đẩy lùi và mất mực.", "Ô SỐ: chỉ số CHẴN mới đứng vững. Số lẻ vỡ ngay khi bạn đặt chân.", "Giải đúng thì cầu phấn hiện ra. Mẹo Gauss: ghép số đầu với số cuối.", "Cấp số cộng cũng có thể đi lùi."], notes:[["CẤP SỐ CỘNG", "uₙ = u₁ + (n − 1)·d", "3, 7, 11, 15…: d = 4", "Chạm quả cầu đúng để mở cửa"], ["SỐ CHẴN · LẺ", "Chẵn: chia hết cho 2", "Lẻ: chia 2 dư 1", "0, 2, 4, 6… đều chẵn"], ["TỔNG GAUSS", "1 + 2 + … + n = n(n + 1) ÷ 2", "n = 10 → 55", "Ghép cặp đầu–cuối"], ["ĐẾM NGƯỢC", "d có thể âm", "100, 91, 82…: d = −9", ""]], secrets:["Hạc giấy kẹp trong cuốn sổ đếm: “Một, hai, ba… con đếm tới đâu thì ta đợi tới đó.”"], decor:[["sign", 8, "SẢNH ĐẾM"], ["board", 40, 3], ["board", 90, 3]], combat:true, theme:"math", math:true, nums:[2, 3, 13, 14, 3, 8, 3, 17, 14, 1, 20, 3, 8, 21, 24, 19, 1, 20, 19, 14], quiz:[{q:"3, 7, 11, ?, 19", opts:["13", "15", "17"], ans:1, kind:"door", hint:"mỗi số hơn số trước 4", why:"cấp số cộng, công sai d = 4"}, {q:"1 + 2 + 3 + … + 10 = ?", opts:["45", "55", "100"], ans:1, kind:"bridge", hint:"ghép cặp: 1+10, 2+9… có 5 cặp", why:"Gauss: (1 + 10) × 10 ÷ 2 = 55"}, {q:"100, 91, 82, ?", opts:["72", "74", "73"], ans:2, kind:"door", hint:"mỗi bước bớt đi 9", why:"công sai d = −9"}],
+ { name:"Sảnh Đếm", ch:4, warp:{x:98.9, y:6, w:1.3, h:3, to:"Góc Đọc Sách", look:"shelf", say:"đẩy kệ sách"}, numRule:"even", item:"lens", pages:["Tối nào Hạ cũng đếm bậc cầu thang trước khi ngủ. Mười hai bậc. Không bao giờ sai.", "Mực Đen ăn mất con số nào, thứ đó quên luôn mình là gì. Cầu thang không còn biết mình cao bao nhiêu."], talks:[[5, 13, "Cạc! Chỗ này toàn số. Cửa có dấu ? chỉ mở khi trả lời đúng."], [38, 13, "Ô số lẻ sẽ vỡ! Chỉ đặt chân lên số chẵn."], [88, 13, "Đếm ngược kìa: trừ đi bao nhiêu mỗi lần?"]], hints:["Đọc câu đố trên cửa ?, rồi chạm quả cầu có đáp án đúng. Sai sẽ bị đẩy lùi và mất mực.", "Ô SỐ: chỉ số CHẴN mới đứng vững. Số lẻ vỡ ngay khi bạn đặt chân.", "Giải đúng thì cầu phấn hiện ra. Mẹo Gauss: ghép số đầu với số cuối.", "Cấp số cộng cũng có thể đi lùi."], notes:[["CẤP SỐ CỘNG", "uₙ = u₁ + (n − 1)·d", "3, 7, 11, 15…: d = 4", "Chạm quả cầu đúng để mở cửa"], ["SỐ CHẴN · LẺ", "Chẵn: chia hết cho 2", "Lẻ: chia 2 dư 1", "0, 2, 4, 6… đều chẵn"], ["TỔNG GAUSS", "1 + 2 + … + n = n(n + 1) ÷ 2", "n = 10 → 55", "Ghép cặp đầu–cuối"], ["ĐẾM NGƯỢC", "d có thể âm", "100, 91, 82…: d = −9", ""]], secrets:["Hạc giấy kẹp trong cuốn sổ đếm: “Một, hai, ba… con đếm tới đâu thì ta đợi tới đó.”"], decor:[["sign", 8, "SẢNH ĐẾM"], ["board", 40, 3], ["board", 90, 3]], combat:true, theme:"math", math:true, nums:[2, 3, 13, 14, 3, 8, 3, 17, 14, 1, 20, 3, 8, 21, 24, 19, 1, 20, 19, 14], quiz:[{q:"3, 7, 11, ?, 19", opts:["13", "15", "17"], ans:1, kind:"door", hint:"mỗi số hơn số trước 4", why:"cấp số cộng, công sai d = 4"}, {q:"1 + 2 + 3 + … + 10 = ?", opts:["45", "55", "100"], ans:1, kind:"bridge", hint:"ghép cặp: 1+10, 2+9… có 5 cặp", why:"Gauss: (1 + 10) × 10 ÷ 2 = 55"}, {q:"100, 91, 82, ?", opts:["72", "74", "73"], ans:2, kind:"door", hint:"mỗi bước bớt đi 9", why:"công sai d = −9"}],
    map:[
   '##############################################################################################################',
   '##############################################################################################################',
@@ -1021,7 +1021,7 @@ const LEVELS = [
   '########################################################################'
    ]},
  // ===== GÓC CHILL BÍ MẬT: quán cà phê (Phố Chợ), mái hải đăng (Bến Cảng), góc đọc sách (Sảnh Đếm) =====
- { name:'Quán Cà Phê Góc Phố', theme:'cafe', secret:true, side:true, ret:{name:'Phố Chợ', x:13.2, row:12}, bench:[35.5, 3],
+ { name:'Quán Cà Phê Góc Phố', theme:'cafe', secret:true, side:true, ret:{name:'Phố Chợ', x:100, row:4}, bench:[35.5, 3],
    pages:[], talks:[], secrets:[], decor:[],
    quotes:['Mưa ngoài kia. Trong này có mùi cà phê và tiếng đĩa than.', 'Con mèo trên quầy chẳng quan tâm ai thắng ai thua.', 'Hồi trước, ông hay gọi một ly đen không đường, rồi để nguội.', 'Ngồi yên một lúc cũng là một cách đi tiếp.', 'Cửa kính mờ hơi nước. Ai đó đã vẽ một mặt cười lên đó.', 'Mưa sẽ tạnh. Cà phê sẽ nguội. Bấc vẫn ở đây.'],
    hints:['Một quán nhỏ trốn mưa. Leo lên gác lửng, có chỗ ngồi bên cửa sổ.', 'Không có gì phải vội.', 'Cửa ra ở bên trái.'],
@@ -1039,7 +1039,7 @@ const LEVELS = [
   '##############################################',
   '##############################################'
  ]},
- { name:'Ban Công Hải Đăng', theme:'sea', secret:true, side:true, ret:{name:'Bến Cảng', x:13.8, row:11}, bench:[23, 4],
+ { name:'Ban Công Hải Đăng', theme:'sea', secret:true, side:true, ret:{name:'Bến Cảng', x:99.8, row:3}, bench:[23, 4],
    pages:[], talks:[], secrets:[], decor:[],
    quotes:['Hoàng hôn trên biển. Sóng cứ vỗ, chẳng cần ai đếm.', 'Ngọn hải đăng không đi tìm tàu. Nó chỉ đứng đó và sáng.', 'Có lẽ mình cũng vậy. Chỉ cần sáng thôi.', 'Hải âu bay về phía mặt trời. Mai nó lại bay về.', 'Gió mặn. Nhưng dễ chịu.', 'Mặt trời lặn mỗi ngày, và chưa ngày nào giống ngày nào.'],
    hints:['Ban công trên ngọn hải đăng. Leo lên cao, có một chiếc ghế nhìn ra biển.', 'Không có gì phải vội.', 'Cửa sập bên trái để quay về bến.'],
@@ -1059,7 +1059,7 @@ const LEVELS = [
   '############################################',
   '############################################'
  ]},
- { name:'Góc Đọc Sách', theme:'nook', secret:true, side:true, ret:{name:'Sảnh Đếm', x:14, row:15}, bench:[17, 2],
+ { name:'Góc Đọc Sách', theme:'nook', secret:true, side:true, ret:{name:'Sảnh Đếm', x:99.4, row:9}, bench:[17, 2],
    pages:[], talks:[], secrets:[], decor:[],
    quotes:['Sau kệ sách là một căn phòng nhỏ. Lửa tí tách. Ngoài trời có tuyết.', 'Hạ từng trốn ở đây đọc truyện, quên cả giờ ăn.', 'Đồng hồ cứ tích tắc. Nhưng ở đây, thời gian chẳng đuổi theo ai.', 'Mỗi cuốn sách là một ô cửa khác.', 'Ấm thật. Như một cái chăn dày.', 'Đọc thêm một trang nữa thôi. Rồi lại một trang nữa.'],
    hints:['Căn phòng bí mật sau kệ sách. Có chỗ ngồi đọc sách trên cao, cạnh ngọn nến.', 'Không có gì phải vội.', 'Kệ sách bên trái là lối ra.'],
@@ -2790,6 +2790,7 @@ function stomp(e){
 }
 // ---- va chạm khi lướt: định luật bảo toàn động lượng ----
 function dashImpact(e, isBoss, forceArmor){
+  if (isBoss) player.graceT = .6;   // vừa lướt trúng boss: không bị tính va chạm thân ngay sau đó
   const p = player, pv = DASH_SPEED*p.dashDir;   // động lượng của Bấc: m = 1
   const armored = forceArmor || (isBoss ? (boss.phase < 3 || boss.guard || (boss.phase===4 && boss.shield)) : ((e.type==='limestone' && e.armor>0) || e.type==='spitter'));
   if (armored){
@@ -3080,11 +3081,12 @@ function updateBoss(dt){
   if (b.vort){ const cx=b.x+b.w/2, cy=b.y+b.h/2;
     for (let i=0;i<5;i++){ const a = b.vort.a + i/6*Math.PI*2, ox = cx+Math.cos(a)*b.vort.r, oy = cy+Math.sin(a)*b.vort.r;   // 5 quả trên 6 vị trí → chừa 1 khe
       if (Math.hypot(ox-px, oy-py) < 22) hurtPlayer(bossDmg(), ox); } }
+  if (p.graceT > 0) p.graceT -= dt;
   // chạm thân boss
   const br = {x:b.x+8, y:b.y+8, w:b.w-16, h:b.h-16};
   if (ov(p, br) && b.st!=='trans'){
     if (p.dashT>0 && !p.dashHit.has('boss')){ p.dashHit.add('boss'); dashImpact(b, true); }
-    else if (p.dashT<=0 && b.st!=='stun') hurtPlayer(bossDmg(), b.x+b.w/2);
+    else if (p.dashT<=0 && b.st!=='stun' && !(p.graceT > 0)) hurtPlayer(bossDmg(), b.x+b.w/2);
   }
 }
 function updateWave(dt){
@@ -5349,13 +5351,14 @@ function nookWorld(){
 // ---------- dấu vết lối vào (vẽ trong màn chủ) ----------
 function drawWarpCue(){
   const L = LEVELS[lvl], w = L.warp; if (!w || !w.look) return; const X = w.x*T, Y = w.y*T, W = w.w*T, H = w.h*T, t = clock;
-  ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.fillStyle = INK;
-  if (w.look==='cafe'){ ctx.globalAlpha = .9; ctx.fillStyle = PAPER; ctx.fillRect(X + 6, Y + 10, W - 12, H - 10); ctx.lineWidth = 2.5; ctx.strokeRect(X + 6, Y + 10, W - 12, H - 10);
+  const dd = Math.hypot(player.x + 11 - (X + W/2), player.y + 17 - (Y + H/2)), fa = clamp(1 - (dd - 70)/160, .1, 1);
+  ctx.save(); ctx.globalAlpha = fa; ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.fillStyle = INK;
+  if (w.look==='cafe'){ ctx.fillStyle = PAPER; ctx.fillRect(X + 6, Y + 10, W - 12, H - 10); ctx.lineWidth = 2.5; ctx.strokeRect(X + 6, Y + 10, W - 12, H - 10);
     ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(X - 4, Y + 12); ctx.lineTo(X + W + 4, Y + 12); ctx.lineTo(X + W - 4, Y); ctx.lineTo(X + 4, Y); ctx.closePath(); ctx.fill(); ctx.fillStyle = PAPER; for (let i=0;i<5;i++) ctx.fillRect(X + 4 + i*16, Y + 2, 8, 9);
-    ctx.globalAlpha = .25 + .15*Math.sin(t*2); ctx.fillStyle = INK; ctx.fillRect(X + 12, Y + H - 4, W - 24, 3); ctx.globalAlpha = 1;
-    ctx.lineWidth = 1.5; ctx.strokeRect(X + W/2 - 7, Y + 26, 14, 10); ctx.beginPath(); ctx.arc(X + W/2 + 8, Y + 31, 3, -1.2, 1.2); ctx.stroke(); for (let k=0;k<2;k++){ const q = ((t*.7 + k/2) % 1); ctx.globalAlpha = 1 - q; ctx.beginPath(); ctx.moveTo(X + W/2 - 3 + k*5, Y + 24 - q*12); ctx.quadraticCurveTo(X + W/2 + k*5, Y + 20 - q*12, X + W/2 - 3 + k*5, Y + 16 - q*12); ctx.stroke(); } }
+    ctx.globalAlpha = fa*(.25 + .15*Math.sin(t*2)); ctx.fillStyle = INK; ctx.fillRect(X + 12, Y + H - 4, W - 24, 3); ctx.globalAlpha = fa;
+    ctx.lineWidth = 1.5; ctx.strokeRect(X + W/2 - 7, Y + 26, 14, 10); ctx.beginPath(); ctx.arc(X + W/2 + 8, Y + 31, 3, -1.2, 1.2); ctx.stroke(); for (let k=0;k<2;k++){ const q = ((t*.7 + k/2) % 1); ctx.globalAlpha = fa*(1 - q); ctx.beginPath(); ctx.moveTo(X + W/2 - 3 + k*5, Y + 24 - q*12); ctx.quadraticCurveTo(X + W/2 + k*5, Y + 20 - q*12, X + W/2 - 3 + k*5, Y + 16 - q*12); ctx.stroke(); } }
   else if (w.look==='hatch'){ ctx.fillStyle = PAPER; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(X + 8, Y + H); ctx.lineTo(X + 8, Y + 16); ctx.arc(X + W/2, Y + 16, W/2 - 8, Math.PI, 0); ctx.lineTo(X + W - 8, Y + H); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.arc(X + W/2, Y + 26, 7, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = .5 + .4*Math.sin(t*1.5); ctx.beginPath(); ctx.arc(X + W/2, Y + 26, 3, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(X + W - 16, Y + H*.6, 2.5, 0, Math.PI*2); ctx.fill(); }
+    ctx.beginPath(); ctx.arc(X + W/2, Y + 26, 7, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = fa*(.5 + .4*Math.sin(t*1.5)); ctx.beginPath(); ctx.arc(X + W/2, Y + 26, 3, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = fa; ctx.beginPath(); ctx.arc(X + W - 16, Y + H*.6, 2.5, 0, Math.PI*2); ctx.fill(); }
   else if (w.look==='shelf'){ ctx.lineWidth = 2; ctx.strokeRect(X, Y, W, H); for (let r=0;r<3;r++){ const yy = Y + r*H/3; line(X, yy + H/3, X + W, yy + H/3); let x = X + 3; let i = 0; while (x < X + W - 6){ const bw = 6 + hash2(i, r)*5, bh = H/3 - 6 - hash2(i+3, r)*8; const tilt = r===1 && i===3; ctx.save(); ctx.translate(x, yy + H/3); if (tilt) ctx.rotate(-.25 + Math.sin(t*2)*.03); ctx.fillStyle = (i+r)%2 ? INK : PAPER; ctx.fillRect(0, -bh, bw, bh); ctx.strokeRect(0, -bh, bw, bh); ctx.restore(); x += bw + 1; i++; } } }
   ctx.restore();
 }
