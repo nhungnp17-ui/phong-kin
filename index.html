@@ -1186,6 +1186,7 @@ const SFX = (() => {
     airjump:  ()=>{ tone({type:'triangle', f:420, f2:980, t:.14, v:.12}); tone({f:1500, f2:1900, t:.08, v:.05, d:.04}); },
     walljump: ()=>{ noise({f:1800, t:.05, v:.12, q:3}); tone({type:'square', f:260, f2:520, t:.08, v:.05}); },
     dash:     ()=>{ noise({f:500, f2:3200, t:.17, v:.22, q:1.5}); },
+    fanfare:  ()=>{ [[523,0],[659,.12],[784,.24],[1047,.36],[784,.6],[1047,.72]].forEach(([f,d],i)=>{ tone({type:'triangle', f, t:i>3 ? .9 : .22, v:.11, d}); tone({type:'sine', f:f*2, t:.3, v:.03, d}); }); [262,330,392].forEach(f=>tone({type:'sawtooth', f, t:1.6, v:.03, a:.08, d:.72, bp:f*3, q:1})); noise({f:6000, t:1.2, v:.04, type:'highpass', d:.72, a:.2}); },
     inkdash:  ()=>{ noise({f:400, f2:2600, t:.2, v:.2, q:1.5}); tone({f:160, f2:60, t:.22, v:.18}); for (let i=0;i<3;i++) tone({f:R(500,900), f2:R(900,1400), t:.05, v:.05, d:.03+i*.04}); },
     denied:   ()=>{ tone({type:'square', f:150, t:.07, v:.06}); tone({type:'square', f:120, t:.09, v:.06, d:.08}); },
     land:     k=>{ noise({type:'lowpass', f:500, f2:200, t:.07, v:.06+.14*k}); },
@@ -1325,6 +1326,12 @@ const SFX = (() => {
       nz('bandpass', 1900, .7, .2, v, 0, .05); nz('highpass', 6000, .5, .08, v*.4, 0, .05); return; }
     if (kind==='c'){ for (let i=0;i<3;i++) nz('bandpass', 1500, 1.2, i===2 ? .16 : .02, v*(i===2 ? 1 : .7), i*.012, -.1); return; }   // vỗ tay
     if (kind==='o'){ nz('highpass', 6500, .6, .28, v, 0, .25); return; }   // hi-hat mở
+    if (kind==='t' || kind==='tl' || kind==='T'){   // trống tom / darbuka (t cao, tl thấp) · T: trống taiko lớn
+      const f0 = kind==='t' ? 260 : kind==='tl' ? 150 : 95, o = ac.createOscillator(), g = ac.createGain(); o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(f0*.55, t0 + (kind==='T' ? .35 : .16));
+      o.connect(g); panned(g, kind==='t' ? .25 : kind==='tl' ? -.25 : 0).connect(D); g.gain.setValueAtTime(Math.max(.0002, v), t0); g.gain.exponentialRampToValueAtTime(.0001, t0 + (kind==='T' ? .6 : .22)); o.start(t0); o.stop(t0 + .65);
+      nz('bandpass', kind==='T' ? 400 : 900, 1, .04, v*.35); if (kind==='T') duck(t0, .5); return; }
+    if (kind==='m'){   // tiếng kim loại công nghiệp: nhiễu dải hẹp + 2 sóng vuông lệch tần (ring)
+      nz('bandpass', 3200, 9, .22, v, 0, (Math.random()-.5)*.6); for (const f of [523, 741]){ const o = ac.createOscillator(), g = ac.createGain(); o.type = 'square'; o.frequency.value = f; o.connect(g); panned(g, .3).connect(D); g.gain.setValueAtTime(v*.25, t0); g.gain.exponentialRampToValueAtTime(.0001, t0 + .18); o.start(t0); o.stop(t0 + .2); } return; }
     nz('highpass', 7200, .8, .04, v, 0, (Math.random()-.5)*.5);   // hi-hat đóng
   }
   const prog = (step, chords) => chords[Math.floor(step/16) % chords.length];
@@ -1453,12 +1460,58 @@ const SFX = (() => {
       const MEL = [{0:76,6:79,8:77},{0:76,8:72},{0:77,4:76,8:74},{0:74},{0:76,6:79,8:84},{0:83,8:79},{0:81,4:79,8:77},{0:74,8:79}];
       const m = MEL[bar][st]; if (m) bell(m, t, 1.8, .016, {pan:.1}); if (st===6 && bar%2) nt('sine', vc[2]+24, t, 1.2, .006, {a:.02, det:wow});
     }},
+    // ===== NHẠC TRÙM RIÊNG =====
+    // VUA MỰC: Rê thứ, nhịp 6/8 như sóng biển (12 bước/ô nhịp), xúc tu bass lắc lư; P2 thêm dây ostinato + hợp xướng; P3 gấp đôi + giai điệu "khúc hát thuỷ thủ" méo mó
+    squid: {bpm:150, fn(s,t,I){
+      const bar = Math.floor(s/12) % 8, st = s % 12, CH = [38,38,34,36,38,38,33,37], r = CH[bar];
+      if (st===0 || st===6) drum('T', t, st===0 ? .24 : .15); if (st===9 && I>=2) drum('tl', t, .07); if (st===3 && I>=3) drum('t', t, .06);
+      if (I>=2 && (st===6)) drum('s', t, .06); if (st%2===1 || I>=3) drum('h', t, .01);
+      if (st%3===0) nt('sawtooth', r - 12 + (st===9 ? 7 : 0), t, .32, .1, {lp:900, lp2:150, q:6, pan:0});
+      if (st===0) nt('square', r - 24, t, .9, .03, {lp:300, pan:0});
+      if (I>=2 && st%3===1){ const arp = [r+24, r+27, r+31, r+27][(st/3|0)]; nt('sawtooth', arp, t, .2, .02, {lp:2600, lp2:900, pan:-.35}); nt('sawtooth', arp+12, t, .2, .007, {lp:2600, lp2:900, pan:.35}); }
+      if (I>=2 && st===0 && bar%2===0){ for (const [m,pn] of [[r+12,-.3],[r+15,.3],[r+19,0]]) nt('sawtooth', m+12, t, 2.4, .007, {a:.5, sus:.6, lp:1400, vib:9, pan:pn}); }
+      const MEL = [{0:62,3:65,6:69,9:67},{0:65,6:62},{0:58,3:62,6:65,9:64},{0:64,6:60},{0:62,3:65,6:69,9:72},{0:70,6:69,9:67},{0:65,3:64,6:62,9:61},{0:62}];
+      if (I>=3){ const m = MEL[bar][st]; if (m) lead(m + 12, t, .55, .03, {pan:.15}); }
+      if (s%96===90){ for (let k=0;k<4;k++) drum(k%2 ? 't' : 'tl', t + k*.05, .07); }
+    }},
+    // VUA MỰC · TIM: tối, chỉ nhịp tim và pad. I = số đèn đang sáng (+1); vỏ bay hơi (I=4): cả dàn bùng lên
+    squidheart: {bpm:96, fn(s,t,I){
+      const st = s % 16, bar = Math.floor(s/16) % 4, r = [38, 34, 36, 33][bar];
+      if (st===0) drum('k', t, .22); if (st===3) drum('k', t, .14); if (I>=3 && st===8) drum('k', t, .16);
+      if (st===0){ nt('sawtooth', r - 12, t, 2.8, .05, {a:.4, sus:.6, lp:220, pan:0}); pad(r + 24, t, 2.6, I>=2 ? .02 : .012, 900); pad(r + 27, t, 2.6, I>=2 ? .02 : .012, 900); }
+      if (I>=2 && st%4===2) nt('sine', r + 36 + (st===10 ? 3 : 0), t, .5, .012, {a:.01, pan:(st-8)/10});
+      if (I>=3 && st%2===0) drum('h', t, .012);
+      if (I>=4){ if (st%2===0) nt('sawtooth', r - 12, t, .16, .07, {lp:900, lp2:200, q:5, pan:0}); if (st===4 || st===12) drum('s', t, .07); drum('h', t, .008);
+        const MEL = {0:74,2:72,4:69,6:72,8:74,10:77,12:76,14:72}; lead((MEL[st]||0) + (bar%2 ? -2 : 0), t, .25, MEL[st] ? .022 : 0); }
+    }},
+    // NHÂN SƯ HÌNH SỐ: Mi Phrygian dominant (âm giai Ai Cập), nhịp lẻ 7/8 (toán học!), darbuka + đàn oud gảy + sáo ney rung; máu càng ít càng dồn
+    sphinx: {bpm:176, fn(s,t,I){
+      const st = s % 7, bar = Math.floor(s/7) % 8, SC = [52,53,56,57,59,60,62,64], r = [40,40,41,40,43,41,40,39][bar];
+      const dar = {0:'tl', 2:'t', 4:'tl', 5:'t', 6:'t'}; if (dar[st]) drum(dar[st], t, st===0 ? .17 : .09); if (I>=2 && st===3) drum('c', t, .03); if (I>=3) drum('h', t, .008);
+      if (st===0 || st===4) nt('sawtooth', r - 12, t, .35, .1, {lp:800, lp2:160, q:4, pan:0}); if (st===0) nt('sine', r - 24, t, .6, .08, {pan:0});
+      const oud = [0,2,1,3,2,4,3][st] + (bar%2 ? 2 : 0); pluck(SC[oud % 8] + 12, t, .22, .03, {lp:2200, pan:-.2});
+      if (I>=2 && st===0 && bar%2===0) for (const m of [64, 68, 71]) nt('sawtooth', m, t, 1.6, .006, {a:.3, sus:.5, lp:1600, det:(m-68)*2, pan:(m-68)/8});
+      const NEY = [{0:76,4:77},{0:80,3:77,5:76},{0:76,2:74,4:72},{0:71},{0:76,4:80},{0:81,3:80,5:77},{0:76,2:77,4:74},{0:76}];
+      if (I>=2){ const m = NEY[bar][st]; if (m) nt('triangle', m, t, .7, .028, {a:.06, sus:.5, vib:28, lp:3000, pan:.25}); }
+      if (I>=3 && st===6) for (let k=0;k<3;k++) drum('t', t + k*.06, .05);
+    }},
+    // LÕI NHIỆT ĐỘNG: công nghiệp 4/4, búa máy kim loại, bass xung, hơi xì; arpeggio dâng theo nhiệt (pha); P3 quá nhiệt: còi báo động
+    core: {bpm:132, fn(s,t,I){
+      const st = s % 16, bar = Math.floor(s/16) % 4, r = [36, 36, 39, 34][bar] + (I>=3 ? 1 : 0);
+      if (st%4===0) drum('k', t, .2); if (st===4 || st===12) drum('m', t, .05); if (st%2===1) drum('h', t, .01); if (I>=2 && st===14) drum('m', t, .03);
+      nt('sawtooth', r - 12 + (st%4===2 ? 12 : 0), t, .12, .06, {lp:700 + I*250, lp2:140, q:7, pan:0});
+      if (st===0) nt('square', r - 24, t, 1.2, .025, {lp:240, pan:0});
+      const ar = [0, 7, 12, 15, 19, 15, 12, 7]; if (I>=2 && s%2===0) pluck(r + 24 + ar[(s/2)%8], t, .16, .014, {lp:3200, pan:((s/2)%8 - 3.5)*.1});
+      if (I>=2 && st===8 && bar%2) drum('o', t, .015);
+      if (I>=3){ if (st===0 && bar%2===0){ nt('sawtooth', 79 + 0, t, 1.2, .01, {lp:3000, vib:40, pan:-.4}); nt('sawtooth', 78, t + 1.2*0, 1.2, .006, {lp:3000, vib:40, pan:.4}); } if (st===10) drum('s', t, .05); }
+      if (s%64===62){ drum('m', t, .05); drum('m', t + .07, .05); }
+    }},
     // Tim Mực: chỉ còn nhịp tim và tiếng ù chói
     heart: {bpm:72, fn(s,t){ if (s%8===0) drum('k', t, .3); if (s%8===2) drum('k', t, .2);
       if (s%32===0){ nt('sine', 74, t, 7, .02, {a:2}); nt('sine', 75, t, 7, .02, {a:2}); nt('sawtooth', 26, t, 7, .05, {a:1, lp:200}); } }},
   };
   // lớp căng thẳng phủ lên nhạc khám phá khi có nguy hiểm: bass dồn móc, hi-hat 16 phách, dây cao chói nửa cung, trống nhịp tim
-  const TRACKS_NOTENSE = new Set(['boss','heart','story','night','cafe','sea','nook','memory']);
+  const TRACKS_NOTENSE = new Set(['squid','squidheart','sphinx','core','boss','heart','story','night','cafe','sea','nook','memory']);
   function tension(s, t, I){
     const root = [38, 38, 41, 36][Math.floor(s/32)%4];
     if (s%2===0) nt('sawtooth', root - (s%8===6 ? -1 : 0), t, .16, I >= 3 ? .05 : .035, {lp:700, lp2:160, q:5});
@@ -9026,16 +9079,18 @@ function pickMusic(){
   if (state==='title' || state==='end') return ['house',1];
   if (state==='story') return ['story',1];
   if (bossCS) return ['heart',1];
-  if (boss && boss.engaged && !boss.dead) return boss.phase===4 ? ['heart',1] : ['boss', boss.phase];
+  if (boss && boss.engaged && !boss.dead){ if (boss.phase===4){ const lit = arenaLamps().filter(t=>litLamps && litLamps.has(t.x+','+t.y)).length; return ['squidheart', boss.st==='exposed' ? 4 : 1 + Math.min(2, lit)]; } return ['squid', boss.phase]; }
   const th = LEVELS[lvl] && LEVELS[lvl].theme;
-  if (mboss && mboss.engaged && !mboss.dead) return ['boss', 1 + Math.min(2, Math.floor((mboss.max - mboss.hp)/2))];
-  if (cboss && cboss.engaged && !cboss.dead) return ['boss', cboss.phase];
+  if (mboss && mboss.engaged && !mboss.dead) return ['sphinx', 1 + Math.min(2, Math.floor((mboss.max - mboss.hp)/Math.max(1, mboss.max/3)))];
+  if (cboss && cboss.engaged && !cboss.dead) return ['core', cboss.phase];
   if (th==='night') return ['night', 1]; if (CHILL[th]) return [CHILL[th].music, 1]; if (th==='memory') return ['memory', 1];
   return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', dangerLevel()];
 }
 function loop(now){ const dt=Math.min(1/30,(now-last)/1000); last=now;
   PERF.ema += ((dt*1000) - PERF.ema)*.05; if (state==='play'){ if (PERF.ema > 21){ PERF.slowT += dt; if (PERF.slowT > 2 && !PERF.auto){ PERF.auto = true; resize(); } } else PERF.slowT = Math.max(0, PERF.slowT - dt*.5); } try { update(dt); draw(); } catch (err){ console.error(err); errCount = (errCount||0) + 1; try { ctx.restore(); } catch(_){} }   // lỗi một khung không được làm đứng cả game
-  const [mn, mi] = pickMusic(); SFX.music(mn, mi); requestAnimationFrame(loop); }
+  const [mn, mi] = pickMusic(); SFX.music(mn, mi);
+  { const dead = (boss && boss.engaged && boss.dead) || (mboss && mboss.engaged && mboss.dead) || (cboss && cboss.engaged && cboss.dead); if (dead && !loop.won && state==='play'){ loop.won = true; SFX.play('fanfare'); } if (!dead) loop.won = false; }
+  requestAnimationFrame(loop); }
 var errCount = 0;
 requestAnimationFrame(loop);
 </script>
