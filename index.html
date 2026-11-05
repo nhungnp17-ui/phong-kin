@@ -5475,6 +5475,72 @@ function nookWorld(){
     ctx.fillStyle = '#d6d0c3'; ctx.fillRect(bx*T - 20, Y - 8, 26, 8); }
   rimTiles(.45); ctx.restore();
 }
+
+// ===== HÌNH ẨN MỜ TRÊN TƯỜNG các góc chill (như tranh mờ ở Tầng trệt): nét phấn trắng, lại gần thì rõ dần =====
+const MURALS = {
+  cafe:  [['photo',28.6,7.1,1],['cup',24.2,2.1,1],['street',36.2,6.3,1],['cat',1.1,2.6,.9],['note',41.3,4.3,1]],
+  sea:   [['boat',9,5.6,1.2],['whale',27,5.4,1.4],['kite',39,6.6,1.1],['heart',.3,7,1]],
+  nook:  [['portrait',23.3,3.6,1.3],['map',1.4,1.4,1],['leaf',10.4,1.2,1],['house',1.2,5.6,1],['crane',41,1.2,1]],
+  night: [['crane',24,8.2,1.2],['house',56.4,5.3,.8],['moonkid',42,6.6,1.1]],
+};
+function drawMurals(theme){
+  const list = MURALS[theme]; if (!list) return; const px = player.x + 11, py = player.y + 17;
+  ctx.save(); ctx.strokeStyle = PAPER; ctx.fillStyle = PAPER; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (const [k, tx, ty, sc] of list){
+    const X = tx*T, Y = ty*T; if (X < camX - 300 || X > camX + viewW + 100) continue;
+    const d = Math.hypot(px - (X + 40*sc), py - (Y + 40*sc)), near = clamp(1 - (d - 60)/260, 0, 1);
+    ctx.globalAlpha = .1 + .05*Math.sin(clock*.8 + tx) + near*.28; ctx.lineWidth = 1.6;
+    ctx.save(); ctx.translate(X, Y); ctx.scale(sc, sc); muralArt(k); ctx.restore();
+  }
+  ctx.restore();
+}
+function stick(x, y, h, o={}){   // người que: x,y = chân
+  const hd = h*.16; ctx.beginPath(); ctx.arc(x, y - h + hd, hd, 0, Math.PI*2); ctx.stroke(); line(x, y - h + hd*2, x, y - h*.42);
+  line(x, y - h*.42, x - h*.14, y); line(x, y - h*.42, x + h*.14, y); line(x, y - h*.72, x + (o.armL||-h*.2), y - h*.5); line(x, y - h*.72, x + (o.armR||h*.2), y - h*.5);
+  if (o.hat){ line(x - hd*1.6, y - h + hd*.2, x + hd*1.6, y - h + hd*.2); ctx.strokeRect(x - hd*.9, y - h - hd*.9, hd*1.8, hd*1.1); }
+  if (o.skirt){ ctx.beginPath(); ctx.moveTo(x, y - h*.6); ctx.lineTo(x - h*.17, y - h*.25); ctx.lineTo(x + h*.17, y - h*.25); ctx.closePath(); ctx.stroke(); }
+  if (o.cane) line(x + h*.22, y - h*.5, x + h*.26, y);
+}
+function muralArt(k){
+  if (k==='photo'){   // ảnh cũ: ông Giáo sư và bé Hạ ngồi quán, hai ly cà phê
+    ctx.strokeRect(0, 0, 96, 70); ctx.strokeRect(5, 5, 86, 60); line(18, 52, 78, 52); line(26, 52, 26, 64); line(70, 52, 70, 64);
+    stick(20, 58, 40, {hat:true, armR:16}); stick(78, 58, 26, {skirt:true, armL:-12}); ctx.strokeRect(40, 44, 7, 8); ctx.strokeRect(52, 46, 6, 6);
+    ctx.font = `400 9px ${HAND}`; ctx.textAlign = 'center'; ctx.fillText('Góc Phố, mùa mưa', 48, 80);
+  } else if (k==='cup'){   // tranh tách cà phê bốc khói
+    ctx.strokeRect(0, 0, 70, 90); ctx.beginPath(); ctx.moveTo(16, 50); ctx.lineTo(20, 76); ctx.lineTo(46, 76); ctx.lineTo(50, 50); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(53, 60, 7, -1.3, 1.3); ctx.stroke(); line(10, 80, 58, 80);
+    for (let i=0;i<3;i++){ ctx.beginPath(); ctx.moveTo(24 + i*9, 44); ctx.quadraticCurveTo(18 + i*9, 34, 26 + i*9, 26); ctx.quadraticCurveTo(32 + i*9, 18, 24 + i*9, 10); ctx.stroke(); }
+  } else if (k==='street'){   // ký hoạ phố mưa có cây đèn
+    ctx.strokeRect(0, 0, 110, 64); line(5, 54, 105, 54); for (let i=0;i<5;i++){ const x = 10 + i*20, h = 18 + (i*13)%22; ctx.strokeRect(x, 54 - h, 14, h); }
+    line(88, 54, 88, 18); ctx.beginPath(); ctx.arc(88, 16, 4, 0, Math.PI*2); ctx.stroke(); for (let i=0;i<14;i++){ const x = 6 + (i*37)%100, y = 6 + (i*23)%40; line(x, y, x - 2, y + 6); }
+  } else if (k==='cat'){ ctx.beginPath(); ctx.ellipse(24, 40, 18, 11, 0, Math.PI, 0); ctx.stroke(); ctx.beginPath(); ctx.arc(42, 30, 8, 0, Math.PI*2); ctx.stroke();
+    line(37, 24, 38, 16); line(38, 16, 42, 22); line(44, 22, 47, 16); line(47, 16, 48, 24); ctx.beginPath(); ctx.moveTo(6, 40); ctx.quadraticCurveTo(-4, 30, 4, 22); ctx.stroke(); ctx.font = `400 9px ${HAND}`; ctx.fillText('Mướp', 14, 54);
+  } else if (k==='note'){ ctx.strokeRect(0, 0, 64, 50); ctx.font = `400 9px ${HAND}`; ctx.textAlign = 'left'; ['Ly đen', 'không đường.', '— cho ông', 'đi mưa về'].forEach((t, i)=>ctx.fillText(t, 6, 14 + i*11)); line(30, -6, 34, 4);
+  } else if (k==='boat'){   // chòm sao con thuyền
+    const P = [[0,30],[60,30],[50,44],[10,44],[0,30],[30,30],[30,0],[50,24],[30,24]]; ctx.setLineDash([2,5]); ctx.beginPath(); P.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y)); ctx.stroke(); ctx.setLineDash([]);
+    for (const [x,y] of P){ ctx.beginPath(); ctx.arc(x, y, 1.8, 0, Math.PI*2); ctx.fill(); }
+  } else if (k==='whale'){ const P = [[0,20],[16,6],[44,4],[66,14],[72,24],[58,32],[20,32],[0,20],[-12,10],[-16,24],[0,20]]; ctx.setLineDash([2,5]); ctx.beginPath(); P.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y)); ctx.stroke(); ctx.setLineDash([]);
+    for (const [x,y] of P){ ctx.beginPath(); ctx.arc(x, y, 1.8, 0, Math.PI*2); ctx.fill(); } ctx.beginPath(); ctx.arc(58, 14, 2, 0, Math.PI*2); ctx.fill(); line(40, 2, 36, -8); line(40, 2, 46, -8);
+  } else if (k==='kite'){   // cô bé thả diều
+    stick(10, 60, 26, {skirt:true, armR:14}); ctx.beginPath(); ctx.moveTo(24, 44); ctx.quadraticCurveTo(40, 30, 52, 8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(52, -2); ctx.lineTo(62, 8); ctx.lineTo(52, 20); ctx.lineTo(42, 8); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(52, 20); ctx.quadraticCurveTo(46, 30, 56, 38); ctx.stroke();
+  } else if (k==='heart'){ ctx.font = `400 12px ${HAND}`; ctx.textAlign = 'left'; ctx.fillText('H + B', 4, 14); ctx.beginPath(); ctx.moveTo(20, 34); ctx.bezierCurveTo(4, 24, 8, 14, 20, 22); ctx.bezierCurveTo(32, 14, 36, 24, 20, 34); ctx.stroke();
+  } else if (k==='portrait'){   // chân dung gia đình trên lò sưởi
+    ctx.lineWidth = 2.4; ctx.strokeRect(0, 0, 110, 80); ctx.lineWidth = 1.4; ctx.strokeRect(6, 6, 98, 68);
+    stick(32, 70, 50, {hat:true, armR:20}); stick(56, 70, 44, {skirt:true, armL:-18, armR:16}); stick(78, 70, 26, {skirt:true, armL:-14});
+    ctx.font = `400 9px ${HAND}`; ctx.textAlign = 'center'; ctx.fillText('nhà mình', 55, 92);
+  } else if (k==='map'){ ctx.strokeRect(0, 0, 80, 56); ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(8, 46); ctx.quadraticCurveTo(30, 10, 50, 34); ctx.quadraticCurveTo(60, 44, 70, 12); ctx.stroke(); ctx.setLineDash([]);
+    line(66, 8, 74, 16); line(74, 8, 66, 16); ctx.beginPath(); ctx.arc(10, 46, 3, 0, Math.PI*2); ctx.stroke(); ctx.font = `400 8px ${HAND}`; ctx.fillText('kho báu?', 46, 52);
+  } else if (k==='leaf'){ ctx.strokeRect(0, 0, 50, 64); line(25, 58, 25, 12); for (let i=0;i<4;i++){ const y = 20 + i*10; ctx.beginPath(); ctx.ellipse(18, y, 7, 3, -.5, 0, Math.PI*2); ctx.stroke(); ctx.beginPath(); ctx.ellipse(32, y + 4, 7, 3, .5, 0, Math.PI*2); ctx.stroke(); }
+  } else if (k==='house'){   // ký hoạ ngôi nhà của Giáo sư
+    ctx.strokeRect(10, 30, 60, 40); ctx.beginPath(); ctx.moveTo(4, 32); ctx.lineTo(40, 6); ctx.lineTo(76, 32); ctx.stroke(); ctx.strokeRect(34, 48, 12, 22); ctx.strokeRect(16, 38, 12, 10); ctx.strokeRect(52, 38, 12, 10); line(58, 16, 58, 6); line(58, 6, 64, 6); line(64, 6, 64, 20);
+  } else if (k==='crane'){   // hạc giấy
+    ctx.beginPath(); ctx.moveTo(0, 30); ctx.lineTo(30, 24); ctx.lineTo(44, 0); ctx.lineTo(36, 26); ctx.lineTo(60, 30); ctx.lineTo(70, 16); ctx.lineTo(66, 32); ctx.lineTo(36, 40); ctx.closePath(); ctx.stroke(); line(30, 24, 36, 40);
+  } else if (k==='moonkid'){   // cô bé ngồi trên vầng trăng câu cá sao
+    ctx.beginPath(); ctx.arc(30, 30, 26, .6, Math.PI*1.6); ctx.arc(40, 22, 22, Math.PI*1.45, .75, true); ctx.closePath(); ctx.stroke();
+    stick(20, 14, 22, {skirt:true, armR:18}); line(38, 2, 62, -8); line(62, -8, 62, 30); ctx.beginPath(); ctx.moveTo(62, 34); for (let i=0;i<5;i++){ const a = -Math.PI/2 + i*Math.PI*4/5; ctx.lineTo(62 + Math.cos(a)*5, 36 + Math.sin(a)*5); } ctx.closePath(); ctx.stroke();
+  }
+}
 // ---------- dấu vết lối vào (vẽ trong màn chủ) ----------
 function drawWarpCue(){
   const L = LEVELS[lvl], w = L.warp; if (!w || !w.look) return; const X = w.x*T, Y = w.y*T, W = w.w*T, H = w.h*T, t = clock;
@@ -8427,7 +8493,7 @@ function drawGame(){
   const y0=Math.max(0,Math.floor(camY/T)), y1=Math.min(GH-1,Math.ceil((camY+viewH)/T));
   cachedWalls(x0, x1);
   for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c=grid[y][x]; if (c!=='.' && c!=='#') drawTile(c,x,y); }
-  if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
+  if (L.theme==='night' || CHILL[L.theme]) drawMurals(L.theme); if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
   if (pulley) drawPulley();
   if (heaterOn) drawSteam();
   for (const k of keyItems) if (!k.got) drawKey(k);
