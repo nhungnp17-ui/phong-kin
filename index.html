@@ -525,33 +525,34 @@ const LEVELS = [
           'Ngọn lửa trong Bấc không cần dầu. Nó cháy bằng thứ khác, thứ mà ta vẫn chưa đặt được tên.',
           'Nếu con đọc tới đây, Lò Luyện đã ở ngay phía trước. Đừng sợ ngọn lửa của chính mình.'],
    talks:[[5,10,'Bể axit, thùng gỗ xốp… cậu nhớ cách làm chứ?'],[39,11,'Con lắc, đá vôi, sên kiềm. Cả phòng là một bài kiểm tra.'],
-          [62,11,'Nhảy từ gờ xuống rùa sắt. Đủ cao thì vỏ sắt vỡ!']],
+          [62,11,'Nhảy từ gờ xuống rùa sắt. Đủ cao thì vỏ sắt vỡ!'],[104,11,'Cạc! Khinh khí cầu của Giáo sư! Không có bánh lái đâu: muốn rẽ thì đổi độ cao để bắt gió.']],
    hints:['Ném NaOH trung hoà bể axit, đẩy thùng xốp sát vách kính, đứng lên rồi nhảy lên bệ.',
           'Canh nhịp hai con lắc. Phá tường đá vôi bằng HCl.',
           'Leo kệ lên gờ, nhảy xuống giẫm rùa sắt. Sứa hydro gần đèn sẽ nổ.',
-          'Đu dây qua sàn gai. Bóng mực lảng vảng giữa các sợi dây.'],
+          'Đu dây qua sàn gai. Bóng mực lảng vảng giữa các sợi dây.', 'KHINH KHÍ CẦU: đứng vào giỏ, nhấn E. Giữ NHẢY để đốt khí (nóng → nhẹ → bay lên), thả ra để nguội dần. Xuống (S/↓): xả van, hạ nhanh.', 'Mỗi tầng một chiều gió: thấp →, giữa ←, cao →. Chui dưới ống thứ nhất, vượt lên qua cột gai, rồi hạ thấp dưới ống thứ hai. Đáp xuống bệ bên phải.'],
+      balloon:{x:108.5, row:12, winds:[[0, 260, 72], [260, 340, -48], [340, 9999, 52]], from:105, to:151},
    notes:[['ÁP SUẤT · LỰC ĐẨY','p = F / S','Archimedes: F = ρ·V·g','Trung hoà trước, thả thùng sau'],
           ['CON LẮC · ĐÁ VÔI','T = 2π·√(L/g)','CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑','Sên kiềm sợ axit'],
           ['THẾ NĂNG','E = m·g·h','Rơi ≥ 4 ô mới vỡ vỏ sắt','2H₂ + O₂ → 2H₂O: nổ'],
-          ['ĐU DÂY · CON LẮC','Đu xuống: thế năng → động năng','Ở đáy cung: v lớn nhất (v = L·ω)','Buông khi đang vung lên → bay xa']],
+          ['ĐU DÂY · CON LẮC','Đu xuống: thế năng → động năng','Ở đáy cung: v lớn nhất (v = L·ω)','Buông khi đang vung lên → bay xa'], ['KHINH KHÍ CẦU','Charles: V/T = hằng số → khí nóng nở ra, loãng hơn','F nâng = ρ_ngoài·V·g·(1 − T_ngoài/T_trong)','Nóng ~85°C: lơ lửng · nóng hơn: bay lên'], ['GIÓ THEO TẦNG','Không có bánh lái: chỉ chọn độ cao','Thấp →  ·  Giữa ←  ·  Cao →','Nguội cần thời gian: đốt sớm, xả sớm']],
    secrets:['Hạc giấy cuối phòng áp suất, gấp bằng giấy chịu lửa. Bên trong chỉ có một chữ: “Lò”.'],
    decor:[['sign',8,'ÁP SUẤT'],['lamp',12],['flask',33,7],['lamp',46],['board',70,2]],
    map:[
-  '##############################################################################################################',
-  '#...........................................p.....#####...z..................................................#',
-  '#.................................................#####...z..................................................#',
-  '#...................................................p.....z..................................................#',
-  '#.........................................................z........$.........................................#',
-  '#.....................3...................................z.......__.......6.............Y.....Y.....Y.......#',
-  '#.........................................................z..................................................#',
-  '#.........................................................z.....##...........................................#',
-  '#................................5..d.....................z...._##.................................3.........#',
-  '#............................g########....................z.....##...........................3...............#',
-  '#..P....n.....QQ.............g########....................z...._##...........................................#',
-  '#################xxxxxxxxxxxxg########...1.....d.......4..z.....##..7...f...n...d..........................E.#',
-  '########################################################################################................######',
-  '########################################################################################^^^^^^^^^^^^^^^^######',
-  '##############################################################################################################',
+  '#############################################################################################################################################################',
+  '#...........................................p.....#####...z...............................................................##..................##............#',
+  '#.................................................#####...z...............................................................##..................##............#',
+  '#...................................................p.....z...............................................................##..................##............#',
+  '#.........................................................z........$......................................................##..................##............#',
+  '#.....................3...................................z.......__.......6.............Y.....Y.....Y........................................##............#',
+  '#.........................................................z.................................................................................................#',
+  '#.........................................................z.....##..........................................................................................#',
+  '#................................5..d.....................z...._##.................................3.................................^^.....................#',
+  '#............................g########....................z.....##...........................3.......................................##.....................#',
+  '#..P....n.....QQ.............g########....................z...._##...................................................................##.....................#',
+  '#################xxxxxxxxxxxxg########...1.....d.......4..z.....##..7...f...n...d....................................................##...................E.#',
+  '########################################################################################................#########....................##................######',
+  '########################################################################################^^^^^^^^^^^^^^^^#########^^^^^^^^^^^^^^^^^^^^##^^^^^^^^^^^^^^^^######',
+  '#############################################################################################################################################################',
  ]},
  { name:'Lò Luyện', ch:3, theme:'lab', combat:true,
    pages:['Lò Luyện cần ba thứ: quặng pirit để đốt ra SO₂, gốm chịu nhiệt để vá nồi, và một người đủ kiên nhẫn để chờ.',
@@ -1462,6 +1463,7 @@ function resetBoss(){
     arena:{L:(gl+1)*T, R:gl===gr ? h.x+8*T : gr*T, top:T, floor:13*T}});
   const A = boss.arena;
   // đèn chùm treo trần: con lắc nhỏ; lướt vào để làm đứt xích
+  bfx = []; inkDecals = [];
   boss.chands = [.32, .68].map((k,i)=>({ax: A.L + (A.R-A.L)*k, ay: A.top, L: 5*T, th:0, ph:i*1.7, st:'hang', x:0, y:0, vy:0}));
   if (litLamps) for (const t of (tiles.n||[])) if (t.x*T > A.L && t.x*T < A.R) litLamps.delete(t.x+','+t.y);
 }
@@ -3063,6 +3065,31 @@ function bossStart(b, name){
   }
 }
 function bossHz(h){ boss.hz.push(h); }
+// ===== HIỆU ỨNG CHIÊU BOSS: vòng xung kích, chớp sáng, bóng mờ lao nhanh, vết mực loang trên sàn, tia lửa =====
+let bfx = [], inkDecals = [];
+function bfxAdd(o){ bfx.push(Object.assign({t:0, life:.5}, o)); if (bfx.length > 80) bfx.shift(); }
+function decal(x, y, r){ inkDecals.push({x, y, r, t:0, sd:Math.random()*99}); if (inkDecals.length > 26) inkDecals.shift(); }
+function sparks(x, y, n, sp, life=.45, up=0){ for (let i=0;i<n;i++){ const a = Math.random()*Math.PI*2, v = sp*(.4 + Math.random()*.8); parts.push({x, y, vx:Math.cos(a)*v, vy:Math.sin(a)*v - up, a, va:(Math.random()-.5)*10, l:3 + Math.random()*5, life:life*(.6 + Math.random()*.6)}); } }
+function slamFx(x, y, big){ bfxAdd({k:'ring', x, y, r0:16, r1:big ? 230 : 130, lw:big ? 7 : 4, life:.5}); bfxAdd({k:'dust', x, y, w:big ? 150 : 90, life:.7}); bfxAdd({k:'flash', x, y:y-10, r:big ? 70 : 40, life:.16}); decal(x, y, big ? 60 : 36); sparks(x, y - 4, big ? 18 : 10, big ? 420 : 280, .5, 160); }
+function updateBfx(dt){ for (const f of bfx) f.t += dt; bfx = bfx.filter(f=>f.t < f.life); for (const d of inkDecals) d.t += dt; inkDecals = inkDecals.filter(d=>d.t < 10); }
+function drawDecals(){ ctx.save(); ctx.fillStyle = INK;
+  for (const d of inkDecals){ ctx.globalAlpha = .55*Math.min(1, d.t*8)*Math.min(1, (10 - d.t)/2.5); ctx.beginPath(); ctx.ellipse(d.x, d.y - 1, d.r, d.r*.12, 0, 0, Math.PI*2); ctx.fill();
+    for (let i=0;i<7;i++){ const a = hash2(i, d.sd)*Math.PI*2, rr = d.r*(.7 + hash2(i+3, d.sd)*.7); ctx.beginPath(); ctx.ellipse(d.x + Math.cos(a)*rr, d.y - 1, 3 + hash2(i, d.sd+1)*5, 1.5, 0, 0, Math.PI*2); ctx.fill(); } }
+  ctx.restore(); }
+function drawBfx(){ ctx.save(); ctx.lineCap = 'round';
+  for (const f of bfx){ const q = f.t/f.life, e = 1 - Math.pow(1 - q, 3);
+    if (f.k==='ring'){ ctx.strokeStyle = f.col || INK; ctx.globalAlpha = (1 - q)*.9; ctx.lineWidth = f.lw*(1 - q) + 1; ctx.beginPath(); if (f.flat) ctx.ellipse(f.x, f.y, f.r0 + (f.r1 - f.r0)*e, (f.r0 + (f.r1 - f.r0)*e)*.22, 0, 0, Math.PI*2); else ctx.arc(f.x, f.y, f.r0 + (f.r1 - f.r0)*e, 0, Math.PI*2); ctx.stroke(); }
+    else if (f.k==='flash'){ ctx.fillStyle = PAPER; ctx.globalAlpha = (1 - q)*.9; ctx.beginPath(); ctx.arc(f.x, f.y, f.r*(.6 + q*.6), 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.stroke(); }
+    else if (f.k==='dust'){ ctx.fillStyle = INK; for (let i=0;i<10;i++){ const side = i%2 ? 1 : -1, d = (i>>1)/5, x = f.x + side*(20 + d*f.w)*e, y = f.y - 6 - Math.sin(d*3)*10*e; ctx.globalAlpha = (1 - q)*.35; ctx.beginPath(); ctx.arc(x, y, (8 + d*10)*(.6 + q), 0, Math.PI*2); ctx.fill(); } }
+    else if (f.k==='ghost'){ ctx.strokeStyle = INK; ctx.globalAlpha = (1 - q)*.45; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(f.x, f.y, f.w*.48, f.h*.46, 0, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha *= .4; ctx.fillStyle = INK; ctx.fill(); }
+    else if (f.k==='speed'){ ctx.strokeStyle = INK; ctx.globalAlpha = (1 - q)*.6; ctx.lineWidth = 2; for (let i=0;i<6;i++){ const y = f.y - f.h/2 + (i + .5)*f.h/6, len = 40 + hash2(i, f.sd)*70; line(f.x - f.dir*(10 + q*30), y, f.x - f.dir*(10 + q*30 + len), y); } }
+    else if (f.k==='beam'){ const w = f.w*(1 - q*q); ctx.fillStyle = INK; ctx.globalAlpha = 1; ctx.fillRect(f.x0, f.y - w/2 - 5, f.x1 - f.x0, w + 10); ctx.fillStyle = PAPER; ctx.fillRect(f.x0, f.y - w*.18, f.x1 - f.x0, w*.36);
+      ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.globalAlpha = .7; for (let i=0;i<14;i++){ const x = f.x0 + hash2(i, f.t*60|0)*(f.x1 - f.x0); line(x, f.y - w/2 - 6, x + 8, f.y - w/2 - 16 - hash2(i+1, f.t*60|0)*12); line(x + 4, f.y + w/2 + 6, x + 10, f.y + w/2 + 14 + hash2(i+2, f.t*60|0)*10); } }
+    else if (f.k==='column'){ const h = f.h*Math.min(1, q*4)*(1 - Math.max(0, q - .5)*2); ctx.fillStyle = INK; ctx.globalAlpha = 1; ctx.beginPath(); ctx.moveTo(f.x - f.w/2, f.y); for (let y = 0; y <= h; y += 12) ctx.lineTo(f.x - f.w/2 + Math.sin(y*.12 + clock*30)*6, f.y - y); ctx.lineTo(f.x, f.y - h - 18); for (let y = h; y >= 0; y -= 12) ctx.lineTo(f.x + f.w/2 + Math.sin(y*.12 + clock*30 + 2)*6, f.y - y); ctx.closePath(); ctx.fill(); }
+    else if (f.k==='crack'){ ctx.strokeStyle = INK; ctx.globalAlpha = Math.min(1, (f.life - f.t)/.6); ctx.lineWidth = 2.5; for (let i=0;i<6;i++){ ctx.beginPath(); ctx.moveTo(f.x, f.y); let x = f.x, y = f.y; for (let k=0;k<4;k++){ x += -f.dir*(8 + hash2(i, k)*14); y += (hash2(i+5, k) - .5)*36; ctx.lineTo(x, y); } ctx.stroke(); } }
+    else if (f.k==='charge'){ ctx.strokeStyle = INK; ctx.globalAlpha = .7; ctx.lineWidth = 1.5; for (let i=0;i<10;i++){ const a = i/10*Math.PI*2 + f.t*3, r = (1 - ((f.t*2 + i/10) % 1))*f.r; line(f.x + Math.cos(a)*r, f.y + Math.sin(a)*r, f.x + Math.cos(a)*(r + 10), f.y + Math.sin(a)*(r + 10)); } }
+  }
+  ctx.restore(); }
 // mặt đứng gần nhất bên dưới điểm (x, y0): sàn, bệ hay sàn một chiều
 function surfY(x, y0, A){ const tx = Math.floor(x/T); for (let ty = Math.max(0, Math.floor(y0/T)); ty*T <= A.floor + 1; ty++){ if (solid(tx, ty) || tileAt(tx*T+1, ty*T+1)==='_') return ty*T; } return A.floor; }
 function surfaces(A){   // tất cả các mặt đứng được trong đấu trường (để rải axit khắp nơi)
@@ -3074,7 +3101,7 @@ function bossStun(b, dur, why){
   if (b.hidden){ b.hidden = false; b.y = b.arena.floor - b.h; } b.tp = null; b.beam = null;
   b.st = 'stun'; b.stT = dur; b.stunMax = dur; b.stunHits = 0; b.guard = false; b.recoverT = 0; b.hz = []; b.vort = null; b.flood = 0; blobs = []; b.ram = null;
   shakeT = Math.max(shakeT, .35); SFX.play('bosshit'); SFX.play('shield');
-  stunBan = {t:0, why: why || ''}; popups.push({x:b.x+b.w/2, y:b.y-16, text:'CHOÁNG! đánh ngay!', life:1.4, big:true});
+  stunBan = {t:0, why: why || ''}; bfxAdd({k:'ring', x:b.x+b.w/2, y:b.y+b.h/2, r0:b.w*.5, r1:b.w*1.8, lw:8, life:.5}); bfxAdd({k:'flash', x:b.x+b.w/2, y:b.y+b.h/2, r:b.w*.6, life:.18}); popups.push({x:b.x+b.w/2, y:b.y-16, text:'CHOÁNG! đánh ngay!', life:1.4, big:true});
 }
 function stunHit(b, max){ if (b.st!=='stun') return; b.stunHits = (b.stunHits||0) + 1; if (b.stunHits >= max){ b.stT = Math.min(b.stT, .25); popups.push({x:b.x+b.w/2, y:b.y-40, text:'nó tỉnh lại rồi!', life:1.2}); } }
 function drawStunBanner(){
@@ -3088,6 +3115,7 @@ function drawStunBanner(){
 function updateBoss(dt){
   const b = boss, p = player; if (!b || b.dead) return;
   const A = b.arena, px = p.x+11, py = p.y+17, k = bossK(b);
+  updateBfx(dt); if (b.hurtT > (b._ph ?? 0) + .05){ const cx = b.x + b.w/2, cy = b.y + b.h/2; bfxAdd({k:'ring', x:cx, y:cy, r0:b.w*.4, r1:b.w*1.1, lw:5, life:.35}); bfxAdd({k:'flash', x:cx, y:cy, r:b.w*.45, life:.12}); sparks(cx, cy, 14, 360, .5, 60); } b._ph = b.hurtT;
   if (!b.engaged && !bossCS && px > A.L + 2*T) startBossCS();
   if (!b.engaged) return;
   b.t += dt; b.hurtT -= dt; b.stT -= dt; b.snuffCd -= dt; if (b.line){ b.line.t -= dt; if (b.line.t<=0) b.line = null; }
@@ -3148,12 +3176,12 @@ function updateBoss(dt){
         b.tell = 1; b.guard = true; d.tell -= dt;
         bossGoto(b, b.x+b.w/2, Math.max(A.top+2*T, b.y+b.h/2 - 60*dt*10), dt, 3);
         if (d.tell > .3) d.lock = {x:px, y:A.floor};   // 0.3s cuối: điểm khoá đứng yên để người chơi kịp chạy
-        if (d.tell<=0){ d.go = true; b.guard = false; const cx=b.x+b.w/2, cy=b.y+b.h/2, L=Math.hypot(d.lock.x-cx, d.lock.y-cy)||1; d.vx=(d.lock.x-cx)/L*980*k; d.vy=(d.lock.y-cy)/L*980*k; SFX.play('throw'); }
+        if (d.tell<=0){ d.go = true; b.guard = false; const cx=b.x+b.w/2, cy=b.y+b.h/2, L=Math.hypot(d.lock.x-cx, d.lock.y-cy)||1; d.vx=(d.lock.x-cx)/L*980*k; d.vy=(d.lock.y-cy)/L*980*k; SFX.play('throw'); bfxAdd({k:'ring', x:cx, y:cy, r0:20, r1:90, lw:4, life:.3}); }
       } else {
-        b.tell = 0; b.x += d.vx*dt; b.y += d.vy*dt;
+        b.tell = 0; b.x += d.vx*dt; b.y += d.vy*dt; if (Math.random() < dt*40) bfxAdd({k:'ghost', x:b.x+b.w/2, y:b.y+b.h/2, w:b.w, h:b.h, life:.25});
         b.x = clamp(b.x, A.L, A.R - b.w);
         if (b.y + b.h >= A.floor){
-          b.y = A.floor - b.h; shakeT = .35; SFX.play('boom');
+          b.y = A.floor - b.h; shakeT = .35; SFX.play('boom'); slamFx(b.x+b.w/2, A.floor, d.n<=1);
           for (const dir of [-1,1]) bossHz({type:'wave', x:b.x+b.w/2, dir, y0:A.floor-22, y1:A.floor, v:470*k});
           d.n--;
           if (d.n > 0){ d.go = false; d.tell = .5/k; b.y -= 4*T; }
@@ -3165,16 +3193,16 @@ function updateBoss(dt){
     case 'ram': {   // HÚC NGANG: hạ xuống sàn một bên, rung lắc báo trước, lao sang tường bên kia → đâm tường thì choáng
       const r = b.ram;
       if (r.tell > 0){ r.tell -= dt; b.tell = 1; b.guard = true; bossGoto(b, r.side<0 ? A.L + b.w/2 + 8 : A.R - b.w/2 - 8, A.floor - b.h/2, dt, 6); }
-      else { b.tell = 0; b.guard = false; b.x += r.dir*r.v*dt; b.y = A.floor - b.h; if (Math.random() < dt*30) parts.push({x:b.x+b.w/2 - r.dir*b.w/2, y:A.floor - 4, vx:-r.dir*80, vy:-80, a:0, va:0, l:3, life:.4});
-        if ((r.dir>0 && b.x + b.w >= A.R) || (r.dir<0 && b.x <= A.L)){ b.x = clamp(b.x, A.L, A.R - b.w); SFX.play('boom'); shakeT = .5; for (let i=0;i<5;i++) bossHz({type:'drop', x:A.L + Math.random()*(A.R-A.L), y:A.top + 20, vy:0, r:7});
+      else { b.tell = 0; b.guard = false; b.x += r.dir*r.v*dt; b.y = A.floor - b.h; if (Math.random() < dt*30){ bfxAdd({k:'ghost', x:b.x+b.w/2, y:b.y+b.h/2, w:b.w, h:b.h, life:.22}); bfxAdd({k:'speed', x:b.x+b.w/2 - r.dir*b.w/2, y:b.y+b.h/2, h:b.h, dir:r.dir, sd:Math.random()*9, life:.2}); } if (Math.random() < dt*30) parts.push({x:b.x+b.w/2 - r.dir*b.w/2, y:A.floor - 4, vx:-r.dir*80, vy:-80, a:0, va:0, l:3, life:.4});
+        if ((r.dir>0 && b.x + b.w >= A.R) || (r.dir<0 && b.x <= A.L)){ b.x = clamp(b.x, A.L, A.R - b.w); SFX.play('boom'); shakeT = .5; { const wx = r.dir>0 ? A.R : A.L; bfxAdd({k:'crack', x:wx, y:A.floor - b.h/2, dir:r.dir, life:2.2}); bfxAdd({k:'ring', x:wx, y:A.floor - b.h/2, r0:10, r1:150, lw:6, life:.45}); bfxAdd({k:'flash', x:wx, y:A.floor - b.h/2, r:50, life:.15}); sparks(wx, A.floor - b.h/2, 16, 380, .5); } for (let i=0;i<5;i++) bossHz({type:'drop', x:A.L + Math.random()*(A.R-A.L), y:A.top + 20, vy:0, r:7});
           r.n--; if (r.n > 0){ r.dir = -r.dir; r.tell = .45; r.side = -r.side; } else { b.ram = null; bossStun(b, 2, 'đâm sầm vào tường'); } } }
       break; }
     case 'acidpool': bossGoto(b, cxm, A.top + 2*T, dt, 3); b.tell = b.stT > .8 ? 1 : 0; if (b.stT<=0){ b.st='idle'; b.stT=.75/k; } break;
     case 'bombs': bossGoto(b, cxm + Math.sin(b.t)*2*T, A.top + 2.5*T, dt, 3); b.tell = 0; if (b.stT<=0){ b.st='idle'; b.stT=.8/k; } break;
     case 'seekers': bossGoto(b, cxm, A.top + 2.5*T, dt, 3); b.tell = 0; if (b.stT<=0){ b.st='idle'; b.stT=.8/k; } break;
-    case 'beam': { const B = b.beam; B.t += dt; b.tell = 1; bossGoto(b, b.x+b.w/2, B.y, dt, 2);
+    case 'beam': { const B = b.beam; B.t += dt; b.tell = 1; if (!B.fxc){ B.fxc = true; bfxAdd({k:'charge', x:b.x+b.w/2, y:b.y+b.h/2, r:110, life:.9}); } bossGoto(b, b.x+b.w/2, B.y, dt, 2);
       for (const L of B.list){ if (L.y === null){ if (B.t < L.at - .35) B.y += (py - B.y)*Math.min(1, dt*6); else { L.y = B.y + (L.off||0); } }
-        if (L.y !== null && B.t >= L.at && B.t < L.at + .35){ if (!L.snd){ L.snd = true; SFX.play('shield'); shakeT = Math.max(shakeT, .2); } if (Math.abs(py - L.y) < 18 && p.dashT<=0) hurtPlayer(bossDmg(), b.x+b.w/2); } }
+        if (L.y !== null && B.t >= L.at && B.t < L.at + .35){ if (!L.snd){ L.snd = true; SFX.play('shield'); SFX.play('boom'); shakeT = Math.max(shakeT, .3); flashT = Math.max(flashT, .08); bfxAdd({k:'beam', x0:A.L, x1:A.R, y:L.y, w:26, life:.4}); bfxAdd({k:'ring', x:b.x+b.w/2, y:L.y, r0:20, r1:120, lw:5, life:.3}); } if (Math.abs(py - L.y) < 18 && p.dashT<=0) hurtPlayer(bossDmg(), b.x+b.w/2); } }
       if (b.stT<=0){ b.st='idle'; b.stT=.8/k; b.beam = null; } break; }
     case 'stalac': { const S = b.stal; S.t += dt; bossGoto(b, cxm, A.top + 1.2*T, dt, 5); b.tell = S.t < .5 ? 1 : 0;
       if (!S.done && S.t >= .5){ S.done = true; shakeT = .4; SFX.play('boom'); const n = 5 + b.phase*2, xs = [px];
@@ -3182,9 +3210,9 @@ function updateBoss(dt){
         xs.forEach((x, i)=>bossHz({type:'stal', x, y:A.top + 6, vy:0, t:-i*.08, tell:.8/k, keep:true})); }
       if (b.stT<=0){ b.st='idle'; b.stT=.7/k; } break; }
     case 'teleport': { const P = b.tp; P.t += dt; b.tell = 0;
-      if (P.t < .45){ b.y += 600*dt; b.hidden = P.t > .3; }
+      if (P.t < .45){ b.y += 600*dt; b.hidden = P.t > .3; if (!P.sank){ P.sank = true; bfxAdd({k:'ring', x:b.x+b.w/2, y:b.y+b.h, r0:20, r1:120, lw:5, life:.5, flat:true}); decal(b.x+b.w/2, surfY(b.x+b.w/2, b.y + b.h - 10, A), 50); } }
       else if (P.t < 1.35){ b.hidden = true; b.y = A.floor + 400; if (P.t < 1.0){ P.x += (px - P.x)*Math.min(1, dt*7); P.y = surfY(P.x, p.y + p.h - 4, A); } }
-      else if (!P.up){ P.up = true; b.hidden = false; b.x = clamp(P.x - b.w/2, A.L, A.R - b.w); b.y = P.y - b.h; SFX.play('boom'); shakeT = .35;
+      else if (!P.up){ P.up = true; b.hidden = false; b.x = clamp(P.x - b.w/2, A.L, A.R - b.w); b.y = P.y - b.h; SFX.play('boom'); shakeT = .35; bfxAdd({k:'column', x:P.x, y:P.y, w:b.w*.9, h:4*T, life:.6}); slamFx(P.x, P.y, true);
         if (Math.abs(px - P.x) < b.w/2 + 6 && Math.abs(p.y + p.h - P.y) < 30 && p.dashT<=0){ hurtPlayer(bossDmg(), P.x); p.vy = -520; }
         for (let i=0;i<14;i++) parts.push({x:P.x + (Math.random()-.5)*b.w, y:P.y, vx:(Math.random()-.5)*260, vy:-200 - Math.random()*260, a:Math.random()*6, va:6, l:4, life:.6}); }
       else if (P.t > 1.9){ P.n--; if (P.n > 0){ P.t = 0; P.up = false; P.x = px; } else { b.st='idle'; b.stT=.6; b.tp = null; } }
@@ -3253,23 +3281,23 @@ function updateBoss(dt){
       if (Math.abs(d-h.r) < 12 && p.dashT<=0) hurtPlayer(bossDmg(), h.x);
       if (h.r > 900) h.dead = true; }
     else if (h.type==='pool'){ h.t += dt; const on = h.t > h.tell && h.t < h.life;
-      if (on && !h.snd){ h.snd = true; SFX.play('fizz'); } if (on && Math.abs(px - h.x) < h.w/2 && Math.abs(p.y + p.h - h.y) < 8) hurtPlayer(bossDmg(), h.x);
+      if (on && !h.snd){ h.snd = true; SFX.play('fizz'); bfxAdd({k:'ring', x:h.x, y:h.y, r0:10, r1:h.w*.8, lw:3, life:.35, flat:true}); } if (on && Math.abs(px - h.x) < h.w/2 && Math.abs(p.y + p.h - h.y) < 8) hurtPlayer(bossDmg(), h.x);
       if (on && Math.random() < dt*4) bubbles.push({x:h.x + (Math.random()-.5)*h.w, y:h.y - 4, vy:-30, r:2, life:.5}); if (h.t > h.life + .3) h.dead = true; }
     else if (h.type==='bomb'){ h.t += dt; h.vy += 1200*dt; const nx = h.x + h.vx*dt, ny = h.y + h.vy*dt;
       if (solid(Math.floor(nx/T), Math.floor(h.y/T)) || nx < A.L || nx > A.R){ h.vx = -h.vx*.7; } else h.x = nx;
       if (h.vy > 0 && (solid(Math.floor(h.x/T), Math.floor((ny + 8)/T)) || ny + 8 > A.floor)){ h.vy = -Math.abs(h.vy)*.5; h.vx *= .8; if (Math.abs(h.vy) < 60) h.vy = 0; } else h.y = ny;
-      if (h.t > h.fuse && !h.boom){ h.boom = true; h.bt = 0; SFX.play('boom'); shakeT = Math.max(shakeT, .25); if (Math.hypot(px - h.x, py - h.y) < 72) hurtPlayer(bossDmg(), h.x);
+      if (h.t > h.fuse && !h.boom){ h.boom = true; h.bt = 0; SFX.play('boom'); shakeT = Math.max(shakeT, .25); bfxAdd({k:'flash', x:h.x, y:h.y, r:60, life:.18}); bfxAdd({k:'ring', x:h.x, y:h.y, r0:10, r1:90, lw:6, life:.35}); if (A.floor - h.y < 40) decal(h.x, A.floor, 40); if (Math.hypot(px - h.x, py - h.y) < 72) hurtPlayer(bossDmg(), h.x);
         for (let i=0;i<12;i++){ const a = i/12*Math.PI*2; parts.push({x:h.x, y:h.y, vx:Math.cos(a)*300, vy:Math.sin(a)*300, a, va:0, l:5, life:.4}); } }
       if (h.boom){ h.bt += dt; if (h.bt > .35) h.dead = true; } }
     else if (h.type==='seek'){ h.t += dt; const dx = px - h.x, dy = py - h.y, d = Math.hypot(dx, dy) || 1, sp = 150 + b.phase*12;
       h.vx += (dx/d*sp - h.vx)*Math.min(1, dt*1.6); h.vy += (dy/d*sp - h.vy)*Math.min(1, dt*1.6); h.x += h.vx*dt; h.y += h.vy*dt;
-      if (d < 18){ if (p.dashT > 0){ h.dead = true; popups.push({x:h.x, y:h.y-14, text:'phá!', life:.7}); SFX.play('pop'); } else { h.dead = true; hurtPlayer(bossDmg(), h.x); } }
+      if (d < 18){ if (p.dashT > 0){ h.dead = true; popups.push({x:h.x, y:h.y-14, text:'phá!', life:.7}); SFX.play('pop'); bfxAdd({k:'ring', x:h.x, y:h.y, r0:6, r1:44, lw:4, life:.3}); sparks(h.x, h.y, 8, 240); } else { h.dead = true; hurtPlayer(bossDmg(), h.x); } }
       if (h.t > h.life) h.dead = true; }
     else if (h.type==='stal'){ h.t += dt; if (h.t > h.tell){ h.vy += 1800*dt; h.y += h.vy*dt; }
       if (Math.abs(px - h.x) < 14 && py > h.y - 10 && py < h.y + 30){ h.dead = true; hurtPlayer(bossDmg(), h.x); }
-      if (h.y > A.floor - 6 || (h.vy > 0 && solid(Math.floor(h.x/T), Math.floor((h.y + 20)/T)))){ h.dead = true; for (let i=0;i<6;i++) parts.push({x:h.x, y:h.y + 18, vx:(Math.random()-.5)*220, vy:-Math.random()*200, a:Math.random()*6, va:6, l:4, life:.4}); } }
+      if (h.y > A.floor - 6 || (h.vy > 0 && solid(Math.floor(h.x/T), Math.floor((h.y + 20)/T)))){ h.dead = true; sparks(h.x, h.y + 18, 9, 260, .45, 120); bfxAdd({k:'ring', x:h.x, y:h.y + 22, r0:4, r1:40, lw:3, life:.3, flat:true}); } }
     else if (h.type==='gey'){ h.t += dt; if (h.t > .7 && h.t < 1.25 && Math.abs(px - h.x) < 22 && py > A.floor - 4*T){ hurtPlayer(bossDmg(), h.x); p.vy = -420; }
-      if (h.t > .7 && h.t < .76 && !h.sfx){ h.sfx = true; SFX.play('fizz'); } if (h.t > 1.45) h.dead = true; }
+      if (h.t > .7 && h.t < .76 && !h.sfx){ h.sfx = true; SFX.play('fizz'); bfxAdd({k:'ring', x:h.x, y:A.floor, r0:8, r1:60, lw:4, life:.35, flat:true}); decal(h.x, A.floor, 26); } if (h.t > .8 && h.t < 1.2 && Math.random() < dt*25) parts.push({x:h.x + (Math.random()-.5)*16, y:A.floor - 4*T, vx:(Math.random()-.5)*260, vy:-120 - Math.random()*160, a:Math.random()*6, va:5, l:3, life:.5}); if (h.t > 1.45) h.dead = true; }
     else if (h.type==='wave'){ h.x += h.dir*h.v*dt;
       if (ov(p, {x:h.x-14, y:h.y0, w:28, h:h.y1-h.y0})) hurtPlayer(bossDmg(), h.x - h.dir*20);
       if (h.x < A.L || h.x > A.R) h.dead = true; }
@@ -4456,7 +4484,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
-  spawnMath = !!L.math; cboss = null; engLevelStart(); if (L.secret) enterChill(); ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
+  spawnMath = !!L.math; cboss = null; engLevelStart(); if (L.secret) enterChill(); bal = L.balloon ? makeBal(L.balloon) : null; ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
   parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
@@ -4519,7 +4547,7 @@ function respawn(){
   if (boss && !boss.dead) resetBoss();
   if (cboss && cboss.engaged && !cboss.dead){ resetCoreBoss(); popups.push({x:cp.x+11, y:cp.y-30, text:'Lõi hồi phục: đấu lại từ đầu!', life:2.4, big:true}); }
   if (mboss && mboss.engaged && !mboss.dead){ resetMathBoss(); popups.push({x:cp.x+11, y:cp.y-30, text:'Boss hồi đầy máu: đấu lại từ đầu!', life:2.4, big:true}); }
-  blobs = []; flasks = [];
+  blobs = []; flasks = []; balReset();
   for (const r of ropes) r.held = false;
   player = makePlayer(cp.x, cp.y); ghosts=[]; jumpBuf=0; dashBuf=0;
   for (const c of crystals) c.cd = 0;
@@ -4770,6 +4798,7 @@ const ACH = {
   nook:       ['Sau Kệ Sách', 'Tìm ra góc đọc sách bí mật', true],
   chill_sit:  ['Chẳng Cần Vội', 'Ngồi xuống ở một góc chill', true],
   chill4:     ['Bản Đồ Những Nơi Bình Yên', 'Tìm đủ 4 góc chill bí mật', true],
+  pilot:      ['Phi Công Khí Nóng', 'Lái khinh khí cầu qua vực gió ở Phòng Áp Suất'],
   mem1:       ['Món Đồ Cũ', 'Xem một kỷ vật của ông và Hạ', true],
   memall:     ['Những Mảnh Của Hạ', 'Tìm đủ 12 kỷ vật và đọc lá thư cuối', true],
   spam:       ['Phòng Thí Nghiệm Di Động', 'Ném 8 lọ trong 3 giây'],
@@ -4937,6 +4966,7 @@ function updatePlayer(dt){
   if (p.sit){ p.sitT += dt; p.vx = 0; dashBuf = 0;
     if ((inp.left || inp.right || jumpBuf > 0) && p.sitT > .6){ p.sit = false; jumpBuf = 0; SFX.play('step'); }
     else { jumpBuf = 0; heroAnim(p, dt); return; } }
+  if (bal && bal.ride){ dashBuf = 0; p.dashT = 0; heroAnim(p, dt); return; }
   if (leverAct || forgeSeq || itemGet){ p.vx = 0; jumpBuf = 0; dashBuf = 0; p.vy = Math.min(p.vy + G*dt, FALL_MAX); moveY(p, p.vy*dt); heroAnim(p, dt); return; }
   p.flingT = Math.max(0, (p.flingT||0) - dt);
   if (p.rope){ if (updateRopePlayer(p, dt)) return; }
@@ -5146,7 +5176,7 @@ function update(dt){
   shakeT -= dt; updateAmbience(dt); updateZoom(dt);
   computeSteam();
   updatePulley(dt); if (sines.length) updateSines();
-  updatePlayer(dt);
+  updateBal(dt); updatePlayer(dt);
   if (LEVELS[lvl].combat){ updateCombat(dt); if (state!=='play' && state!=='trans') return; }
   for (const b of boxes){
     const wet = tileAt(b.x+T/2, b.y+T/2)==='w';
@@ -5199,6 +5229,7 @@ function update(dt){
     if (px > w.x*T - 34 && px < (w.x+w.w)*T + 20 && py > w.y*T - 30 && py < (w.y+w.h)*T + 30){ actPress = false; const to = LEVELS.findIndex(L=>L.name===w.to);
       const T2 = LEVELS[to]; let sx = 7, sr = 13; T2.map.forEach((r,y)=>{ const i = r.indexOf('P'); if (i >= 0){ sx = i + .5; sr = y + 1; } });
       transTo = {lvl:to, x:sx, row:sr, face:1, sfx:'door'}; player.actT = .3; win(); return; } }
+  if (actPress && bal && !bal.popT){ if (bal.ride){ actPress = false; leaveBal(); } else if (Math.abs(player.x + 11 - bal.x) < 40 && Math.abs(player.y + player.h - bal.y) < 50){ actPress = false; boardBal(); } }
   if (actPress && LEVELS[lvl].mem && !player.sit){ const mi = nearMem(); if (mi >= 0){ actPress = false; openMem(mi); } }
   if (actPress && LEVELS[lvl].bench && !player.sit){ const [bx, br] = LEVELS[lvl].bench; if (Math.abs(player.x+11 - bx*T) < 50 && Math.abs(player.y+player.h - (br+1)*T) < 30 && player.ground){ actPress = false; sitDown(); } }
   if (actPress){
@@ -5229,7 +5260,7 @@ function update(dt){
   updateCam(dt, false, false);
   // Điểm hồi sinh: lần đầu đứng vững ở một đoạn mới
   curSeg = clamp(Math.floor((cx-INTRO*T)/(SEG*T)), 0, LEVELS[lvl].hints.length-1);
-  if (curSeg !== cpSeg && p.ground && curSeg > cpSeg){
+  if (curSeg !== cpSeg && p.ground && curSeg > cpSeg && !(bal && bal.ride)){
     cpSeg = curSeg; cp = {x:p.x, y:p.y}; msgT = 3; SFX.play('save'); p.hp = HP_MAX; saveGame();
     popups.push({x:cx, y:p.y-14, text:'đã lưu', life:1.4});
     for (let i=0;i<12;i++){ const a=i/12*Math.PI*2; parts.push({x:cx,y:p.y+p.h,vx:Math.cos(a)*170,vy:Math.sin(a)*50-40,a,va:0,l:5,life:.5}); }
@@ -5678,6 +5709,71 @@ function muralArt(k){
     stick(20, 14, 22, {skirt:true, armR:18}); line(38, 2, 62, -8); line(62, -8, 62, 30); ctx.beginPath(); ctx.moveTo(62, 34); for (let i=0;i<5;i++){ const a = -Math.PI/2 + i*Math.PI*4/5; ctx.lineTo(62 + Math.cos(a)*5, 36 + Math.sin(a)*5); } ctx.closePath(); ctx.stroke();
   }
 }
+
+// ===== KHINH KHÍ CẦU (Phòng Áp Suất): định luật Charles + lực đẩy Archimedes; lái bằng cách đổi độ cao để bắt các tầng gió =====
+let bal = null;
+const BAL_G = 130, BAL_LIFT = BAL_G/(1 - 293/(85 + 273));   // ~85°C thì lơ lửng
+function makeBal(c){ const x = c.x*T, y = c.row*T; return {x, y, vx:0, vy:0, T:20, ride:false, burn:false, home:{x, y}, winds:c.winds, from:c.from*T, to:c.to*T, popT:0, landed:false, flick:0}; }
+function balReset(){ if (!bal) return; Object.assign(bal, {x:bal.home.x, y:bal.home.y, vx:0, vy:0, T:20, ride:false, burn:false, popT:0}); }
+function balRects(x, y){ return [{x:x-18, y:y-22, w:36, h:22}, {x:x-36, y:y-120, w:72, h:76}]; }
+function rectHits(r, chr){ const x0 = Math.floor(r.x/T), x1 = Math.floor((r.x+r.w-1)/T), y0 = Math.floor(r.y/T), y1 = Math.floor((r.y+r.h-1)/T);
+  for (let ty=y0; ty<=y1; ty++) for (let tx=x0; tx<=x1; tx++){ if (chr ? (grid[ty] && grid[ty][tx]===chr) : solid(tx, ty)) return true; } return false; }
+function balWind(y){ if (bal.x < bal.from || bal.x > bal.to) return 0; for (const [a, b, v] of bal.winds) if (y >= a && y < b) return v; return 0; }
+function updateBal(dt){
+  if (!bal) return; const b = bal, p = player;
+  if (b.popT > 0){ b.popT -= dt; if (b.popT <= 0) balReset(); return; }
+  b.burn = b.ride && (inp.jump || jumpBuf > 0); jumpBuf = b.ride ? 0 : jumpBuf;
+  if (b.burn) b.T = Math.min(140, b.T + 40*dt); else b.T += (20 - b.T)*.1*dt; if (b.ride && inp.down) b.T = Math.max(20, b.T - 28*dt);
+  if (!b.ride && Math.abs(b.x - b.home.x) < 4 && Math.abs(b.y - b.home.y) < 4){ b.T = 20; return; }   // đỗ ở bệ phóng
+  const ay = BAL_G - BAL_LIFT*(1 - 293/(b.T + 273)); b.vy = clamp((b.vy + ay*dt)*(1 - .9*dt), -130, 140);
+  b.vx += (balWind(b.y) - b.vx)*1.2*dt;
+  const nx = b.x + b.vx*dt; if (balRects(nx, b.y).some(r=>rectHits(r))){ b.vx = -b.vx*.3; shakeT = Math.max(shakeT, .1); SFX.play('clank'); } else b.x = nx;
+  const ny = b.y + b.vy*dt; if (balRects(b.x, ny).some(r=>rectHits(r))){ if (b.vy > 40) { SFX.play('land'); shakeT = .12; } b.vy = 0; } else b.y = ny;
+  const grounded = rectHits({x:b.x-18, y:b.y, w:36, h:2});
+  if (grounded) b.vx *= Math.max(0, 1 - 6*dt);
+  if (b.flick > 0) b.flick -= dt;
+  // gai dưới vực / trên cột → vỡ khí cầu
+  if (balRects(b.x, b.y).some(r=>rectHits(r, '^')) || b.y > (GH-1)*T){
+    SFX.play('crash'); sparks(b.x, b.y - 60, 20, 380, .6); b.popT = 1.2; popups.push({x:b.x, y:b.y - 130, text:'Khinh khí cầu thủng!', life:1.6, big:true});
+    if (b.ride){ b.ride = false; die(); } return; }
+  if (b.ride){
+    p.x = b.x - 11; p.y = b.y - 10 - p.h; p.vx = b.vx; p.vy = 0; p.ground = true;
+    if (grounded && b.x > b.to && !b.landed){ b.landed = true; award('pilot'); popups.push({x:b.x, y:b.y - 140, text:'Hạ cánh an toàn!', life:2, big:true}); SFX.play('save'); }
+  }
+}
+function boardBal(){ const b = bal; b.ride = true; b.landed = false; SFX.play('step'); popups.push({x:b.x, y:b.y - 150, text:'Giữ NHẢY: đốt khí · ↓: xả van · E: bước ra', life:3.2, big:true});
+  if (crow && !b.told){ b.told = true; crow.queue.push('Khí nóng nở ra nên loãng hơn không khí ngoài: lực đẩy Archimedes nâng cả giỏ lên. Nguội đi thì chìm xuống.'); } }
+function leaveBal(){ const b = bal, p = player; b.ride = false; p.x = b.x - 11 + (b.x > b.to ? 30 : -30); p.y = b.y - 10 - p.h; p.vy = -260; SFX.play('step'); }
+function drawBal(){
+  if (!bal) return; const b = bal, t = clock; ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // các tầng gió (chỉ vẽ trên vực)
+  { const x0 = b.from, x1 = b.to; for (const [a, c, v] of b.winds){ const y0 = Math.max(a, T), y1 = Math.min(c, 12*T); if (y1 <= y0) continue;
+      ctx.globalAlpha = .07; ctx.fillStyle = INK; if (v < 0) ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+      ctx.globalAlpha = .28; ctx.strokeStyle = INK; ctx.lineWidth = 1.5;
+      for (let i=0;i<14;i++){ const yy = y0 + 10 + hash2(i, a)*(y1 - y0 - 20), sp = Math.abs(v), xx = x0 + (((hash2(i, a+1)*(x1 - x0) + t*sp*Math.sign(v)) % (x1 - x0)) + (x1 - x0)) % (x1 - x0), L = 18 + hash2(i, 7)*26;
+        line(xx, yy, xx - Math.sign(v)*L, yy); line(xx, yy, xx - Math.sign(v)*5, yy - 3); line(xx, yy, xx - Math.sign(v)*5, yy + 3); }
+      ctx.globalAlpha = .5; ctx.fillStyle = INK; ctx.font = `700 10px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(v > 0 ? 'GIÓ  →' : '←  GIÓ NGƯỢC', x0 + 8, y0 + 14); } }
+  ctx.globalAlpha = 1;
+  if (b.popT > 0){ ctx.restore(); return; }
+  const X = b.x, Y = b.y, ex = X, ey = Y - 82, sw = Math.sin(t*1.3)*2;
+  // dây treo + giỏ
+  ctx.strokeStyle = INK; ctx.lineWidth = 1.5; line(X - 16, Y - 22, ex - 26, ey + 30); line(X + 16, Y - 22, ex + 26, ey + 30); line(X - 6, Y - 22, ex - 9, ey + 38); line(X + 6, Y - 22, ex + 9, ey + 38);
+  // khí cầu: nở to hơn khi nóng (V ∝ T)
+  const k = 1 + (b.T - 20)/600, rx = 40*k, ry = 46*k;
+  ctx.fillStyle = PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(ex - 14, ey + 40); ctx.bezierCurveTo(ex - rx*1.3, ey + 10, ex - rx*1.15, ey - ry*1.2, ex + sw, ey - ry); ctx.bezierCurveTo(ex + rx*1.15, ey - ry*1.2, ex + rx*1.3, ey + 10, ex + 14, ey + 40); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.save(); ctx.clip(); ctx.fillStyle = INK; for (let i=-2;i<=2;i+=2){ ctx.beginPath(); ctx.ellipse(ex + i*rx*.32, ey - 4, rx*.13, ry*1.2, 0, 0, Math.PI*2); ctx.fill(); } ctx.restore();
+  ctx.lineWidth = 1.2; for (let i=-1;i<=1;i++) { ctx.beginPath(); ctx.moveTo(ex - 14, ey + 40); ctx.quadraticCurveTo(ex + i*rx*.9, ey - ry*.2, ex + sw, ey - ry); ctx.stroke(); }
+  ctx.fillStyle = INK; ctx.fillRect(X - 18, Y - 22, 36, 22); ctx.strokeStyle = PAPER; ctx.lineWidth = 1; for (let i=0;i<4;i++) line(X - 18 + i*12 + 6, Y - 20, X - 18 + i*12 + 6, Y - 2); line(X - 18, Y - 11, X + 18, Y - 11);
+  // đèn khí
+  ctx.fillStyle = INK; ctx.fillRect(X - 5, ey + 40, 10, 6); if (b.burn){ flameD(X, ey + 40, 22 + Math.random()*10, INK, PAPER); if (Math.random() < .5) parts.push({x:X + (Math.random()-.5)*8, y:ey + 30, vx:(Math.random()-.5)*20, vy:-80, a:0, va:0, l:2, life:.3}); }
+  // nhiệt kế + lực nâng
+  if (b.ride || b.T > 25){ const tx = ex + rx + 18, ty = ey - 30, h = 70, f = clamp((b.T - 20)/120, 0, 1), neutral = (85 - 20)/120;
+    ctx.fillStyle = PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.fillRect(tx - 5, ty, 10, h); ctx.strokeRect(tx - 5, ty, 10, h); ctx.fillStyle = INK; ctx.fillRect(tx - 3, ty + h - f*h, 6, f*h);
+    ctx.beginPath(); ctx.arc(tx, ty + h + 6, 7, 0, Math.PI*2); ctx.fill(); ctx.lineWidth = 1.5; line(tx - 9, ty + h - neutral*h, tx + 9, ty + h - neutral*h);
+    ctx.font = `700 10px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText(Math.round(b.T) + '°C', tx + 10, ty + 10); ctx.font = `400 9px ${FONT}`; ctx.fillText('lơ lửng', tx + 11, ty + h - neutral*h + 3);
+    const lift = 1 - 293/(b.T + 273); ctx.fillText('1 − T₀/T = ' + lift.toFixed(2), tx + 10, ty + h + 10); ctx.fillText(b.vy < -15 ? '↑ lên' : b.vy > 15 ? '↓ xuống' : '· đứng', tx + 10, ty + 24); }
+  ctx.restore();
+}
 // ---------- dấu vết lối vào (vẽ trong màn chủ) ----------
 function drawWarpCue(){
   const L = LEVELS[lvl], w = L.warp; if (!w || !w.look) return; const X = w.x*T, Y = w.y*T, W = w.w*T, H = w.h*T, t = clock;
@@ -5859,6 +5955,7 @@ function drawPrompts(){
   const pr = (x, y, d, lab)=>{ const a = clamp((90-d)/40, 0, 1); if (a <= 0) return; const yy = y + Math.sin(clock*4)*2; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.8;
     ctx.fillRect(x-9,yy-9,18,18); ctx.strokeRect(x-9,yy-9,18,18); ctx.fillStyle=INK; ctx.font=`700 11px ${FONT}`; ctx.textAlign='center'; ctx.fillText('E', x, yy+4); if (lab){ ctx.font=`400 9px ${FONT}`; ctx.fillStyle = (LL.theme==='night' || CHILL[LL.theme]) ? PAPER : INK; ctx.fillText(lab, x, yy-14); } ctx.restore(); };
   if (LL.warp){ const w = LL.warp, cx = (w.x + w.w/2)*T, cy = (w.y + w.h/2)*T; pr(cx, w.y*T - 16, Math.hypot(cx-px, cy-py) - 40, w.say || 'mở cửa sổ'); }
+  if (bal && !bal.ride && !(bal.popT > 0)) pr(bal.x, bal.y - 150, Math.hypot(bal.x - px, bal.y - 20 - py), 'lên khinh khí cầu');
   if (LL.mem && !player.sit){ const mi = nearMem(); if (mi >= 0){ const m = LL.mem[mi]; pr(m[0]*T, m[1]*T - 44, 0, memGot.has(LL.name + '#' + mi) ? 'đọc lại' : 'xem kỷ vật'); } }
   if (LL.bench && !player.sit){ const [bx, br] = LL.bench; pr(bx*T, br*T - 30, Math.hypot(bx*T-px, (br+.5)*T-py), 'ngồi'); }
   for (const c of ['l','v','n','F']) for (const t of tiles[c]||[]){
@@ -6759,6 +6856,8 @@ function drawBossLine(){
 function drawBossFX(){
   drawChandeliers();
   const b = boss; if (!b || b.dead || !b.engaged) return;
+  drawDecals();
+  if (b.tell && !b.hidden){ const cx = b.x + b.w/2, cy = b.y + b.h/2; ctx.save(); ctx.strokeStyle = INK; ctx.setLineDash([4, 8]); ctx.lineWidth = 2; for (let i=0;i<2;i++){ const q = ((clock*1.6 + i/2) % 1); ctx.globalAlpha = (1 - q)*.5; ctx.beginPath(); ctx.arc(cx, cy, b.w*.55 + q*50, 0, Math.PI*2); ctx.stroke(); } ctx.restore(); }
   const A = b.arena; ctx.save(); ctx.strokeStyle=INK; ctx.fillStyle=INK;
   // mưa mực: dấu X trên sàn ở các cột sắp bị dội, chừa 2 cột an toàn
   if (b.st==='rain' && b.mark){
@@ -6835,6 +6934,7 @@ function drawBossFX(){
   if (b.st==='snuff' && b.tell){ ctx.font=`700 11px ${FONT}`; ctx.textAlign='center'; ctx.globalAlpha=.5+.5*Math.sin(clock*20); ctx.fillText('NÓ ĐANG HÍT VÀO… sắp thổi tắt đèn!', b.x+b.w/2, b.y-26); ctx.globalAlpha=1; }
   if (b.st==='idle' && b.recoverT > 0){ ctx.font=`700 10px ${FONT}`; ctx.textAlign='center'; ctx.globalAlpha=.6+.4*Math.sin(clock*18); ctx.fillText('THỞ DỐC · ĐÁNH!', b.x+b.w/2, b.y+b.h/2-88*b.w/96); ctx.globalAlpha=1; }
   if (b.st==='exposed'){ ctx.font=`700 11px ${FONT}`; ctx.textAlign='center'; ctx.fillText('LƯỚT! ' + b.exposeT.toFixed(1) + 's', b.x+b.w/2, b.y-22); }
+  ctx.restore(); drawBfx(); ctx.save(); ctx.strokeStyle=INK; ctx.fillStyle=INK;
   if (b.st==='stun'){ const cx=b.x+b.w/2; for (let i=0;i<3;i++){ const a=clock*5+i*2.1; ctx.font=`700 14px ${FONT}`; ctx.textAlign='center'; ctx.fillText('✶', cx+Math.cos(a)*30, b.y-10+Math.sin(a)*8); } }
   ctx.restore();
 }
@@ -8631,7 +8731,7 @@ function drawGame(){
   const y0=Math.max(0,Math.floor(camY/T)), y1=Math.min(GH-1,Math.ceil((camY+viewH)/T));
   cachedWalls(x0, x1);
   for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c=grid[y][x]; if (c!=='.' && c!=='#') drawTile(c,x,y); }
-  if (L.theme==='night' || CHILL[L.theme]){ drawMurals(L.theme); drawMemItems(); } if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
+  if (L.theme==='night' || CHILL[L.theme]){ drawMurals(L.theme); drawMemItems(); } if (bal) drawBal(); if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
   if (pulley) drawPulley();
   if (heaterOn) drawSteam();
   for (const k of keyItems) if (!k.got) drawKey(k);
