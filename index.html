@@ -1447,7 +1447,36 @@ function flaskVel(charge, face){
   const v = FLASK_V0 + (FLASK_V1-FLASK_V0)*charge;
   return {vx: Math.cos(FLASK_ANGLE)*v*face, vy: -Math.sin(FLASK_ANGLE)*v};
 }
+// Ném nhanh (bấm F): tự chọn lực để lọ rơi trúng mục tiêu gần nhất phía trước; sát người thì đập thẳng vào mục tiêu
+function tapTargets(){
+  const p = player, face = p.faceS>=0 ? 1 : -1, cx = p.x+11, cy = p.y+17, out = [];
+  const add = (x, y, w, h)=>{ const dx = (x + w/2 - cx)*face, dy = y + h/2 - cy; if (dx > -w/2 - 6 && dx < 460 && Math.abs(dy) < 220) out.push({x, y, w, h, d:Math.hypot(dx, dy*1.5), dx}); };
+  if (boss && !boss.dead && boss.engaged) add(boss.x, boss.y, boss.w, boss.h);
+  for (const e of enemies) if (!e.dead) add(e.x, e.y, e.w, e.h);
+  return out.sort((a,b)=>a.d-b.d);
+}
+function tapAim(){
+  const p = player, face = p.faceS>=0 ? 1 : -1, cx = p.x+11, cy = p.y+17;
+  for (const t of tapTargets().slice(0, 3)){
+    const nx = clamp(cx, t.x, t.x + t.w), ny = clamp(cy, t.y, t.y + t.h);
+    if (Math.hypot(nx - cx, ny - cy) < 34 && reagent!=='tnt') return {smash:true, t};
+    let best = null;
+    for (let c = 0; c <= 1.0001; c += .05){ const r = predictFlask(c, face); if (!r.land) continue; const [lx, ly] = r.land;
+      const inBox = lx > t.x - 6 && lx < t.x + t.w + 6 && ly > t.y - 6 && ly < t.y + t.h + 6; if (inBox){ best = c; break; } }
+    if (best !== null) return {ch:best};
+  }
+  return null;
+}
+function smashFlask(t){   // mục tiêu sát bên: đập lọ thẳng vào, không bay vòng qua đầu
+  const p = player; if (mana < FLASK_TAP){ manaFlash=.5; SFX.play('denied'); return; }
+  if ((ammo[reagent]||0) <= 0){ throwFlask(.55, FLASK_TAP); return; }
+  const x = clamp(p.x+11 + (p.faceS>=0?1:-1)*14, t.x + 2, t.x + t.w - 2), y = clamp(p.y+12, t.y + 2, t.y + t.h - 2);
+  mana -= FLASK_TAP; engThrow(); SFX.play('throw'); p.sx = 1.12; p.sy = .9;
+  ammo[reagent]--;
+  splash(x, y, reagent);
+}
 function flaskStart(p){ return {x:p.x+11+p.faceS*6, y:p.y+8}; }
+const effCh = c => clamp((c - TAP_CH)/(1 - TAP_CH), 0, 1);   // giữ F: lực tính từ 0 → ném gần được
 function predictFlask(charge, face){
   const s0 = flaskStart(player), v = flaskVel(charge, face), pts = [];
   let x=s0.x, y=s0.y, vx=v.vx, vy=v.vy;
@@ -3200,8 +3229,8 @@ function updateCombat(dt){
   // bấm nhanh F = ném ngay (lực trung bình) → spam được; giữ F > 0,15s = nạp lực như cũ
   if (inp.throw && state==='play' && !itemGet && !forgeSeq){ const was = p.charge; p.charging = true; p.charge = Math.min(1, p.charge + dt/.7); if (was < TAP_CH && p.charge >= TAP_CH) SFX.play('grab'); }
   else if (p.charging){ p.charging = false;
-    if (p.charge < TAP_CH){ throwFlask(.55, FLASK_TAP); p.throwT = THROW_T*.5; p.throwPend = false; }
-    else { p.throwT = THROW_T; p.throwCh = p.charge; p.throwPend = true; SFX.play('swoosh'); }
+    if (p.charge < TAP_CH){ const aim = tapAim(); if (aim && aim.smash) smashFlask(aim.t); else throwFlask(aim ? aim.ch : .55, FLASK_TAP); p.throwT = THROW_T*.5; p.throwPend = false; }
+    else { p.throwT = THROW_T; p.throwCh = effCh(p.charge); p.throwPend = true; SFX.play('swoosh'); }
     p.charge = 0; }
   if (p.throwPend && p.throwT < THROW_T*.75){ p.throwPend = false; throwFlask(p.throwCh); }
   // lọ đang bay
@@ -6549,12 +6578,12 @@ function drawCombatFX(){
   // quỹ đạo ngắm: parabol y = x·tanθ − g·x²/(2v²cos²θ)
   const p = player;
   if (p.charging && p.charge >= TAP_CH){
-    const pr = predictFlask(p.charge, p.faceS>=0?1:-1);
+    const pr = predictFlask(effCh(p.charge), p.faceS>=0?1:-1);
     ctx.fillStyle=INK;
     pr.pts.forEach((q,i)=>{ ctx.globalAlpha = .75 - i/pr.pts.length*.5; ctx.beginPath(); ctx.arc(q[0], q[1], 2, 0, Math.PI*2); ctx.fill(); });
     ctx.globalAlpha=1;
     if (pr.land){ ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(pr.land[0], pr.land[1], SPLASH_R*.5, 0, Math.PI*2); ctx.setLineDash([3,4]); ctx.stroke(); ctx.setLineDash([]); }
-    const v = Math.round((FLASK_V0 + (FLASK_V1-FLASK_V0)*p.charge)/T*10)/10;
+    const v = Math.round((FLASK_V0 + (FLASK_V1-FLASK_V0)*effCh(p.charge))/T*10)/10;
     ctx.font=`700 10px ${FONT}`; ctx.textAlign='center'; ctx.fillText(`v₀ = ${v} ô/s · θ = 52°`, p.x+11, p.y-46);
   }
 }
