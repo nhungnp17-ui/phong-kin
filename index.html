@@ -13,6 +13,9 @@
 <body>
 <canvas id="c"></canvas>
 <script>
+// tuỳ chỉnh người chơi (lưu máy): âm lượng nhạc / hiệu ứng, rung màn hình
+const SETS = (()=>{ const d = {mus:.8, sfx:.9, shake:1}; try { return Object.assign(d, JSON.parse(localStorage.getItem('phongkin_set_v1') || '{}')); } catch(e){ return d; } })();
+function saveSets(){ try { localStorage.setItem('phongkin_set_v1', JSON.stringify(SETS)); } catch(e){} }
 // ===== PHÒNG KÍN — platformer giải đố, vector đen trắng =====
 const cv = document.getElementById('c'); let ctx = cv.getContext('2d');
 // Hiệu năng: tự hạ đồ hoạ khi máy chậm (hoặc bật tay trong menu dev)
@@ -97,7 +100,7 @@ const LEVELS = [
   '###########################^^^^^###################################^^^^^^^^^^^^#######',
   '######################################################################################',
  ]},
- { name:'Tầng hầm', theme:'basement',
+ { name:'Tầng hầm', theme:'basement', warp:{x:21.8, y:1.2, w:2, h:1.8, to:'Ký Ức · Mười Hai Bậc', look:'memory', say:'chạm vào ký ức'},
    pages:['Tầng hầm giữ chiếc chìa khoá cuối cùng. Ta sợ chính mình sẽ quên mất nó ở đâu.',
           'Đèn ngày càng mờ, mực cạn dần. Ta viết chậm lại để tiết kiệm từng giọt.',
           'Nếu ai đọc được trang này: đừng sợ bóng tối. Bóng tối chỉ là chỗ chưa có ai thắp đèn.'],
@@ -351,7 +354,7 @@ const LEVELS = [
   '############################################################',
   '############################################################',
  ]},
- { name:'Mái Nhà', ch:2, theme:'outside', combat:true,
+ { name:'Mái Nhà', ch:2, theme:'outside', combat:true, warp:{x:23.5, y:7.2, w:2, h:1.8, to:'Ký Ức · Sân Ga Buổi Sáng', look:'memory', say:'chạm vào ký ức'},
    pages:['Ta chưa bao giờ dám lên mái nhà. Từ trên này, thị trấn trông nhỏ như một trang giấy.',
           'Gió là không khí chuyển động. Không khí có khối lượng, nên gió có thể đẩy cả một sợi bấc.',
           'Nếu Mực Đen thoát ra ngoài, nó sẽ theo gió. Gió đi đâu, mực đi đó.'],
@@ -789,7 +792,7 @@ const LEVELS = [
   '################################^^^^^^^^^^^^^^^^^^^^^#############################^^^^^^^^^^^^^####################^^^^^^^^^^^^^######',
   '######################################################################################################################################',
  ]},
- { name:"Tháp Fibonacci", ch:4, numRule:"fib", pages:["Fibonacci đếm thỏ. Mỗi cặp thỏ con lại sinh thêm. 1, 1, 2, 3, 5, 8… Ta đếm mãi mà không chán.", "Hoa hướng dương, vỏ ốc, cành cây: tự nhiên cũng đếm theo dãy này. Có lẽ thế giới được viết bằng toán.", "Lên tới đỉnh rồi, con nhìn xuống xem: mỗi tầng chỉ là tổng của hai tầng trước."], talks:[[5, 29, "Tháp này mọc theo dãy Fibonacci!"], [39, 22, "Gấp ba lần mỗi bước… đó là cấp số nhân."], [63, 16, "Sắp tới đỉnh rồi!"]], hints:["Leo bậc số Fibonacci: 1, 2, 3, 5, 8, 13, 21… Số khác sẽ vỡ.", "Cấp số nhân: mỗi số nhân với cùng một số.", "Lên đỉnh tháp: lối ra ở trên cùng."], notes:[["DÃY FIBONACCI", "Fₙ = Fₙ₋₁ + Fₙ₋₂", "1, 1, 2, 3, 5, 8, 13, 21…", "Tỉ số tiến tới φ ≈ 1,618"], ["CẤP SỐ NHÂN", "uₙ = u₁·qⁿ⁻¹", "2, 6, 18, 54: q = 3", ""], ["TỈ LỆ VÀNG", "φ = (1 + √5) ÷ 2", "Vỏ ốc, hoa, cành cây", ""]], secrets:["Hạc giấy trên đỉnh tháp: “Mỗi bước con đi là tổng của mọi bước trước đó.”"], decor:[["sign", 8, "FIBONACCI"], ["board", 30, 3]], combat:true, theme:"math", math:true, nums:[40, 89, 30, 8, 50, 13, 40, 55, 9, 1, 22, 34, 14, 1, 50, 3, 9, 2, 13], quiz:[{q:"1, 1, 2, 3, 5, 8, ?", opts:["11", "15", "13"], ans:2, kind:"door", hint:"mỗi số bằng tổng hai số đứng trước", why:"5 + 8 = 13"}, {q:"2, 6, 18, ?", opts:["36", "54", "72"], ans:1, kind:"bridge", hint:"mỗi số gấp 3 số trước", why:"cấp số nhân, công bội q = 3"}],
+ { name:"Tháp Fibonacci", ch:4, warp:{x:74.8, y:5.2, w:2, h:1.8, to:"Ký Ức · Lá Thư Không Gạch", look:"memory", say:"chạm vào ký ức"}, numRule:"fib", pages:["Fibonacci đếm thỏ. Mỗi cặp thỏ con lại sinh thêm. 1, 1, 2, 3, 5, 8… Ta đếm mãi mà không chán.", "Hoa hướng dương, vỏ ốc, cành cây: tự nhiên cũng đếm theo dãy này. Có lẽ thế giới được viết bằng toán.", "Lên tới đỉnh rồi, con nhìn xuống xem: mỗi tầng chỉ là tổng của hai tầng trước."], talks:[[5, 29, "Tháp này mọc theo dãy Fibonacci!"], [39, 22, "Gấp ba lần mỗi bước… đó là cấp số nhân."], [63, 16, "Sắp tới đỉnh rồi!"]], hints:["Leo bậc số Fibonacci: 1, 2, 3, 5, 8, 13, 21… Số khác sẽ vỡ.", "Cấp số nhân: mỗi số nhân với cùng một số.", "Lên đỉnh tháp: lối ra ở trên cùng."], notes:[["DÃY FIBONACCI", "Fₙ = Fₙ₋₁ + Fₙ₋₂", "1, 1, 2, 3, 5, 8, 13, 21…", "Tỉ số tiến tới φ ≈ 1,618"], ["CẤP SỐ NHÂN", "uₙ = u₁·qⁿ⁻¹", "2, 6, 18, 54: q = 3", ""], ["TỈ LỆ VÀNG", "φ = (1 + √5) ÷ 2", "Vỏ ốc, hoa, cành cây", ""]], secrets:["Hạc giấy trên đỉnh tháp: “Mỗi bước con đi là tổng của mọi bước trước đó.”"], decor:[["sign", 8, "FIBONACCI"], ["board", 30, 3]], combat:true, theme:"math", math:true, nums:[40, 89, 30, 8, 50, 13, 40, 55, 9, 1, 22, 34, 14, 1, 50, 3, 9, 2, 13], quiz:[{q:"1, 1, 2, 3, 5, 8, ?", opts:["11", "15", "13"], ans:2, kind:"door", hint:"mỗi số bằng tổng hai số đứng trước", why:"5 + 8 = 13"}, {q:"2, 6, 18, ?", opts:["36", "54", "72"], ans:1, kind:"bridge", hint:"mỗi số gấp 3 số trước", why:"cấp số nhân, công bội q = 3"}],
    map:[
   '######################################################################################',
   '######################################################################################',
@@ -1083,13 +1086,68 @@ const LEVELS = [
   '############################################',
   '############################################'
  ]},
+ { name:"Ký Ức · Mười Hai Bậc", theme:'memory', secret:true, side:true, memory:true, ret:{"name": "Tầng hầm", "x": 22.8, "row": 3},
+   pages:[], talks:[], secrets:[], decor:[], hints:['Một ký ức cũ. Cứ đi chậm thôi, lắng nghe.'],
+   scenes:[[4, 14, "prof", "Lên giường thôi, Hạ. Khuya rồi."], [9, 13, "ha", "Một, hai, ba…"], [13, 11, "ha", "…bốn, năm, sáu…"], [17, 9, "ha", "Bố ơi, sao cầu thang nhà mình lại có đúng mười hai bậc?"], [11, 12, "prof", "Vì mỗi tối bố muốn nghe con đếm đủ một năm. Mười hai tháng."], [25, 5, "ha", "…mười, mười một…"], [34, 2, "ha", "Mười hai! Con đếm đúng rồi nhé. Mai con đếm tiếp."], [37, 2, "prof", "Ừ. Con đếm tới đâu, bố đợi tới đó."], [40, 2, "note", "Nhiều năm sau, ông vẫn đếm mười hai bậc ấy mỗi tối. Một mình. Và vẫn đợi."], [8.9, 13, "num", "1"], [10.9, 12, "num", "2"], [12.9, 11, "num", "3"], [14.9, 10, "num", "4"], [16.9, 9, "num", "5"], [18.9, 8, "num", "6"], [20.9, 7, "num", "7"], [22.9, 6, "num", "8"], [24.9, 5, "num", "9"], [26.9, 4, "num", "10"], [28.9, 3, "num", "11"], [30.9, 2, "num", "12"]],
+   map:[
+  '############################################',
+  '#........................................E.#',
+  '#.............................##############',
+  '#...........................################',
+  '#.........................##################',
+  '#.......................####################',
+  '#.....................######################',
+  '#...................########################',
+  '#.................##########################',
+  '#...............############################',
+  '#.............##############################',
+  '#...........################################',
+  '#.........##################################',
+  '#..P....####################################',
+  '############################################',
+  '############################################'
+ ]},
+ { name:"Ký Ức · Sân Ga Buổi Sáng", theme:'memory', secret:true, side:true, memory:true, ret:{"name": "Mái Nhà", "x": 24.5, "row": 9},
+   pages:[], talks:[], secrets:[], decor:[], hints:['Một ký ức cũ. Cứ đi chậm thôi, lắng nghe.'],
+   scenes:[[7, 10, "habag", "Bố không ra tiễn con à?"], [15, 10, "note", "Ông có ra. Ông đứng sau cột đèn, cách con bé hai mươi bước."], [19.6, 10, "prof", "(Nếu bước ra, bố sẽ níu con lại mất.)"], [29, 10, "habag", "Con đi nhé, bố. Con sẽ viết thư về. Bố nhớ ăn tối."], [38, 10, "note", "Tàu chạy. Ông giơ tay lên vẫy. Không ai thấy."], [46, 6, "prof", "Tối ấy ông viết lá thư đầu tiên. Rồi gạch đi. Từng chữ một."], [53, 10, "note", "Những lời không nói được không biến mất. Chúng thấm xuống sàn, tụ lại, lớn dần… thành Vua Mực."]],
+   map:[
+  '############################################################',
+  '#..........................................................#',
+  '#..........................................................#',
+  '#..........................................................#',
+  '#..........................................................#',
+  '#..........................................................#',
+  '#...........................................____...........#',
+  '#..........___..........____...............................#',
+  '#.................#................___.....................#',
+  '#.P...............#.....................##...............E.#',
+  '############################################################',
+  '############################################################'
+ ]},
+ { name:"Ký Ức · Lá Thư Không Gạch", theme:'memory', secret:true, side:true, memory:true, ret:{"name": "Tháp Fibonacci", "x": 76, "row": 7},
+   pages:[], talks:[], secrets:[], decor:[], hints:['Một ký ức cũ. Cứ đi chậm thôi, lắng nghe.'],
+   scenes:[[5, 10, "prof", "Gửi Hạ."], [10.5, 7, "note", "(Ông đưa ngòi bút lên, định gạch. Rồi thôi.)"], [16.5, 5, "prof", "Bố xin lỗi vì hôm ấy đã đứng sau cột đèn."], [21.5, 7, "prof", "Bố làm một sợi bấc biết đi. Nó đi qua hết những nơi con từng sợ: tầng hầm tối, phố mưa, căn phòng đầy axit…"], [28.5, 5, "prof", "Nó ngã nhiều lắm. Nhưng lần nào nó cũng đứng dậy. Bố nghĩ bố học được điều đó từ nó."], [34.5, 3, "prof", "Nhà mình vẫn để đèn. Con về lúc nào cũng được. Không về cũng được. Bố vẫn thương con."], [46.5, 7, "note", "Lần đầu tiên, ông viết hết một lá thư mà không gạch chữ nào."], [52, 10, "prof", "Bấc. Con mang giúp ta lá thư này nhé."]],
+   map:[
+  '########################################################',
+  '#......................................................#',
+  '#......................................................#',
+  '#................................____..................#',
+  '#......................................................#',
+  '#..............____........____........____............#',
+  '#......................................................#',
+  '#........____.......____.....................____......#',
+  '#......................................................#',
+  '#.P..................................................E.#',
+  '###############........#################################',
+  '########################################################'
+ ]}
 ];
 
 // ===================================================================
 //  ÂM THANH: tổng hợp bằng Web Audio, không cần file
 // ===================================================================
 const SFX = (() => {
-  let ac = null, master = null, noiseBuf = null, muted = false;
+  let ac = null, master = null, noiseBuf = null, muted = false; let sfxOut = null;
   try { muted = localStorage.getItem('phongkin_mute') === '1'; } catch(e){}
   const loops = {};
   function init(){
@@ -1097,6 +1155,7 @@ const SFX = (() => {
     try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ return; }
     master = ac.createGain(); master.gain.value = muted ? 0 : .55;
     const comp = ac.createDynamicsCompressor(); master.connect(comp); comp.connect(ac.destination);
+    sfxOut = ac.createGain(); sfxOut.gain.value = SETS.sfx; sfxOut.connect(master);
     noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
     const d = noiseBuf.getChannelData(0); for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
   }
@@ -1109,7 +1168,7 @@ const SFX = (() => {
     osc.type = type; osc.frequency.setValueAtTime(f, t0); osc.frequency.exponentialRampToValueAtTime(Math.max(20,f2), t0+t);
     let node = osc;
     if (bp){ const fl = ac.createBiquadFilter(); fl.type='bandpass'; fl.frequency.value=bp; fl.Q.value=q||2; osc.connect(fl); node = fl; }
-    node.connect(g); g.connect(master); env(g, t0, a, t, v); osc.start(t0); osc.stop(t0+t+.05);
+    node.connect(g); g.connect(sfxOut); env(g, t0, a, t, v); osc.start(t0); osc.stop(t0+t+.05);
   }
   // tiếng ồn có lọc (gió, va chạm, sột soạt)
   function noise(o){
@@ -1117,7 +1176,7 @@ const SFX = (() => {
     const t0 = now()+d, src = ac.createBufferSource(), fl = ac.createBiquadFilter(), g = ac.createGain();
     src.buffer = noiseBuf; src.loop = true; fl.type = type; fl.Q.value = q;
     fl.frequency.setValueAtTime(f, t0); fl.frequency.exponentialRampToValueAtTime(Math.max(20,f2), t0+t);
-    src.connect(fl); fl.connect(g); g.connect(master); env(g, t0, a, t, v);
+    src.connect(fl); fl.connect(g); g.connect(sfxOut); env(g, t0, a, t, v);
     src.start(t0, Math.random()*.5); src.stop(t0+t+.05);
   }
   const R = (a,b) => a + Math.random()*(b-a);
@@ -1196,7 +1255,7 @@ const SFX = (() => {
     if (!L){
       const src = ac.createBufferSource(), fl = ac.createBiquadFilter(), g = ac.createGain();
       src.buffer = noiseBuf; src.loop = true; fl.type = cfg.type; fl.frequency.value = cfg.f; fl.Q.value = cfg.q||1;
-      g.gain.value = 0; src.connect(fl); fl.connect(g); g.connect(master); src.start();
+      g.gain.value = 0; src.connect(fl); fl.connect(g); g.connect(sfxOut); src.start();
       L = loops[name] = {g};
     }
     L.g.gain.setTargetAtTime(level*cfg.v, now(), .05);
@@ -1386,12 +1445,20 @@ const SFX = (() => {
       if (st===0) nt('sine', bs-12, t, 2.4, .05, {a:.05}); if (st===4 || st===10) vc.forEach((n,i)=>nt('sine', n+12, t + i*.04, .6, .006, {a:.01}));
       if (st%4===0) drum('sh', t, st%8 ? .003 : .005);
     }},
+    // Ký ức: valse 3/4 chậm, piano + hộp nhạc, như một cuộn phim cũ
+    memory: {bpm:78, tense:false, fn(s,t){
+      const bar = Math.floor(s/12) % 8, st = s % 12, wow = Math.sin(t*.6)*5;
+      const CH = [[48,[60,64,67]],[45,[60,64,69]],[41,[60,65,69]],[43,[59,62,67]],[48,[60,64,67]],[40,[59,64,67]],[41,[57,60,65]],[43,[59,62,65]]], [bs, vc] = CH[bar];
+      if (st===0) sub(bs-12, t, 1.6, .06); if (st===4 || st===8) vc.forEach((m,i)=>pno(m, t + i*.012, .7, .012));
+      const MEL = [{0:76,6:79,8:77},{0:76,8:72},{0:77,4:76,8:74},{0:74},{0:76,6:79,8:84},{0:83,8:79},{0:81,4:79,8:77},{0:74,8:79}];
+      const m = MEL[bar][st]; if (m) bell(m, t, 1.8, .016, {pan:.1}); if (st===6 && bar%2) nt('sine', vc[2]+24, t, 1.2, .006, {a:.02, det:wow});
+    }},
     // Tim Mực: chỉ còn nhịp tim và tiếng ù chói
     heart: {bpm:72, fn(s,t){ if (s%8===0) drum('k', t, .3); if (s%8===2) drum('k', t, .2);
       if (s%32===0){ nt('sine', 74, t, 7, .02, {a:2}); nt('sine', 75, t, 7, .02, {a:2}); nt('sawtooth', 26, t, 7, .05, {a:1, lp:200}); } }},
   };
   // lớp căng thẳng phủ lên nhạc khám phá khi có nguy hiểm: bass dồn móc, hi-hat 16 phách, dây cao chói nửa cung, trống nhịp tim
-  const TRACKS_NOTENSE = new Set(['boss','heart','story','night','cafe','sea','nook']);
+  const TRACKS_NOTENSE = new Set(['boss','heart','story','night','cafe','sea','nook','memory']);
   function tension(s, t, I){
     const root = [38, 38, 41, 36][Math.floor(s/32)%4];
     if (s%2===0) nt('sawtooth', root - (s%8===6 ? -1 : 0), t, .16, I >= 3 ? .05 : .035, {lp:700, lp2:160, q:5});
@@ -1405,7 +1472,7 @@ const SFX = (() => {
     if (M.want !== M.name){                       // chuyển bài: hạ nhỏ rồi đổi
       M.bus.gain.setTargetAtTime(0, now(), .15);
       if (!M.fadeAt) M.fadeAt = now() + .45;
-      if (now() >= M.fadeAt){ M.name = M.want; M.fadeAt = 0; M.step = 0; M.next = now() + .05; if (M.name) M.bus.gain.setTargetAtTime(muted ? 0 : M.vol, now(), .3); }
+      if (now() >= M.fadeAt){ M.name = M.want; M.fadeAt = 0; M.step = 0; M.next = now() + .05; if (M.name) M.bus.gain.setTargetAtTime(muted ? 0 : M.vol*SETS.mus, now(), .3); }
       return;
     }
     const tr = TRACKS[M.name]; if (!tr) return;
@@ -1420,6 +1487,7 @@ const SFX = (() => {
     loop(name, level){ if (!ac) return; const C = {slide:{type:'bandpass',f:2600,q:2,v:.07}, belt:{type:'bandpass',f:180,q:3,v:.12}, gale:{type:'bandpass',f:600,q:.5,v:.08}, push:{type:'lowpass',f:260,v:.16}, steam:{type:'highpass',f:2800,v:.08}, wind:{type:'bandpass',f:900,q:.6,v:.05}, rain:{type:'highpass',f:1800,v:.03}, vinyl:{type:'bandpass',f:2400,q:.4,v:.008}, city:{type:'lowpass',f:220,v:.09}, rainin:{type:'lowpass',f:1400,v:.05}, waves:{type:'lowpass',f:480,v:.16}, fire:{type:'bandpass',f:700,q:.7,v:.035}, hiss:{type:'bandpass',f:4200,q:.25,v:.018}}[name]; loop(name, muted?0:level, C); },
     toggle(){ muted = !muted; try { localStorage.setItem('phongkin_mute', muted?'1':'0'); } catch(e){} if (master) master.gain.setTargetAtTime(muted?0:.55, now(), .02); if (muted) for (const k in loops) loops[k].g.gain.value = 0; },
     get muted(){ return muted; },
+    setVol(){ if (!ac) return; if (sfxOut) sfxOut.gain.setTargetAtTime(SETS.sfx, now(), .03); if (M.bus && M.name && !M.fadeAt) M.bus.gain.setTargetAtTime(muted ? 0 : M.vol*SETS.mus, now(), .05); },
   };
 })();
 
@@ -4303,6 +4371,18 @@ const STORY = {
       cineCard(`Chương ${LAST_CH.no} · Còn tiếp`, 4),
     ]},
   ],
+  // KẾT THẬT: chỉ khi đã đi hết 3 ký ức ẩn
+  trueEnd: [
+    {shots:[
+      cineShot('desk',   [-60,-40,1,-.05], [40,0,1.4,.02], 6.5, 'Bấc đặt con hạc giấy lên bàn. Ông mở ra: lá thư không một vết gạch, nét chữ của chính ông.', {from:.1, to:.75}),
+      cineShot('study',  [-90,50,2.0,0],   [-60,55,2.3,0], 6.5, 'Ông đọc lại một lần. Rồi lần đầu tiên sau nhiều năm, ông dán tem và mang nó ra hòm thư đầu dốc.', {mode:'think', prof:'look'}),
+      cineShot('floor',  [0,-160,1.25,0],  [0,420,1.15,0], 6,   'Dưới sàn nhà, những vệt mực gạch xoá khô dần. Chúng không còn lý do để ở lại.'),
+      cineShot('house',  [60,-40,.85,0],   [190,-10,1.5,0], 7,  'Mùa thu năm ấy, có tiếng gõ cửa. Ông không còn sợ tiếng gõ cửa nữa.', {rain:false, tr:'fade'}),
+      cineCard('“Bố ơi. Con về rồi.”', 5),
+      cineCard('Có những ngọn đèn được thắp lên để chờ. Và có những ngày, người ta về thật.', 5.5),
+      cineCard('KẾT THẬT · Ngọn Bấc Không Cô Đơn', 4.5),
+    ]},
+  ],
 };
 let wave = null, bossLoss = false, titleNewBtn = null;
 let enemies = [], flasks = [], blobs = [], drops = [], litLamps = new Set(), boss = null, reagent = 'base', hurtFlash = 0;
@@ -4696,6 +4776,51 @@ function computeSteam(){
 
 // ===== Input =====
 const inp = {left:false,right:false,jump:false,throw:false};
+
+// ===== MENU TẠM DỪNG (Esc): tiếp tục, âm lượng, rung, toàn màn hình, sổ tay, thành tựu, về màn hình chính =====
+let pauseOpen = false, pauseSel = 0, pauseRects = [];
+const PAUSE_ITEMS = ['resume', 'mus', 'sfx', 'shake', 'full', 'help', 'ach', 'restart', 'title'];
+function openPause(){ if (state!=='play' || pauseOpen) return; pauseOpen = true; pauseSel = 0; for (const k in inp) inp[k] = false; SFX.play('page'); }
+function closePause(){ pauseOpen = false; SFX.play('page'); }
+function pauseLabel(k){ const bar = v=>'▮'.repeat(Math.round(v*10)) + '▯'.repeat(10 - Math.round(v*10)) + ' ' + Math.round(v*100) + '%';
+  return {resume:'Tiếp tục', mus:'Nhạc       ' + bar(SETS.mus), sfx:'Hiệu ứng   ' + bar(SETS.sfx), shake:'Rung màn hình: ' + (SETS.shake ? 'BẬT' : 'TẮT'),
+    full:'Toàn màn hình: ' + (document.fullscreenElement ? 'BẬT' : 'TẮT'), help:'Sổ hướng dẫn (H)', ach:'Thành tựu & kỷ lục (T)', restart:'Chơi lại khu này (R)', title:'Lưu & về màn hình chính'}[k]; }
+function pauseAct(k, dir=0){
+  if (k==='mus' || k==='sfx'){ SETS[k] = clamp(Math.round((SETS[k] + (dir || 1)*.1)*10)/10, 0, 1); if (!dir && SETS[k] >= 1 && dir===0) {} saveSets(); SFX.setVol(); SFX.play('tick'); return; }
+  if (dir) return;
+  if (k==='resume') closePause();
+  else if (k==='shake'){ SETS.shake = SETS.shake ? 0 : 1; saveSets(); }
+  else if (k==='full'){ try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch(e){} }
+  else if (k==='help'){ pauseOpen = false; toggleHelp(); }
+  else if (k==='ach'){ pauseOpen = false; achOpen = true; }
+  else if (k==='restart'){ pauseOpen = false; load(lvl); }
+  else if (k==='title'){ pauseOpen = false; saveGame(); state = 'title'; story = null; reading = null; }
+}
+function pauseKey(e){
+  const c = e.code; if (['Escape','KeyP'].includes(c) && !e.repeat){ closePause(); return; }
+  if (c==='ArrowUp' || c==='KeyW'){ pauseSel = (pauseSel + PAUSE_ITEMS.length - 1) % PAUSE_ITEMS.length; SFX.play('tick'); }
+  else if (c==='ArrowDown' || c==='KeyS'){ pauseSel = (pauseSel + 1) % PAUSE_ITEMS.length; SFX.play('tick'); }
+  else if (c==='ArrowLeft' || c==='KeyA') pauseAct(PAUSE_ITEMS[pauseSel], -1);
+  else if (c==='ArrowRight' || c==='KeyD') pauseAct(PAUSE_ITEMS[pauseSel], 1);
+  else if ((c==='Enter' || c==='Space' || c==='KeyE') && !e.repeat) pauseAct(PAUSE_ITEMS[pauseSel], 0);
+}
+function pauseClick(x, y){ for (const r of pauseRects){ if (x > r.x && x < r.x + r.w && y > r.y && y < r.y + r.h){ pauseSel = r.i; const k = PAUSE_ITEMS[r.i];
+  if ((k==='mus' || k==='sfx')){ pauseAct(k, x < r.x + r.w/2 ? -1 : 1); } else pauseAct(k, 0); return true; } } return false; }
+function drawPause(){
+  const W = innerWidth, H = innerHeight, w = Math.min(420, W - 40), rowH = 34, h = 96 + PAUSE_ITEMS.length*rowH, x = (W - w)/2, y = Math.max(10, (H - h)/2);
+  ctx.save(); ctx.fillStyle = 'rgba(17,17,17,.55)'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.fillRect(x, y, w, h); ctx.strokeRect(x, y, w, h); ctx.lineWidth = 1; ctx.strokeRect(x + 6, y + 6, w - 12, h - 12);
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.font = `700 22px ${FONT}`; ctx.fillText('TẠM DỪNG', W/2, y + 40);
+  ctx.font = `400 11px ${FONT}`; ctx.globalAlpha = .6; ctx.fillText(`${LEVELS[lvl].name}  ·  chết ${deaths}  ·  thành tựu ${achGot.size}/${Object.keys(ACH).length}`, W/2, y + 60); ctx.globalAlpha = 1;
+  pauseRects = [];
+  PAUSE_ITEMS.forEach((k, i)=>{ const ry = y + 76 + i*rowH, sel = i===pauseSel; pauseRects.push({x:x + 16, y:ry, w:w - 32, h:rowH - 6, i});
+    if (sel){ ctx.fillStyle = INK; ctx.fillRect(x + 16, ry, w - 32, rowH - 6); }
+    ctx.fillStyle = sel ? PAPER : INK; ctx.textAlign = 'left'; ctx.font = `${sel ? 700 : 400} 14px ${FONT}`; ctx.fillText((sel ? '▸ ' : '  ') + pauseLabel(k), x + 26, ry + 19);
+    if (sel && (k==='mus' || k==='sfx')){ ctx.textAlign = 'right'; ctx.font = `400 10px ${FONT}`; ctx.fillText('← →', x + w - 26, ry + 19); } });
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.font = `400 10px ${FONT}`; ctx.globalAlpha = .55; ctx.fillText('↑↓ chọn · ←→ chỉnh · Enter xác nhận · Esc đóng', W/2, y + h - 12);
+  ctx.restore();
+}
+document.addEventListener('visibilitychange', ()=>{ if (document.hidden) openPause(); });
 let jumpBuf=0, dashBuf=0, actPress=false, transTo=null;
 const KEYMAP = {KeyV:'lens', ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'jump',KeyW:'jump',Space:'jump',KeyZ:'jump',KeyC:'jump',KeyF:'throw',KeyJ:'throw',KeyE:'act'};
 function trigger(kind){
@@ -4715,6 +4840,8 @@ addEventListener('keydown', e=>{
   if (devMenu){ e.preventDefault(); if (!e.repeat || e.code.startsWith('Arrow')) devKey(e); return; }
   if (e.code==='KeyM' && !e.repeat){ SFX.toggle(); return; }
   if (e.code==='KeyN' && state==='title' && !e.repeat){ begin(); return; }
+  if (pauseOpen){ e.preventDefault(); pauseKey(e); return; }
+  if (e.code==='Escape' && state==='play' && !reading && !e.repeat && !helpOpen && !achOpen){ e.preventDefault(); openPause(); return; }
   if (achOpen){ e.preventDefault(); if (['KeyT','Escape','Enter','Space'].includes(e.code) && !e.repeat){ achOpen = false; SFX.play('page'); } return; }
   if (e.code==='KeyT' && !e.repeat && state==='play' && !reading){ achOpen = true; SFX.play('page'); for (const k in inp) inp[k]=false; return; }
   if (helpOpen){ e.preventDefault(); if (['KeyH','Escape','Enter','Space'].includes(e.code) && !e.repeat) toggleHelp(); return; }
@@ -4752,6 +4879,8 @@ cv.addEventListener('pointerdown', e=>{
   SFX.init();
   if (bestiary){ bestiary = null; return; }
   if (devMenu){ devClick(e.clientX, e.clientY); return; }
+  if (pauseOpen){ pauseClick(e.clientX, e.clientY); return; }
+  if (Math.hypot(e.clientX-(OX+276*S*HK), e.clientY-(OY+29*S*HK)) < 16*S*HK && state==='play'){ openPause(); return; }
   if (e.clientX < 90 && e.clientY < 50){ devTap(); if (devMenu) return; }
   if (Math.hypot(e.clientX-(OX+212*S*HK), e.clientY-(OY+29*S*HK)) < 16*S*HK && state==='play'){ SFX.toggle(); return; }
   if (Math.hypot(e.clientX-(OX+244*S*HK), e.clientY-(OY+29*S*HK)) < 16*S*HK && state==='play' && !achOpen){ achOpen = true; SFX.play('page'); for (const k in inp) inp[k]=false; return; }
@@ -4798,6 +4927,8 @@ const ACH = {
   nook:       ['Sau Kệ Sách', 'Tìm ra góc đọc sách bí mật', true],
   chill_sit:  ['Chẳng Cần Vội', 'Ngồi xuống ở một góc chill', true],
   chill4:     ['Bản Đồ Những Nơi Bình Yên', 'Tìm đủ 4 góc chill bí mật', true],
+  kyuc1:      ['Trang Giấy Ngả Vàng', 'Đi hết một ký ức ẩn của Giáo sư', true],
+  kyuc3:      ['Lá Thư Không Gạch', 'Đi hết 3 ký ức ẩn · mở khoá KẾT THẬT', true],
   pilot:      ['Phi Công Khí Nóng', 'Lái khinh khí cầu qua vực gió ở Phòng Áp Suất'],
   mem1:       ['Món Đồ Cũ', 'Xem một kỷ vật của ông và Hạ', true],
   memall:     ['Những Mảnh Của Hạ', 'Tìm đủ 12 kỷ vật và đọc lá thư cuối', true],
@@ -4941,7 +5072,7 @@ function die(){
   SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0);
   for (let i=0;i<16;i++) parts.push({x:player.x+11,y:player.y+17,vx:(Math.random()-.5)*420,vy:-Math.random()*420,a:Math.random()*6,va:(Math.random()-.5)*12,l:6+Math.random()*10,life:1});
 }
-function win(){ const L0 = LEVELS[lvl]; if (L0 && L0.secret && L0.ret){ transTo = {lvl:L0.ret.lvl ?? LEVELS.findIndex(L=>L.name===L0.ret.name), x:L0.ret.x, row:L0.ret.row, face:-1, sfx:'door'}; }
+function win(){ const L0 = LEVELS[lvl]; if (L0 && L0.memory) finishMemory(); if (L0 && L0.secret && L0.ret){ transTo = {lvl:L0.ret.lvl ?? LEVELS.findIndex(L=>L.name===L0.ret.name), x:L0.ret.x, row:L0.ret.row, face:-1, sfx:'door'}; }
   if (!transTo && !skipSummary){ summary = makeSummary(); state = 'summary'; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); return; }
   skipSummary = false; state='trans'; tState=0; SFX.play('exit'); SFX.loop('slide',0); SFX.loop('push',0); SFX.loop('wind',0); SFX.loop('steam',0); }
 function dust(x,y,n,dirx=0){
@@ -5139,7 +5270,7 @@ function update(dt){
     else if (c1 > c0 && c1 <= panelLen(P) && c1 % 2 === 0) SFX.play('tick');
     updateSceneHero(dt); return; }
   if (reading){ reading.t += dt; return; }
-  if ((helpOpen || achOpen) && state==='play') return;
+  if ((helpOpen || achOpen || pauseOpen) && state==='play') return;
   if (bossCS && state==='play'){ shakeT -= dt; updateAmbience(dt); updateZoom(dt); updateBossCS(dt); updateCam(dt, false); updateCrow(dt);
     for (const u of popups){ u.life-=dt; u.y-=dt*24; } popups = popups.filter(u=>u.life>0);
     for (const b of bubbles){ b.y += b.vy*dt; b.life -= dt; } bubbles = bubbles.filter(b=>b.life>0); return; }
@@ -5152,7 +5283,7 @@ function update(dt){
     if (tState>.45 && tState-dt<=.45){
       if (transTo){ const tt = transTo; transTo = null; lvl = tt.lvl; load(lvl); if (tt.x != null){ player.x = tt.x*T - 11; player.y = tt.row*T - player.h; cp = {x:player.x, y:player.y}; player.face = tt.face || 1; updateCam(0, true, true); } state = 'play'; SFX.play(tt.sfx || 'door'); return; }
       lvl++;
-      if (lvl>=LEVELS.length || LEVELS[lvl].secret){ endTime=(performance.now()-t0)/1000; clearSave(); startStory(STORY.finale, ()=>{ state='end'; }); return; }
+      if (lvl>=LEVELS.length || LEVELS[lvl].secret){ endTime=(performance.now()-t0)/1000; clearSave(); startStory(trueEnding() ? STORY.finale.concat(STORY.trueEnd) : STORY.finale, ()=>{ state='end'; }); return; }
       startStory(STORY.chapters[lvl] || [], ()=>{ load(lvl); state='play'; saveGame(); }); return;
     }
     if (tState>.9) state='play';
@@ -5427,7 +5558,7 @@ function drawForeground(){
     if (hash2(i,3) < .35) continue;
     const x = i*sp - ox + hash2(i,5)*200, len = 50 + hash2(i,9)*90, sw = Math.sin(clock*1.2+i)*.05;
     ctx.save(); ctx.translate(x, -4); ctx.rotate(sw);
-    if (th==='outside' || th==='night' || CHILL[th]){ ctx.restore(); continue; }
+    if (th==='outside' || th==='night' || th==='memory' || CHILL[th]){ ctx.restore(); continue; }
     if (th==='fallen'){              // xúc tu mực rủ xuống
       ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(0,0); for (let k=1;k<=8;k++) ctx.lineTo(Math.sin(clock*1.4+i+k*.6)*8*k/8, k*len/8); ctx.stroke();
       ctx.beginPath(); ctx.arc(Math.sin(clock*1.4+i+4.8)*8, len+4, 4, 0, Math.PI*2); ctx.fill();
@@ -5774,6 +5905,40 @@ function drawBal(){
     const lift = 1 - 293/(b.T + 273); ctx.fillText('1 − T₀/T = ' + lift.toFixed(2), tx + 10, ty + h + 10); ctx.fillText(b.vy < -15 ? '↑ lên' : b.vy > 15 ? '↓ xuống' : '· đứng', tx + 10, ty + 24); }
   ctx.restore();
 }
+
+// ===== KÝ ỨC (màn ẩn nối cốt truyện): giấy cũ ngả vàng, bóng người mờ diễn lại chuyện cũ khi Bấc đi ngang =====
+let memDone = new Set(); try { memDone = new Set(JSON.parse(localStorage.getItem('phongkin_kyuc_v1') || '[]')); } catch(e){}
+const KYUC_TOTAL = 3;
+function trueEnding(){ return memDone.size >= KYUC_TOTAL; }
+function memoryBack(){ const g = ctx.createLinearGradient(0, 0, 0, viewH); g.addColorStop(0, '#e9e1cf'); g.addColorStop(1, '#d8ccb3'); ctx.fillStyle = g; ctx.fillRect(0, 0, viewW, viewH);
+  ctx.save(); ctx.strokeStyle = 'rgba(80,60,30,.07)'; ctx.lineWidth = 1; for (let y = 22 - (camY*.3 % 22); y < viewH; y += 22) line(0, y, viewW, y);
+  const L = LEVELS[lvl];
+  if (L.name.includes('Sân Ga')){ ctx.fillStyle = 'rgba(60,45,25,.12)'; const ox = camX*.3; for (let i=-1;i<6;i++){ const x = i*260 - (ox % 260); ctx.fillRect(x + 40, viewH*.25, 18, viewH); ctx.beginPath(); ctx.arc(x + 49, viewH*.25, 30, Math.PI, 0); ctx.fill(); } }
+  for (let i=0;i<40;i++){ const x = (hash2(i, 3)*viewW + clock*6*(1 + hash2(i,4))) % viewW, y = (hash2(i, 5)*viewH - clock*4*(1 + hash2(i,6)) % viewH + viewH) % viewH; ctx.fillStyle = `rgba(255,250,235,${.25 + .25*Math.sin(clock + i)})`; ctx.beginPath(); ctx.arc(x, y, 1.2 + hash2(i,7)*1.6, 0, Math.PI*2); ctx.fill(); }
+  ctx.restore(); }
+function memoryWorld(){
+  const L = LEVELS[lvl], t = clock, px = player.x + 11, py = player.y + 17; ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  if (L.name.includes('Sân Ga')){   // đoàn tàu bên phải, cột đèn
+    const X = 30*T, Y = 10*T; ctx.fillStyle = 'rgba(40,30,20,.16)'; ctx.fillRect(X, Y - 3.4*T, 26*T, 3.4*T); ctx.fillStyle = 'rgba(255,250,235,.5)'; for (let i=0;i<9;i++) ctx.fillRect(X + 20 + i*2.8*T, Y - 2.8*T, 1.6*T, 1.1*T);
+    ctx.strokeStyle = 'rgba(40,30,20,.5)'; ctx.lineWidth = 3; line(18.5*T, 4*T, 18.5*T, 8*T); ctx.beginPath(); ctx.arc(18.5*T, 4*T, 10, 0, Math.PI*2); ctx.stroke(); warmGlow(18.5*T, 4*T, 70, .35); }
+  if (L.name.includes('Lá Thư')){ const X = 3*T, Y = 10*T; ctx.fillStyle = 'rgba(40,30,20,.25)'; ctx.fillRect(X, Y - 30, 70, 6); ctx.fillRect(X + 6, Y - 24, 4, 24); ctx.fillRect(X + 60, Y - 24, 4, 24); warmGlow(X + 20, Y - 46, 80, .4);
+    ctx.strokeStyle = 'rgba(40,30,20,.6)'; ctx.lineWidth = 2; line(X + 14, Y - 30, X + 14, Y - 50); ctx.beginPath(); ctx.arc(X + 14, Y - 54, 5, 0, Math.PI*2); ctx.stroke(); }
+  for (const [x, row, who, text] of L.scenes || []){
+    const X = x*T, Y = row*T, d = Math.hypot(px - X, py - (Y - 30)), near = clamp(1 - (d - 70)/120, 0, 1);
+    if (who==='num'){ ctx.globalAlpha = .25 + near*.5; ctx.fillStyle = '#3a2d1a'; ctx.font = `400 ${16 + near*6}px ${HAND}`; ctx.textAlign = 'center'; ctx.fillText(text, X, Y - 8); continue; }
+    if (who!=='note'){ ctx.globalAlpha = .18 + near*.55; ctx.strokeStyle = '#3a2d1a'; ctx.lineWidth = 2.2; warmGlow(X, Y - 30, 50, .25*near);
+      const h = who==='prof' ? 64 : 40, sway = Math.sin(t*1.4 + x)*1.5; ctx.save(); ctx.translate(sway, 0);
+      stick(X, Y, h, who==='prof' ? {hat:true, cane:true} : {skirt:true, armR:who==='habag' ? 4 : h*.25});
+      if (who==='habag'){ ctx.strokeRect(X + 8, Y - 16, 16, 12); line(X + 12, Y - 16, X + 14, Y - 21); line(X + 14, Y - 21, X + 18, Y - 21); line(X + 18, Y - 21, X + 20, Y - 16); }
+      ctx.restore(); }
+    if (near > .02){ ctx.globalAlpha = near; ctx.fillStyle = '#2a2014'; ctx.textAlign = 'center'; ctx.font = `${who==='note' ? 'italic ' : ''}400 17px ${HAND}`;
+      const ln = wrapText(text, 260), y0 = Y - (who==='prof' ? 92 : who==='note' ? 70 : 64) - (ln.length - 1)*20; ln.forEach((l, k)=>ctx.fillText(l, X, y0 + k*20));
+      if (!L._heard) L._heard = new Set(); if (near > .8 && !L._heard.has(text)){ L._heard.add(text); SFX.play('page'); } }
+  }
+  ctx.restore();
+}
+function finishMemory(){ const L = LEVELS[lvl]; if (!L.memory) return; const first = !memDone.has(L.name); memDone.add(L.name); try { localStorage.setItem('phongkin_kyuc_v1', JSON.stringify([...memDone])); } catch(e){}
+  if (first){ award('kyuc1'); popups.push({x:player.x + 11, y:player.y - 40, text:`Ký ức ${memDone.size}/${KYUC_TOTAL}`, life:2.2, big:true}); if (trueEnding()) award('kyuc3'); } }
 // ---------- dấu vết lối vào (vẽ trong màn chủ) ----------
 function drawWarpCue(){
   const L = LEVELS[lvl], w = L.warp; if (!w || !w.look) return; const X = w.x*T, Y = w.y*T, W = w.w*T, H = w.h*T, t = clock;
@@ -5785,6 +5950,9 @@ function drawWarpCue(){
     ctx.lineWidth = 1.5; ctx.strokeRect(X + W/2 - 7, Y + 26, 14, 10); ctx.beginPath(); ctx.arc(X + W/2 + 8, Y + 31, 3, -1.2, 1.2); ctx.stroke(); for (let k=0;k<2;k++){ const q = ((t*.7 + k/2) % 1); ctx.globalAlpha = fa*(1 - q); ctx.beginPath(); ctx.moveTo(X + W/2 - 3 + k*5, Y + 24 - q*12); ctx.quadraticCurveTo(X + W/2 + k*5, Y + 20 - q*12, X + W/2 - 3 + k*5, Y + 16 - q*12); ctx.stroke(); } }
   else if (w.look==='hatch'){ ctx.fillStyle = PAPER; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(X + 8, Y + H); ctx.lineTo(X + 8, Y + 16); ctx.arc(X + W/2, Y + 16, W/2 - 8, Math.PI, 0); ctx.lineTo(X + W - 8, Y + H); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.arc(X + W/2, Y + 26, 7, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = fa*(.5 + .4*Math.sin(t*1.5)); ctx.beginPath(); ctx.arc(X + W/2, Y + 26, 3, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = fa; ctx.beginPath(); ctx.arc(X + W - 16, Y + H*.6, 2.5, 0, Math.PI*2); ctx.fill(); }
+  else if (w.look==='memory'){ const cx = X + W/2, cy = Y + H/2 + Math.sin(t*1.6)*4; ctx.globalAlpha *= .5 + .4*Math.sin(t*2.2); warmGlow(cx, cy, 46, .0001);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(Math.sin(t*1.3)*.25); ctx.fillStyle = PAPER; ctx.lineWidth = 1.5; ctx.fillRect(-11, -8, 22, 16); ctx.strokeRect(-11, -8, 22, 16); line(-7, -3, 7, -3); line(-7, 1, 5, 1); line(-7, 5, 3, 5); ctx.restore();
+    for (let i=0;i<4;i++){ const a = t*1.4 + i*1.57, r = 18 + Math.sin(t*2 + i)*4; ctx.beginPath(); ctx.arc(cx + Math.cos(a)*r, cy + Math.sin(a)*r*.7, 1.6, 0, Math.PI*2); ctx.fill(); } }
   else if (w.look==='shelf'){ ctx.lineWidth = 2; ctx.strokeRect(X, Y, W, H); for (let r=0;r<3;r++){ const yy = Y + r*H/3; line(X, yy + H/3, X + W, yy + H/3); let x = X + 3; let i = 0; while (x < X + W - 6){ const bw = 6 + hash2(i, r)*5, bh = H/3 - 6 - hash2(i+3, r)*8; const tilt = r===1 && i===3; ctx.save(); ctx.translate(x, yy + H/3); if (tilt) ctx.rotate(-.25 + Math.sin(t*2)*.03); ctx.fillStyle = (i+r)%2 ? INK : PAPER; ctx.fillRect(0, -bh, bw, bh); ctx.strokeRect(0, -bh, bw, bh); ctx.restore(); x += bw + 1; i++; } } }
   ctx.restore();
 }
@@ -8651,7 +8819,7 @@ function draw(){
   drawGame();
   ctx.setTransform(DPR,0,0,DPR,0,0);
   if ((dev.god || dev.ink) && state==='play'){ ctx.fillStyle=INK; ctx.font=`700 10px ${FONT}`; ctx.textAlign='left'; ctx.fillText('DEV' + (dev.god?' · BẤT TỬ':'') + (dev.ink?' · MỰC ∞':''), OX, innerHeight-8); }
-  if (state==='play'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawTip(); if (helpOpen) drawHelp(); if (achOpen) drawAchPanel(); }
+  if (state==='play'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawTip(); if (helpOpen) drawHelp(); if (achOpen) drawAchPanel(); if (pauseOpen) drawPause(); }
   if (state==='summary'){ ctx.setTransform(DPR,0,0,DPR,0,0); drawSummary(); }
   ctx.setTransform(DPR,0,0,DPR,0,0); if (boss && boss.engaged) drawStunBanner(); drawAch();
   drawDevMenu();
@@ -8679,10 +8847,12 @@ function drawGame(){
       text('PHÒNG KÍN', cx, cy+64, Math.min(52,w/6.5), 700);
       text(`Chương ${CHAPTER.no} · ${CHAPTER.title}`, cx, cy+98, Math.min(15,w/32), 600);
       text('←→ đi · ↑/Z nhảy · ↓/S cúi · Q lướt · F ném lọ · X đổi lọ', cx, cy+124, sm, 400);
-      text('E tương tác · H sổ hướng dẫn · R chơi lại khu · M tiếng', cx, cy+144, sm, 400);
+      text('E tương tác · H sổ hướng dẫn · Esc tạm dừng & tuỳ chỉnh', cx, cy+144, sm, 400);
+      text(`thành tựu ${achGot.size}/${Object.keys(ACH).length}  ·  kỷ vật ${memGot.size}/${MEM_TOTAL}  ·  ký ức ẩn ${memDone.size}/${KYUC_TOTAL}${trueEnding() ? '  ·  ✦ KẾT THẬT' : ''}`, cx, cy+170, Math.min(11, w/50), 400);
     } else {
       const m=Math.floor(endTime/60), s=Math.floor(endTime%60);
-      text(LAST_CH.partial ? `CHƯƠNG ${LAST_CH.no} · CÒN TIẾP` : `HẾT CHƯƠNG ${LAST_CH.no}`, cx, cy+66, Math.min(40,w/11), 700);
+      text(trueEnding() ? 'KẾT THẬT' : (LAST_CH.partial ? `CHƯƠNG ${LAST_CH.no} · CÒN TIẾP` : `HẾT CHƯƠNG ${LAST_CH.no}`), cx, cy+66, Math.min(40,w/11), 700);
+      if (!trueEnding()) text(`Ký ức ẩn ${memDone.size}/${KYUC_TOTAL} · tìm đủ để mở KẾT THẬT`, cx, cy+156, 11, 400);
       text(`Còn tiếp: ${LAST_CH.next}…`, cx, cy+136, 13, 400);
       text(`${m}:${String(s).padStart(2,'0')}  ·  chết ${deaths} lần  ·  nhật ký ${gotPages.size}/${PAGE_TOTAL}  ·  hạc giấy ${gotSecrets.size}/${SECRET_TOTAL}`, cx, cy+110, 16, 400);
     }
@@ -8718,9 +8888,9 @@ function drawGame(){
   ctx.setTransform(S*DPR,0,0,S*DPR,OX*DPR,OY*DPR);
   ctx.save(); ctx.beginPath(); ctx.rect(0,0,viewW,viewH); ctx.clip();
   ctx.fillStyle = L.theme==='fallen' ? '#d4d4cf' : L.theme==='outside' ? '#f2f1ec' : WALL; ctx.fillRect(0,0,viewW,viewH);
-  if (L.theme==='night') drawNightSky(); else if (CHILL[L.theme]) CHILL[L.theme].back(); else drawBackdrop();
+  if (L.theme==='night') drawNightSky(); else if (CHILL[L.theme]) CHILL[L.theme].back(); else if (L.theme==='memory') memoryBack(); else drawBackdrop();
   if (!PERF.low) drawMotes();
-  const shk = shakeT>0 ? shakeT*16 : 0;
+  const shk = shakeT>0 ? shakeT*16*SETS.shake : 0;
   ctx.translate(-Math.round(camX*S)/S + (Math.random()-.5)*shk, -Math.round(camY*S)/S + (Math.random()-.5)*shk);
   drawLightPools(L);
   ctx.save(); ctx.globalAlpha = DECOR_ALPHA;
@@ -8731,7 +8901,7 @@ function drawGame(){
   const y0=Math.max(0,Math.floor(camY/T)), y1=Math.min(GH-1,Math.ceil((camY+viewH)/T));
   cachedWalls(x0, x1);
   for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c=grid[y][x]; if (c!=='.' && c!=='#') drawTile(c,x,y); }
-  if (L.theme==='night' || CHILL[L.theme]){ drawMurals(L.theme); drawMemItems(); } if (bal) drawBal(); if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
+  if (L.theme==='night' || CHILL[L.theme]){ drawMurals(L.theme); drawMemItems(); } if (L.theme==='memory') memoryWorld(); if (bal) drawBal(); if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
   if (pulley) drawPulley();
   if (heaterOn) drawSteam();
   for (const k of keyItems) if (!k.got) drawKey(k);
@@ -8813,6 +8983,7 @@ function drawGame(){
   { const ax = 244, ay = 29; ctx.save(); ctx.fillStyle = PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(ax, ay, 13, 0, Math.PI*2); ctx.fill(); ctx.stroke();
     ctx.fillStyle = INK; ctx.beginPath(); for (let j=0;j<10;j++){ const a = -Math.PI/2 + j*Math.PI/5, rr = j%2 ? 3.2 : 7.5; ctx.lineTo(ax + Math.cos(a)*rr, ay + 1 + Math.sin(a)*rr); } ctx.closePath(); ctx.fill();
     ctx.font = `700 7px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('T', ax + 11, ay + 13); ctx.restore(); }
+  { const ax = 276, ay = 29; ctx.save(); ctx.fillStyle = PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(ax, ay, 13, 0, Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle = INK; ctx.fillRect(ax - 5, ay - 6, 3.5, 12); ctx.fillRect(ax + 1.5, ay - 6, 3.5, 12); ctx.font = `700 6px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('Esc', ax + 12, ay + 13); ctx.restore(); }
   } finally { viewW = vw0; viewH = vh0; ctx.restore(); }
   if (state==='dying' && bossLoss && tState>.5){
     const a = Math.min(1,(tState-.5)*2);
@@ -8859,7 +9030,7 @@ function pickMusic(){
   const th = LEVELS[lvl] && LEVELS[lvl].theme;
   if (mboss && mboss.engaged && !mboss.dead) return ['boss', 1 + Math.min(2, Math.floor((mboss.max - mboss.hp)/2))];
   if (cboss && cboss.engaged && !cboss.dead) return ['boss', cboss.phase];
-  if (th==='night') return ['night', 1]; if (CHILL[th]) return [CHILL[th].music, 1];
+  if (th==='night') return ['night', 1]; if (CHILL[th]) return [CHILL[th].music, 1]; if (th==='memory') return ['memory', 1];
   return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', dangerLevel()];
 }
 function loop(now){ const dt=Math.min(1/30,(now-last)/1000); last=now;
