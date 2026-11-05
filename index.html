@@ -998,6 +998,7 @@ const LEVELS = [
  ]},
  // ===== MÀN ẨN: Hiên Đêm (ra từ cửa sổ Tầng trệt, nhấn E). Không tính vào tiến trình =====
  { name:'Hiên Đêm', theme:'night', secret:true, side:true, ret:{lvl:0, x:19.5, row:3}, bench:[56.5, 2],
+   mem:[[12, 13, "umbrella", "Chiếc ô vàng gấp dở", "Một chiếc ô trẻ con, cán khắc chữ “H”. Hồi bé, Hạ không chịu che ô. Con bé bảo: “Mưa là trời đang kể chuyện, che lại thì không nghe được.” Ông đi sau, che cho nó suốt quãng đường về."], [32.5, 11, "postcard", "Tấm bưu thiếp từ thành phố xa", "“Bố ơi, ở đây đèn nhiều lắm, nhiều hơn cả sao nhà mình. Nhưng chẳng ngọn nào là đèn hiên nhà mình cả. Con vẫn ổn. Bố nhớ ăn tối nhé. — Hạ”"], [50, 9, "lamp", "Mẩu giấy buộc vào cột đèn", "Nét chữ của Giáo sư: “Đêm nào ta cũng để đèn hiên sáng. Không phải vì nghĩ con sẽ về đêm nay. Chỉ là… lỡ đâu con nhìn về phía này, con sẽ biết nhà vẫn còn sáng.”"]], whisper:["(tiếng mưa rơi trên mái tôn)", "Gió mang theo mùi bánh mì từ một quán khuya.", "Có ai đó dưới phố đang hát nhỏ."],
    pages:[], talks:[], secrets:[], decor:[],
    hints:['Hiên đêm. Thành phố sáng đèn, mưa rất nhẹ. Đi sang trái (cửa sổ) để quay vào nhà.', 'Không có gì phải vội.', 'Bồn nước trên kia có một chỗ ngồi.'],
    map:[
@@ -1022,8 +1023,9 @@ const LEVELS = [
    ]},
  // ===== GÓC CHILL BÍ MẬT: quán cà phê (Phố Chợ), mái hải đăng (Bến Cảng), góc đọc sách (Sảnh Đếm) =====
  { name:'Quán Cà Phê Góc Phố', theme:'cafe', secret:true, side:true, ret:{name:'Phố Chợ', x:100, row:4}, bench:[35.5, 3],
+   mem:[[21.8, 8, "mug", "Cái cốc cacao sứt quai", "Cốc này của Hạ. Chủ quán vẫn giữ trên kệ, chưa đưa cho ai dùng. Chủ nhật nào hai bố con cũng ngồi đây: một đen không đường, một cacao nhiều sữa. Hạ luôn uống hết phần bọt trước."], [30, 6, "ledger", "Sổ ghi món của quán", "Những trang đầu: “CN – 1 đen, 1 cacao.” Tuần nào cũng vậy, suốt mười mấy năm. Rồi tới một trang chỉ còn: “CN – 1 đen.” Những trang sau cũng thế. Người ghi sổ đã vẽ thêm một trái tim nhỏ cạnh chữ “đen”."], [7, 10, "carve", "Vết khắc trên mép bàn", "Ai đó đã khắc rất nhỏ: “Bố đừng uống cà phê đen một mình nhé. Gọi thêm một cốc cacao cho con, để đó cũng được.” Bên dưới, nét khắc khác, run hơn: “Bố vẫn gọi mà.”"]], whisper:["(máy pha cà phê rì rì)", "Con mèo mở một mắt nhìn Bấc, rồi ngủ tiếp.", "Đĩa than vừa sang mặt B."],
    pages:[], talks:[], secrets:[], decor:[],
-   quotes:['Mưa ngoài kia. Trong này có mùi cà phê và tiếng đĩa than.', 'Con mèo trên quầy chẳng quan tâm ai thắng ai thua.', 'Hồi trước, ông hay gọi một ly đen không đường, rồi để nguội.', 'Ngồi yên một lúc cũng là một cách đi tiếp.', 'Cửa kính mờ hơi nước. Ai đó đã vẽ một mặt cười lên đó.', 'Mưa sẽ tạnh. Cà phê sẽ nguội. Bấc vẫn ở đây.'],
+   quotes:["Mưa ngoài kia. Trong này có mùi cà phê và tiếng đĩa than.", "Con mèo trên quầy chẳng quan tâm ai thắng ai thua.", "Hồi trước, ông hay gọi một ly đen không đường, rồi để nguội.", "Bàn bên cửa sổ vẫn để hai cái ghế. Không ai dọn đi.", "Ngồi yên một lúc cũng là một cách đi tiếp.", "Cửa kính mờ hơi nước. Ai đó đã vẽ một mặt cười lên đó.", "Ở quán này, chẳng ai hỏi con đã đi được bao xa.", "Ly cacao nóng thì phải uống chậm. Mấy chuyện buồn cũng vậy.", "Ông chủ quán gật đầu với Bấc, như đã quen từ lâu.", "Mưa sẽ tạnh. Cà phê sẽ nguội. Bấc vẫn ở đây."],
    hints:['Một quán nhỏ trốn mưa. Leo lên gác lửng, có chỗ ngồi bên cửa sổ.', 'Không có gì phải vội.', 'Cửa ra ở bên trái.'],
    map:[
   '##############################################',
@@ -1040,8 +1042,9 @@ const LEVELS = [
   '##############################################'
  ]},
  { name:'Ban Công Hải Đăng', theme:'sea', secret:true, side:true, ret:{name:'Bến Cảng', x:99.8, row:3}, bench:[23, 4],
+   mem:[[15.5, 7, "kite", "Cánh diều rách đuôi", "Cánh diều đầu tiên ông làm cho Hạ, bằng giấy can và que tre. Nó chưa bao giờ bay cao. Hạ vẫn cười như được bay: “Không sao đâu bố, diều thấp thì mình nhìn rõ nó hơn.”"], [40, 10, "bottle", "Chai thư trôi dạt", "“Con sẽ đi thật xa, xa như mấy con tàu kia. Rồi con sẽ quay về kể bố nghe hết. Bố ở nhà đừng buồn. Buồn thì lên hải đăng ngồi, con nhìn thấy đèn là biết bố đang nhớ con.” — Hạ, 17 tuổi"], [9.5, 9, "log", "Sổ trực của người gác đèn", "“Chiều nay ông Giáo sư lại lên. Ông ngồi tới khi mặt trời lặn hẳn, không nói gì. Trước khi về, ông nhờ tôi quay đèn chậm lại một chút về phía biển. Tôi đã làm vậy. Cũng chẳng tốn gì.”"]], whisper:["(sóng vỗ vào chân đá)", "Một con hải âu đậu xuống lan can, rồi bay đi.", "Đèn hải đăng quét qua, ấm như một cái gật đầu."],
    pages:[], talks:[], secrets:[], decor:[],
-   quotes:['Hoàng hôn trên biển. Sóng cứ vỗ, chẳng cần ai đếm.', 'Ngọn hải đăng không đi tìm tàu. Nó chỉ đứng đó và sáng.', 'Có lẽ mình cũng vậy. Chỉ cần sáng thôi.', 'Hải âu bay về phía mặt trời. Mai nó lại bay về.', 'Gió mặn. Nhưng dễ chịu.', 'Mặt trời lặn mỗi ngày, và chưa ngày nào giống ngày nào.'],
+   quotes:["Hoàng hôn trên biển. Sóng cứ vỗ, chẳng cần ai đếm.", "Ngọn hải đăng không đi tìm tàu. Nó chỉ đứng đó và sáng.", "Có lẽ mình cũng vậy. Chỉ cần sáng thôi.", "Hải âu bay về phía mặt trời. Mai nó lại bay về.", "Tàu nào đi xa rồi cũng nhớ đường về, nhờ có một ngọn đèn.", "Gió mặn. Nhưng dễ chịu.", "Biển rộng thế, mà vẫn ôm vừa một chiếc thuyền nhỏ.", "Không ai hứa sóng sẽ lặng. Nhưng thuyền vẫn học được cách nổi.", "Ông từng ngồi đây đợi một con tàu. Không phải để nó về sớm, mà để nó biết có người đợi.", "Mặt trời lặn mỗi ngày, và chưa ngày nào giống ngày nào."],
    hints:['Ban công trên ngọn hải đăng. Leo lên cao, có một chiếc ghế nhìn ra biển.', 'Không có gì phải vội.', 'Cửa sập bên trái để quay về bến.'],
    map:[
   '##..........................................',
@@ -1060,8 +1063,9 @@ const LEVELS = [
   '############################################'
  ]},
  { name:'Góc Đọc Sách', theme:'nook', secret:true, side:true, ret:{name:'Sảnh Đếm', x:99.4, row:9}, bench:[17, 2],
+   mem:[[7.5, 4, "storybook", "Cuốn truyện kẹp hạc giấy", "Truyện “Ngọn bấc nhỏ”. Hạ đánh dấu trang bằng một con hạc giấy, ở đúng câu: “Bấc cháy để soi đường, nhưng nó không cô đơn, vì ánh sáng luôn chạm tới ai đó.” Hoá ra những con hạc giấy khắp nhà là Hạ dạy ông gấp."], [11.5, 6, "shelfnote", "Mẩu giấy dán trên kệ", "“Quy định của thư viện nhà mình (do Hạ đặt): 1. Sách đọc rồi thì gấp một con hạc. 2. Bố không được đọc trộm đoạn kết. 3. Ai buồn thì được ngồi ghế bành, người kia phải pha cacao.”"], [19.5, 11, "letter", "Lá thư chưa gửi", "“Gửi Hạ. Bố làm một sợi bấc biết đi. Nó nghịch lắm, hay ngã, ngã xong lại đứng dậy, giống con hồi tập xe. Bố không định làm nó thay con đâu. Bố chỉ… không muốn ngôi nhà im lặng quá. Con cứ đi tiếp nhé. Bố vẫn ở đây.”"]], whisper:["(lửa tí tách)", "Một trang sách tự lật vì gió lùa.", "Tuyết đọng thành một lớp mỏng trên bậu cửa tròn."],
    pages:[], talks:[], secrets:[], decor:[],
-   quotes:['Sau kệ sách là một căn phòng nhỏ. Lửa tí tách. Ngoài trời có tuyết.', 'Hạ từng trốn ở đây đọc truyện, quên cả giờ ăn.', 'Đồng hồ cứ tích tắc. Nhưng ở đây, thời gian chẳng đuổi theo ai.', 'Mỗi cuốn sách là một ô cửa khác.', 'Ấm thật. Như một cái chăn dày.', 'Đọc thêm một trang nữa thôi. Rồi lại một trang nữa.'],
+   quotes:["Sau kệ sách là một căn phòng nhỏ. Lửa tí tách. Ngoài trời có tuyết.", "Hạ từng trốn ở đây đọc truyện, quên cả giờ ăn.", "Đồng hồ cứ tích tắc. Nhưng ở đây, thời gian chẳng đuổi theo ai.", "Mỗi cuốn sách là một ô cửa khác.", "Có những nỗi buồn chỉ cần một cái chăn và một trang sách.", "Ấm thật. Như một cái chăn dày.", "Nhân vật trong truyện cũng lạc đường. Rồi họ cũng tìm được nhà.", "Lửa không hỏi con mạnh hay yếu. Lửa chỉ sưởi.", "Ngoài kia tuyết rơi lặng lẽ, như ai đó đang đắp chăn cho cả thị trấn.", "Đọc thêm một trang nữa thôi. Rồi lại một trang nữa."],
    hints:['Căn phòng bí mật sau kệ sách. Có chỗ ngồi đọc sách trên cao, cạnh ngọn nến.', 'Không có gì phải vội.', 'Kệ sách bên trái là lối ra.'],
    map:[
   '############################################',
@@ -4385,7 +4389,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
-  spawnMath = !!L.math; cboss = null; engLevelStart(); ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
+  spawnMath = !!L.math; cboss = null; engLevelStart(); if (L.secret) enterChill(); ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
   parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
@@ -4602,7 +4606,7 @@ const KEYMAP = {KeyV:'lens', ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:
 function trigger(kind){
   if (bossCS){ skipBossCS(); return; }
   if (state==='story'){ advanceStory(); return; }
-  if (reading){ reading = null; jumpBuf = 0; return; }
+  if (reading){ reading = null; jumpBuf = 0; if (memFinalPend){ memFinalPend = false; reading = {mem:true, title:'Lá thư cuối cùng', text:MEM_FINAL, t:0, final:true}; SFX.play('page'); } return; }
   if (state==='title'){ loadSave() ? continueGame() : begin(); return; }
   if (state==='end'){ clearSave(); begin(); return; }
   if (kind==='jump') jumpBuf=.12;
@@ -4699,6 +4703,8 @@ const ACH = {
   nook:       ['Sau Kệ Sách', 'Tìm ra góc đọc sách bí mật', true],
   chill_sit:  ['Chẳng Cần Vội', 'Ngồi xuống ở một góc chill', true],
   chill4:     ['Bản Đồ Những Nơi Bình Yên', 'Tìm đủ 4 góc chill bí mật', true],
+  mem1:       ['Món Đồ Cũ', 'Xem một kỷ vật của ông và Hạ', true],
+  memall:     ['Những Mảnh Của Hạ', 'Tìm đủ 12 kỷ vật và đọc lá thư cuối', true],
   spam:       ['Phòng Thí Nghiệm Di Động', 'Ném 8 lọ trong 3 giây'],
 };
 let achGot = new Set(), achQ = [], achShow = null;
@@ -5018,7 +5024,7 @@ function update(dt){
   if (state==='play'){ saveT -= dt; if (saveT <= 0){ saveT = 5; saveGame(); } }
   updateTnt(dt); updateRopes(dt); engUpdate(dt);
   if (state==='summary'){ summary.t += dt; if (summary.go || summary.t > 9){ summary = null; state = 'play'; skipSummary = true; win(); } return; }
-  { const night = state==='play' && LEVELS[lvl] && LEVELS[lvl].theme==='night', ch = state==='play' && LEVELS[lvl] && CHILL[LEVELS[lvl].theme]; if (night || ch) updateNight(dt);
+  { const night = state==='play' && LEVELS[lvl] && LEVELS[lvl].theme==='night', ch = state==='play' && LEVELS[lvl] && CHILL[LEVELS[lvl].theme]; if (night || ch){ updateNight(dt); updateChill(dt); }
     for (const k of ['rainin','waves','fire']) SFX.loop(k, ch && ch.loops[k] ? ch.loops[k]*(k==='waves' ? .55 + .45*Math.sin(clock*.9) : k==='fire' ? .8 + .2*Math.random() : 1) : 0);
     if (ch){ ch.amb(dt); if (ch.loops.vinyl) SFX.loop('vinyl', 1); if (ch.loops.hiss) SFX.loop('hiss', ch.loops.hiss); award(ch.ach); if (player.sit) award('chill_sit'); if (CHILL_ACH.every(k=>achGot.has(k))) award('chill4'); }
     SFX.loop('rain', night ? 1 : 0); SFX.loop('city', night ? 1 : 0); if (!ch){ SFX.loop('hiss', night ? 1 : 0); SFX.loop('vinyl', night ? 1 : 0); }
@@ -5126,6 +5132,7 @@ function update(dt){
     if (px > w.x*T - 34 && px < (w.x+w.w)*T + 20 && py > w.y*T - 30 && py < (w.y+w.h)*T + 30){ actPress = false; const to = LEVELS.findIndex(L=>L.name===w.to);
       const T2 = LEVELS[to]; let sx = 7, sr = 13; T2.map.forEach((r,y)=>{ const i = r.indexOf('P'); if (i >= 0){ sx = i + .5; sr = y + 1; } });
       transTo = {lvl:to, x:sx, row:sr, face:1, sfx:'door'}; player.actT = .3; win(); return; } }
+  if (actPress && LEVELS[lvl].mem && !player.sit){ const mi = nearMem(); if (mi >= 0){ actPress = false; openMem(mi); } }
   if (actPress && LEVELS[lvl].bench && !player.sit){ const [bx, br] = LEVELS[lvl].bench; if (Math.abs(player.x+11 - bx*T) < 50 && Math.abs(player.y+player.h - (br+1)*T) < 30 && player.ground){ actPress = false; sitDown(); } }
   if (actPress){
     actPress=false;
@@ -5355,19 +5362,82 @@ function drawForeground(){
 }
 let vigCv = null, lampConeCv = null;
 // ===== MÀN ẨN: HIÊN ĐÊM =====
-const NIGHT_LINES = ['Dưới kia, cả nghìn ô cửa đang sáng.', 'Sau mỗi ô cửa là một người. Chẳng ai biết có một sợi bấc đang nhìn họ.', 'Mưa nhỏ thôi. Đủ để thành phố dịu lại.', 'Có lẽ Hạ cũng từng ngồi đây. Đếm đèn thay vì đếm sao.', 'Ở lại thêm một chút cũng được.'];
+const NIGHT_LINES = ["Dưới kia, cả nghìn ô cửa đang sáng.", "Sau mỗi ô cửa là một người. Chẳng ai biết có một sợi bấc đang nhìn họ.", "Mưa nhỏ thôi. Đủ để thành phố dịu lại.", "Có lẽ Hạ cũng từng ngồi đây. Đếm đèn thay vì đếm sao.", "Có những đêm chẳng cần làm gì cả. Chỉ cần ngồi đây là đủ.", "Thành phố ồn ào, nhưng trên này, tiếng mưa nhỏ hơn tiếng thở.", "Một ô cửa vừa tắt đèn. Chắc ai đó đã được ngủ ngon.", "Không cần phải sáng bằng cả thành phố. Một ngọn đèn hiên là đủ ấm.", "Ở xa có người cũng đang nhìn ra cửa sổ. Hai người cô đơn, cùng một cơn mưa.", "Ở lại thêm một chút cũng được."];
 let nightQ = null;
-function sitDown(){ const p = player, [bx, br] = LEVELS[lvl].bench; p.sit = true; p.sitT = 0; p.x = bx*T - 11; p.y = (br+1)*T - p.h; p.vx = p.vy = 0; p.face = 1; nightQ = {i:0, t:0}; SFX.play('step'); }
-const nightLines = ()=> (LEVELS[lvl] && LEVELS[lvl].quotes) || NIGHT_LINES;
+// ===== GÓC CHILL: kỷ vật về ông & Hạ (chỉ có trong các góc bí mật), lời vỗ về, thì thầm =====
+const MEM_FINAL = "Bấc à. Nếu con đọc được dòng này, nghĩa là con đã ngồi ở đủ những chỗ ta và Hạ từng ngồi. Con không phải để thay ai cả. Con là con: hay ngã, hay đứng dậy, và vẫn sáng. Cô đơn không có nghĩa là không ai thương. Có những người thương mình từ rất xa, theo nhịp của họ. Và nếu có ai đang cầm tay con đi qua những nơi này, nhờ con nói với người đó: cảm ơn. Mong người đó cũng luôn có một góc nhỏ để ngồi, và một ngọn đèn ai đó để dành.";
+const COMFORT = ["Con không cần phải giỏi mọi lúc.", "Mệt thì nghỉ. Ngọn đèn vẫn chờ.", "Có những ngày chỉ cần đi qua được là đã giỏi lắm rồi.", "Cô đơn không có nghĩa là không ai thương con.", "Con đã đi một quãng dài. Ta thấy hết.", "Thở chậm một chút. Ở đây an toàn.", "Con được phép buồn. Nỗi buồn cũng là một cách để nhớ.", "Không ai ở đây chấm điểm con cả.", "Ngã bao nhiêu lần cũng được. Con vẫn là con.", "Nếu hôm nay khó, thì mai sẽ khác. Không hứa dễ hơn, nhưng sẽ khác.", "Ánh sáng nhỏ vẫn là ánh sáng.", "Ta mừng vì con đã tìm ra chỗ này.", "Ở đâu đó, có người cũng đang nghĩ về một người như con.", "Có những người thương mình từ rất xa, theo nhịp của họ.", "Ngồi đây một lúc, rồi mình đi tiếp. Không vội."];
+const MEM_TOTAL = LEVELS.reduce((n, L)=>n + (L.mem ? L.mem.length : 0), 0);
+let memGot = new Set(), memFinalPend = false, chillVisits = {}, chillW = null, chillWT = 6, hudFade = 1, sessionT0 = Date.now();
+try { memGot = new Set(JSON.parse(localStorage.getItem('phongkin_mem_v1') || '[]')); chillVisits = JSON.parse(localStorage.getItem('phongkin_visit_v1') || '{}'); } catch(e){}
+function saveMem(){ try { localStorage.setItem('phongkin_mem_v1', JSON.stringify([...memGot])); localStorage.setItem('phongkin_visit_v1', JSON.stringify(chillVisits)); } catch(e){} }
+function shuffle(a){ a = a.slice(); for (let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function contextLines(){   // lời nói theo hoàn cảnh người chơi: giờ khuya, số lần ngã, quay lại lần nữa…
+  const L = LEVELS[lvl], out = [], h = new Date().getHours(), v = chillVisits[L.name] || 0, mins = (Date.now() - sessionT0)/60000;
+  if (v > 1) out.push(v > 3 ? 'Lại là con. Chỗ ngồi này ta vẫn giữ cho con.' : 'Con quay lại rồi. Chỗ này vẫn để dành cho con.');
+  if (h >= 23 || h < 4) out.push('Khuya rồi. Cảm ơn con vẫn còn thức ở đây với ta.', 'Ngủ sớm một chút cũng là thương mình đấy.');
+  else if (h < 9) out.push('Sáng sớm mà con đã ở đây. Nhớ ăn sáng nhé.');
+  else if (h >= 18) out.push('Chiều tối rồi. Ai đó ngoài kia cũng vừa xong một ngày dài.');
+  if (deaths >= 20) out.push(`Con đã ngã ${deaths} lần trên đường tới đây. Mà con vẫn tới. Ta biết điều đó không dễ.`);
+  else if (deaths >= 5) out.push(`${deaths} lần ngã. Lần nào con cũng đứng dậy.`);
+  else if (deaths === 0) out.push('Chưa ngã lần nào à? Giỏi quá. Nhưng ngã cũng không sao đâu.');
+  if (mins > 40) out.push('Con chơi lâu rồi đấy. Uống ngụm nước đi, ta đợi.');
+  const here = (L.mem||[]).filter((m, i)=>memGot.has(L.name + '#' + i)).length;
+  if (L.mem && here < L.mem.length) out.push('Quanh đây còn vài món đồ cũ. Không cần vội tìm.');
+  if (memGot.size === MEM_TOTAL) out.push('Con đã biết hết chuyện của ông và Hạ rồi. Cảm ơn con đã lắng nghe.');
+  return out;
+}
+function buildSitLines(){ const L = LEVELS[lvl], q = L.quotes || NIGHT_LINES; return [q[0], ...contextLines(), ...shuffle(q.slice(1).concat(shuffle(COMFORT).slice(0, 6)))]; }
+function enterChill(){ const L = LEVELS[lvl]; chillVisits[L.name] = (chillVisits[L.name] || 0) + 1; saveMem(); chillWT = 2.5; chillW = null; hudFade = 1; }
+function nearMem(){ const L = LEVELS[lvl]; if (!L.mem) return -1; const px = player.x + 11, fy = player.y + player.h;
+  let best = -1, bd = 60; L.mem.forEach((m, i)=>{ const d = Math.hypot(m[0]*T - px, (m[1]*T - fy)*1.5); if (d < bd){ bd = d; best = i; } }); return best; }
+function openMem(i){ const L = LEVELS[lvl], m = L.mem[i], id = L.name + '#' + i, first = !memGot.has(id);
+  memGot.add(id); saveMem(); SFX.play('page'); reading = {mem:true, title:m[3], text:m[4], t:0};
+  if (first){ award('mem1'); if (memGot.size === MEM_TOTAL){ award('memall'); memFinalPend = true; } } }
+function updateChill(dt){
+  const L = LEVELS[lvl]; if (!L || !L.secret || state!=='play') return;
+  hudFade += ((player.sit && player.sitT > 2 ? 0 : 1) - hudFade)*Math.min(1, dt*1.5); player.sitT = (player.sitT||0) + dt;
+  if (reading || player.sit){ chillW = null; return; }
+  if (chillW){ chillW.t += dt; if (chillW.t > 5.5) chillW = null; }
+  else if ((chillWT -= dt) <= 0){ const pool = [...(L.whisper||[]), ...COMFORT, ...contextLines()]; let t; do { t = pool[Math.floor(Math.random()*pool.length)]; } while (pool.length > 1 && chillW && t === chillW.text); chillW = {t:0, text:t}; chillWT = 13 + Math.random()*6; }
+}
+function drawWhisper(){
+  if (!chillW || !LEVELS[lvl].secret) return; const a = clamp(Math.min(chillW.t/1.2, (5.5 - chillW.t)/1.2), 0, 1)*.85;
+  ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = PAPER; ctx.textAlign = 'center'; ctx.font = `italic 400 ${Math.min(17, viewW/40)}px ${HAND}`; ctx.fillText(chillW.text, viewW/2, viewH*.2); ctx.restore();
+}
+function drawSitVignette(){   // ngồi xuống: viền tối ấm, HUD lặng dần, chỉ còn khung cảnh
+  if (!player.sit || !LEVELS[lvl].secret) return; const k = 1 - hudFade, g = ctx.createRadialGradient(viewW/2, viewH/2, viewH*.3, viewW/2, viewH/2, viewH*.95);
+  g.addColorStop(0, 'rgba(10,8,6,0)'); g.addColorStop(1, `rgba(10,8,6,${.55*k})`); ctx.fillStyle = g; ctx.fillRect(0, 0, viewW, viewH);
+}
+function drawMemItems(){
+  const L = LEVELS[lvl]; if (!L.mem) return; ctx.save(); ctx.strokeStyle = PAPER; ctx.fillStyle = PAPER; ctx.lineCap = 'round'; ctx.lineWidth = 1.6;
+  L.mem.forEach((m, i)=>{ const X = m[0]*T, Y = m[1]*T, got = memGot.has(L.name + '#' + i), k = m[2];
+    if (!got){ ctx.save(); ctx.globalAlpha = .18 + .12*Math.sin(clock*2 + i); warmGlow(X, Y - 10, 34, .5); ctx.restore();
+      for (let j=0;j<3;j++){ const a = clock*1.3 + j*2.1 + i, r = 16 + Math.sin(clock*2 + j)*3; ctx.globalAlpha = .5 + .5*Math.sin(clock*3 + j); ctx.beginPath(); ctx.arc(X + Math.cos(a)*r, Y - 12 + Math.sin(a)*r*.6, 1.3, 0, Math.PI*2); ctx.fill(); } }
+    ctx.globalAlpha = got ? .45 : .95; ctx.save(); ctx.translate(X, Y);
+    if (k==='mug'){ ctx.strokeRect(-6, -12, 12, 12); ctx.beginPath(); ctx.arc(7, -6, 3.5, -1.2, 1.2); ctx.stroke(); }
+    else if (k==='ledger' || k==='log' || k==='storybook'){ ctx.strokeRect(-10, -6, 20, 6); ctx.strokeRect(-9, -11, 18, 5); if (k==='storybook'){ ctx.beginPath(); ctx.moveTo(2, -11); ctx.lineTo(6, -18); ctx.lineTo(9, -11); ctx.stroke(); } }
+    else if (k==='carve'){ ctx.strokeRect(-14, -16, 28, 3); line(-11, -13, -11, 0); line(11, -13, 11, 0); ctx.font = `400 8px ${HAND}`; ctx.textAlign = 'center'; ctx.fillText('H♡', 0, -19); }
+    else if (k==='kite'){ ctx.beginPath(); ctx.moveTo(0, -24); ctx.lineTo(8, -14); ctx.lineTo(0, -4); ctx.lineTo(-8, -14); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, -4); ctx.quadraticCurveTo(-6, 0, 4, 0); ctx.stroke(); }
+    else if (k==='bottle'){ ctx.save(); ctx.rotate(-.5); ctx.strokeRect(-4, -14, 8, 12); ctx.strokeRect(-2, -18, 4, 4); ctx.restore(); }
+    else if (k==='umbrella'){ ctx.beginPath(); ctx.arc(0, -10, 10, Math.PI, 0); ctx.closePath(); ctx.stroke(); line(0, -10, 0, 0); ctx.beginPath(); ctx.arc(-2, 0, 2, 0, Math.PI); ctx.stroke(); }
+    else if (k==='postcard' || k==='letter' || k==='shelfnote'){ ctx.strokeRect(-9, -12, 18, 12); line(-9, -12, 0, -5); line(9, -12, 0, -5); }
+    else if (k==='lamp'){ line(0, 0, 0, -26); ctx.strokeRect(-4, -32, 8, 7); ctx.strokeRect(2, -20, 8, 6); }
+    ctx.restore(); });
+  ctx.restore();
+}
+
+function sitDown(){ const p = player, [bx, br] = LEVELS[lvl].bench; p.sit = true; p.sitT = 0; p.x = bx*T - 11; p.y = (br+1)*T - p.h; p.vx = p.vy = 0; p.face = 1; nightQ = {i:0, t:0, list:buildSitLines()}; SFX.play('step'); }
+const nightLines = ()=> (nightQ && nightQ.list) || (LEVELS[lvl] && LEVELS[lvl].quotes) || NIGHT_LINES;
 function updateNight(dt){
   if (!LEVELS[lvl] || !LEVELS[lvl].bench) return;
-  if (player.sit && nightQ){ nightQ.t += dt; if (nightQ.t > 6.5 && nightQ.i < nightLines().length - 1){ nightQ.i++; nightQ.t = 0; } }
+  if (player.sit && nightQ){ nightQ.t += dt; if (nightQ.t > 7){ nightQ.i++; nightQ.t = 0; if (nightQ.i >= nightLines().length){ nightQ.list = buildSitLines(); nightQ.i = 1; } } }
   if (!player.sit) nightQ = null;
 }
 function drawNightQuote(){
   if (!nightQ || state!=='play') return; const a = clamp(Math.min(nightQ.t/1.2, (6.5 - nightQ.t)/1.2), 0, 1); if (nightQ.i === nightLines().length-1) { if (nightQ.t > 1.2) {} }
-  const aa = nightQ.i === nightLines().length-1 ? clamp(nightQ.t/1.2, 0, 1) : a;
-  ctx.save(); ctx.globalAlpha = aa; ctx.fillStyle = PAPER; ctx.textAlign = 'center'; ctx.font = `400 ${Math.min(22, viewW/32)}px ${HAND}`; ctx.fillText(nightLines()[nightQ.i], viewW/2, viewH - 40);
+  const aa = clamp(Math.min(nightQ.t/1.4, (7 - nightQ.t)/1.4), 0, 1);
+  ctx.save(); ctx.globalAlpha = aa; ctx.fillStyle = PAPER; ctx.textAlign = 'center'; ctx.font = `400 ${Math.min(22, viewW/32)}px ${HAND}`; { const ln = wrapText(nightLines()[nightQ.i] || '', viewW*.8); ln.forEach((l, k)=>ctx.fillText(l, viewW/2, viewH - 40 - (ln.length - 1 - k)*26)); }
   ctx.globalAlpha = aa*.5; ctx.font = `400 9px ${FONT}`; ctx.fillText('← → để đứng dậy', viewW/2, viewH - 20); ctx.restore();
 }
 // ===== CÁC GÓC CHILL BÍ MẬT (quán cà phê · mái hải đăng · góc đọc sách) — dùng chung cơ chế với Hiên Đêm =====
@@ -5722,6 +5792,7 @@ function drawPrompts(){
   const pr = (x, y, d, lab)=>{ const a = clamp((90-d)/40, 0, 1); if (a <= 0) return; const yy = y + Math.sin(clock*4)*2; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.8;
     ctx.fillRect(x-9,yy-9,18,18); ctx.strokeRect(x-9,yy-9,18,18); ctx.fillStyle=INK; ctx.font=`700 11px ${FONT}`; ctx.textAlign='center'; ctx.fillText('E', x, yy+4); if (lab){ ctx.font=`400 9px ${FONT}`; ctx.fillStyle = (LL.theme==='night' || CHILL[LL.theme]) ? PAPER : INK; ctx.fillText(lab, x, yy-14); } ctx.restore(); };
   if (LL.warp){ const w = LL.warp, cx = (w.x + w.w/2)*T, cy = (w.y + w.h/2)*T; pr(cx, w.y*T - 16, Math.hypot(cx-px, cy-py) - 40, w.say || 'mở cửa sổ'); }
+  if (LL.mem && !player.sit){ const mi = nearMem(); if (mi >= 0){ const m = LL.mem[mi]; pr(m[0]*T, m[1]*T - 44, 0, memGot.has(LL.name + '#' + mi) ? 'đọc lại' : 'xem kỷ vật'); } }
   if (LL.bench && !player.sit){ const [bx, br] = LL.bench; pr(bx*T, br*T - 30, Math.hypot(bx*T-px, (br+.5)*T-py), 'ngồi'); }
   for (const c of ['l','v','n','F']) for (const t of tiles[c]||[]){
     if (c==='F' && (forgeDone || forgeSeq)) continue;
@@ -8391,7 +8462,7 @@ function drawStory(){
 // Trang nhật ký đang đọc (vẽ trong khung nhìn)
 function drawReading(){
   const r = reading, a = Math.min(1, r.t*4);
-  const w = Math.min(380, viewW-40), x = (viewW-w)/2;
+  const w = Math.min(r.mem ? 460 : 380, viewW-40), x = (viewW-w)/2;
   ctx.font = `400 20px ${HAND}`;
   const lines = wrapText(r.text, w-64), h = 70 + lines.length*24 + 30, y = (viewH-h)/2;
   ctx.save(); ctx.globalAlpha = a;
@@ -8399,7 +8470,7 @@ function drawReading(){
   ctx.translate(viewW/2, y+h/2); ctx.rotate(-.015); ctx.translate(-viewW/2, -(y+h/2));
   ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=2.5; ctx.fillRect(x,y,w,h); ctx.strokeRect(x,y,w,h);
   ctx.lineWidth=1; ctx.globalAlpha = a*.18; for (let yy=y+56; yy<y+h-20; yy+=24) line(x+16,yy+6,x+w-16,yy+6); line(x+30,y,x+30,y+h); ctx.globalAlpha = a;
-  ctx.fillStyle=INK; ctx.font=`700 11px ${FONT}`; ctx.textAlign='left'; ctx.fillText(r.secret ? `HẠC GIẤY BÍ MẬT · ${r.secret}/${SECRET_TOTAL}` : `NHẬT KÝ GIÁO SƯ TỊCH · TRANG ${r.no}/${PAGE_TOTAL}`, x+40, y+28);
+  ctx.fillStyle=INK; ctx.font=`700 11px ${FONT}`; ctx.textAlign='left'; ctx.fillText(r.mem ? (r.final ? 'LÁ THƯ CUỐI CÙNG · đủ 12 kỷ vật' : `KỶ VẬT · ${r.title} · ${memGot.size}/${MEM_TOTAL}`) : r.secret ? `HẠC GIẤY BÍ MẬT · ${r.secret}/${SECRET_TOTAL}` : `NHẬT KÝ GIÁO SƯ TỊCH · TRANG ${r.no}/${PAGE_TOTAL}`, x+40, y+28);
   ctx.font=`400 20px ${HAND}`;
   lines.forEach((l,i)=>ctx.fillText(l, x+40, y+60+i*24));
   ctx.font=`400 10px ${FONT}`; ctx.textAlign='right'; ctx.globalAlpha = a*(.5+.5*Math.sin(clock*4));
@@ -8493,7 +8564,7 @@ function drawGame(){
   const y0=Math.max(0,Math.floor(camY/T)), y1=Math.min(GH-1,Math.ceil((camY+viewH)/T));
   cachedWalls(x0, x1);
   for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c=grid[y][x]; if (c!=='.' && c!=='#') drawTile(c,x,y); }
-  if (L.theme==='night' || CHILL[L.theme]) drawMurals(L.theme); if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
+  if (L.theme==='night' || CHILL[L.theme]){ drawMurals(L.theme); drawMemItems(); } if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
   if (pulley) drawPulley();
   if (heaterOn) drawSteam();
   for (const k of keyItems) if (!k.got) drawKey(k);
@@ -8560,9 +8631,10 @@ function drawGame(){
   // HUD vẽ nhỏ lại theo hệ số HK để không tràn khung nhìn
   ctx.save(); ctx.scale(HK, HK); const vw0 = viewW, vh0 = viewH; viewW /= HK; viewH /= HK;
   try {
+  const _sec = LEVELS[lvl] && LEVELS[lvl].secret; if (_sec) drawSitVignette(); ctx.globalAlpha = _sec ? hudFade : 1;
   if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawQuestHUD(); drawMathBossHUD(); drawCoreHUD(); drawMathHUD(); drawGearHUD(); drawBossLine(); }
   drawNotes();
-  drawNightQuote();
+  ctx.globalAlpha = 1; drawNightQuote(); drawWhisper();
   // nút loa (cạnh thanh mực): bấm hoặc nhấn M
   { const sx = 212, sy = 29; ctx.save(); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.arc(sx,sy,13,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle=INK;
