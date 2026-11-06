@@ -979,26 +979,38 @@ const LEVELS = [
   '################################^^^^^^^^^^^^^##############^^^^^^^^^^^^^^##################^^^^^^^^^##########',
   '##############################################################################################################',
  ]},
- { name:"Đỉnh Tháp", ch:5, combat:true, mboss:{name:"Máy Vẽ Đồ Thị", kind:"plotter", arena:[18, 58, 15], orbs:[[24, 12], [38, 10], [53, 12]], qs:[{q:"y = 2x + 1. Khi x = 3, y = ?", opts:["6", "7", "9"], ans:1, why:"2·3 + 1 = 7"}, {q:"x² − 9 = 0, x > 0. x = ?", opts:["9", "81", "3"], ans:2, hint:"x² = 9", why:"3² = 9"}, {q:"sin 90° = ?", opts:["1", "0", "1/2"], ans:0, why:"đỉnh cao nhất của đường tròn đơn vị"}, {q:"Đường nào đi qua gốc toạ độ?", opts:["y = x + 1", "y = 4x", "y = 2"], ans:1, hint:"thay x = 0, cần y = 0", why:"4·0 = 0"}, {q:"Độ dài vectơ (6; 8)?", opts:["14", "48", "10"], ans:2, hint:"√(6² + 8²)", why:"√100 = 10"}, {q:"Đỉnh parabol y = −x² + 4?", opts:["(0; 4)", "(4; 0)", "(2; 0)"], ans:0, hint:"x = 0 cho y lớn nhất", why:"y lớn nhất bằng 4 tại x = 0"}, {q:"cos 180° = ?", opts:["0", "1", "−1"], ans:2, hint:"điểm đối diện (1; 0) trên đường tròn", why:"cos 180° = −1"}], defeat:"Máy Vẽ Đồ Thị vẽ nét cuối: y = 0"}, pages:["Cỗ máy này vẽ mọi đồ thị ta từng nghĩ ra. Kể cả những đường ta không dám đi."], talks:[[6, 13, "Máy Vẽ Đồ Thị! Né sóng sin, parabol và mũi tên vectơ."]], hints:["Sóng sin quét ngang: đứng chỗ đường sóng không đi qua. Mũi tên vectơ bay thẳng theo vạch chấm.", "Chạm cầu đúng để làm máy mất một vạch."], notes:[["MÁY VẼ ĐỒ THỊ", "Né đòn → nghe câu hỏi → chạm cầu đúng", "Vạch chấm báo trước hướng mũi tên", "Sai: mất 1 máu"]], secrets:[], decor:[["sign", 8, "ĐỈNH THÁP"]], theme:"math", math:true, quiz:[],
-   map:[
-  '################################################################',
-  '################################################################',
-  '################################################################',
-  '#..........................................................%...#',
-  '#......................................8...................%...#',
-  '#..........................................................%...#',
-  '#..........................................................%...#',
-  '#..........................................................%...#',
-  '#..........................................................%...#',
-  '#..........................................................%...#',
-  '#..........................................................%...#',
-  '#...................................______.................%...#',
-  '#..........................................................%...#',
-  '#....................._____...___............___..._____...%...#',
-  '#..P....n...m..............................................%.E.#',
-  '################################################################',
-  '################################################################',
-  '################################################################',
+ { name:"Đỉnh Tháp", ch:5, combat:true, chase:{name:"Máy Vẽ Đồ Thị", path:[[61.5, 19.4], [6, 19.4], [6, 7.5], [66.5, 7.5], [66.5, 27.4]], speed:150, delay:2.2, segMul:[1, .45, 1, .75]}, pages:["Cỗ máy này vẽ mọi đồ thị ta từng nghĩ ra. Kể cả những đường ta không dám đi."], talks:[], hints:["CHẠY! Máy Vẽ Đồ Thị vẽ đuổi sau lưng: trái → cột khí lên → phải → xuống giếng. Chạm vào nó là hết."], notes:[["CUỘC RƯỢT ĐUỔI", "Trái → cột khí lên → phải → xuống giếng", "Vạch chấm, chữ nhấp nháy: đòn sắp tới", "Chạm Máy Vẽ là hết · có mốc an toàn"]], secrets:[], decor:[], theme:"math", math:true, quiz:[],
+  map:[
+  '########################################################################',
+  '########################################################################',
+  '#.........Y............................................................#',
+  '#......................................................................#',
+  '#......................................................................#',
+  '#.......................................___............................#',
+  '#.................................#....................................#',
+  '#....___......................#...#.....................#..............#',
+  '#............^^^^#####^^^#############^^^^^^^#####^^^##########........#',
+  '#___.........##################################################........#',
+  '#............##################################################.......^#',
+  '#.||.____....##################################################___.....#',
+  '#.||.........##################################################........#',
+  '#.||.........##################################################........#',
+  '#.||.........##################################################^.......#',
+  '#.||......................##..................................#.....___#',
+  '#.||......................##..................................#........#',
+  '#.||..........................................................#........#',
+  '#.||....................................#.....................#.......^#',
+  '#.||..................#.................##........#.......P...#___.....#',
+  '##############################^^^###########^^^################........#',
+  '###############################################################........#',
+  '###############################################################^.......#',
+  '###############################################################.....___#',
+  '###############################################################........#',
+  '###############################################################........#',
+  '###############################################################........#',
+  '###############################################################^^..E..^#',
+  '########################################################################',
+  '########################################################################'
  ]},
  // ===== MÀN ẨN: Hiên Đêm (ra từ cửa sổ Tầng trệt, nhấn E). Không tính vào tiến trình =====
  { name:'Hiên Đêm', theme:'night', secret:true, side:true, ret:{lvl:0, x:19.5, row:3}, bench:[56.5, 2],
@@ -4410,7 +4422,7 @@ const STORY = {
     [{scene:'chapter', title:'Phần 5 · Bệ Phóng Vectơ', icon:'graph', lines:['Nơi biết hướng quan trọng hơn biết nhanh.']}],
     [
       {shots:[
-        cineShot('graph',   [60,-420,1.0,0], [160,-560,1.4,0], 6.5, 'Trên đỉnh tháp, một cỗ máy đang vẽ không ngừng. Mỗi nét bút là một đòn tấn công.', {mode:'plotter', tr:'fade'}),
+        cineShot('graph',   [60,-420,1.0,0], [160,-560,1.4,0], 6.5, 'Trên đỉnh tháp, một cỗ máy đang vẽ không ngừng. Nó vẽ theo mọi bước chân. Và nó vừa nhìn thấy Bấc.', {mode:'plotter', tr:'fade'}),
       ]},
       {scene:'chapter', title:'Phần 6 · Đỉnh Tháp', icon:'graph', lines:['Nơi Máy Vẽ Đồ Thị chờ.']},
     ],
@@ -4617,7 +4629,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
-  spawnMath = !!L.math; cboss = null; engLevelStart(); if (L.secret) enterChill(); bal = L.balloon ? makeBal(L.balloon) : null; ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
+  spawnMath = !!L.math; cboss = null; engLevelStart(); if (L.secret) enterChill(); bal = L.balloon ? makeBal(L.balloon) : null; chase = L.chase ? makeChase(L.chase) : null; if (chase) popups.push({x:player.x + 11, y:player.y - 50, text:'Máy Vẽ Đồ Thị đã thấy Bấc… CHẠY SANG TRÁI!', life:2.6, big:true}); ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
   parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
@@ -4681,10 +4693,12 @@ function respawn(){
   if (cboss && cboss.engaged && !cboss.dead){ resetCoreBoss(); popups.push({x:cp.x+11, y:cp.y-30, text:'Lõi hồi phục: đấu lại từ đầu!', life:2.4, big:true}); }
   if (mboss && mboss.engaged && !mboss.dead){ resetMathBoss(); popups.push({x:cp.x+11, y:cp.y-30, text:'Boss hồi đầy máu: đấu lại từ đầu!', life:2.4, big:true}); }
   blobs = []; flasks = []; balReset();
+  if (chase && !chase.done){ cp = {x:chase.P[0].x - 11 - 3*T, y:chase.P[0].y + T*.5 - 34}; }
   for (const r of ropes) r.held = false;
   player = makePlayer(cp.x, cp.y); ghosts=[]; jumpBuf=0; dashBuf=0;
   for (const c of crystals) c.cd = 0;
   mana = Math.max(mana, MANA_DASH);
+  if (chase && !chase.done) chaseReset();
   updateCam(0, true, true); engRespawn();
   // hoạt ảnh hiện hình: mực tụ lại
   for (let i=0;i<14;i++){ const a=i/14*Math.PI*2; parts.push({x:cp.x+11+Math.cos(a)*40,y:cp.y+17+Math.sin(a)*40,vx:-Math.cos(a)*90,vy:-Math.sin(a)*90-60,a,va:0,l:5,life:.45}); }
@@ -4969,7 +4983,7 @@ const ACH = {
   persist:    ['Kiên Trì Như Sợi Bấc', 'Ngã 10 lần mà vẫn đứng dậy'],
   vuamuc:     ['Trung Hoà Vua Mực', 'Hạ Vua Mực'],
   sphinx:     ['Kẻ Trả Lời Nhân Sư', 'Hạ Nhân Sư Hình Số'],
-  plotter:    ['Người Vẽ Lại Đồ Thị', 'Hạ Máy Vẽ Đồ Thị'],
+  plotter:    ['Người Vẽ Lại Đồ Thị', 'Thoát khỏi Máy Vẽ Đồ Thị ở Đỉnh Tháp'],
   core:       ['Cân Bằng Nhiệt', 'Hạ Lõi Nhiệt Động'],
   reflect:    ['Định Luật Bảo Toàn', 'Bật ngược một cầu nhiệt'],
   pages10:    ['Người Đọc Nhật Ký', 'Nhặt 10 trang nhật ký'],
@@ -5360,7 +5374,7 @@ function update(dt){
   shakeT -= dt; updateAmbience(dt); updateZoom(dt);
   computeSteam();
   updatePulley(dt); if (sines.length) updateSines();
-  updateBal(dt); updatePlayer(dt);
+  updateBal(dt); updateChase(dt); updatePlayer(dt);
   if (LEVELS[lvl].combat){ updateCombat(dt); if (state!=='play' && state!=='trans') return; }
   for (const b of boxes){
     const wet = tileAt(b.x+T/2, b.y+T/2)==='w';
@@ -5513,7 +5527,7 @@ function update(dt){
   noteT -= dt;
   if (p.y > RH) return die();
   // Lối ra
-  if (!(boss && !boss.dead)) for (const t of tiles.E||[]) if (cx>t.x*T+8 && cx<t.x*T+T-8 && cy>t.y*T-T && cy<t.y*T+T) return win();
+  if (!(boss && !boss.dead)) for (const t of tiles.E||[]) if (cx>t.x*T+8 && cx<t.x*T+T-8 && cy>t.y*T-T && cy<t.y*T+T){ finishChase(); return win(); }
 }
 
 // ===== Vẽ =====
@@ -5992,6 +6006,90 @@ function memoryWorld(){
 }
 function finishMemory(){ const L = LEVELS[lvl]; if (!L.memory) return; const first = !memDone.has(L.name); memDone.add(L.name); try { localStorage.setItem('phongkin_kyuc_v1', JSON.stringify([...memDone])); } catch(e){}
   if (first){ award('kyuc1'); popups.push({x:player.x + 11, y:player.y - 40, text:`Ký ức ${memDone.size}/${KYUC_TOTAL}`, life:2.2, big:true}); if (trueEnding()) award('kyuc3'); } }
+
+// ===== RƯỢT ĐUỔI Ở ĐỈNH THÁP: Máy Vẽ Đồ Thị vẽ theo đúng đường Bấc chạy (trái → lên → phải → xuống); chạm là hết =====
+let chase = null;
+function makeChase(c){ const P = c.path.map(([x,y])=>({x:x*T, y:y*T})), seg = []; let acc = 0;
+  for (let i=0;i<P.length-1;i++){ const L = Math.hypot(P[i+1].x - P[i].x, P[i+1].y - P[i].y); seg.push({a:P[i], b:P[i+1], s0:acc, L}); acc += L; }
+  return {def:c, P, seg, total:acc, u:-c.delay*c.speed, wait:c.delay, cpU:0, cpI:0, atk:3.2, hz:[], erased:[], last:'', x:P[0].x, y:P[0].y, dir:{x:-1, y:0}, done:false, trail:[], killed:false}; }
+function chasePos(u){ const C = chase; u = clamp(u, 0, C.total); for (const sg of C.seg) if (u <= sg.s0 + sg.L){ const k = (u - sg.s0)/sg.L; return {x:sg.a.x + (sg.b.x - sg.a.x)*k, y:sg.a.y + (sg.b.y - sg.a.y)*k, dx:(sg.b.x - sg.a.x)/sg.L, dy:(sg.b.y - sg.a.y)/sg.L}; } const l = C.seg[C.seg.length-1]; return {x:l.b.x, y:l.b.y, dx:0, dy:1}; }
+function chaseProj(x, y){ const C = chase; let best = 0, bd = 1e9; for (const sg of C.seg){ const vx = sg.b.x - sg.a.x, vy = sg.b.y - sg.a.y, k = clamp(((x - sg.a.x)*vx + (y - sg.a.y)*vy)/(sg.L*sg.L), 0, 1), px = sg.a.x + vx*k, py = sg.a.y + vy*k, d = Math.hypot(x - px, y - py); if (d < bd){ bd = d; best = sg.s0 + k*sg.L; } } return best; }
+const CHASE_TIPS = ['Chạy sang TRÁI!', 'LÊN! Cột khí góc trái → nhảy kệ → đu dây qua gai', 'Chạy sang PHẢI trên tầng thượng!', 'XUỐNG GIẾNG: bám từng kệ, tránh gai bám tường!'];
+function chaseReset(){ const C = chase; if (!C) return; const back = C.cpI === 0 ? C.def.delay*C.def.speed : 7*T; C.u = C.cpU - back; C.wait = 1.6; C.hz = []; C.atk = 3; for (const e of C.erased) grid[e.y][e.x] = e.c; C.erased = []; C.trail = []; C.killed = false;
+  const CPS = [[58.5, 20], [8.5, 20], [19.5, 8], [64.5, 11]], n = CPS[C.cpI]; if (n){ player.x = n[0]*T - 11; player.y = n[1]*T - player.h; player.vx = player.vy = 0; } popups.push({x:player.x + 11, y:player.y - 40, text:'CHẠY! ' + CHASE_TIPS[C.cpI], life:2.2, big:true}); }
+function chaseAttack(){
+  const C = chase, p = player, px = p.x + 11, py = p.y + 17, sec = C.seg.findIndex(sg=>C.u <= sg.s0 + sg.L), pool = ['line','par','vec','sine','grid'];
+  if (sec >= 2) pool.push('erase', 'grid'); if (sec >= 1) pool.push('par', 'line');
+  let mv; do { mv = pool[Math.floor(Math.random()*pool.length)]; } while (mv === C.last && pool.length > 1); C.last = mv;
+  const bx = C.x, by = C.y;
+  if (mv==='line'){ const a = (Math.random()-.5)*1.2; C.hz.push({k:'line', x0:px, y0:py, a, t:0, tell:.85}); popups.push({x:px, y:py - 50, text:`y = ${a>=0?'':'−'}${Math.abs(a).toFixed(1)}x + b`, life:1}); }
+  else if (mv==='par'){ for (let i=0;i<3;i++){ const tx = px + (i-1)*2.2*T + p.vx*.5, ty = py, t = .9 + i*.12, vx = (tx - bx)/t, vy = (ty - by)/t - .5*900*t; C.hz.push({k:'blob', x:bx, y:by, vx, vy, t:0, life:2.2, tx, ty, tellT:t}); } }
+  else if (mv==='vec'){ const ang = Math.atan2(py - by, px - bx); for (let i=-1;i<=1;i++){ const a = ang + i*.22; C.hz.push({k:'arrow', x:bx, y:by, dx:Math.cos(a), dy:Math.sin(a), t:0, tell:.7, v:640, life:2.2}); } }
+  else if (mv==='sine'){ const dir = Math.sign(px - bx) || -1; C.hz.push({k:'sine', x:bx, y:py + 10, dir, t:0, v:300, life:4}); }
+  else if (mv==='grid'){ const cols = []; for (let i=-2;i<=2;i++) if (i !== 0 || Math.random() < .5) cols.push(Math.round(px/T + i*2 + (Math.random() < .5 ? 1 : 0))); for (const cx of cols) C.hz.push({k:'col', x:cx*T + T/2, t:0, tell:.9, life:1.4}); popups.push({x:px, y:py - 60, text:'x = k', life:.8}); }
+  else if (mv==='erase'){ let n = 0; for (let y = Math.floor(py/T) + 1; y < GH && n < 3; y++) for (let x = Math.floor(px/T) - 3; x <= Math.floor(px/T) + 3 && n < 3; x++){ if (grid[y] && grid[y][x]==='_' && Math.random() < .8){ C.hz.push({k:'erase', tx:x, ty:y, t:0, tell:1.1, life:3.8}); n++; } } if (!n) return chaseAttack(); }
+  SFX.play('scribble');
+}
+function updateChase(dt){
+  const C = chase; if (!C || C.done || state!=='play') return; const p = player, px = p.x + 11, py = p.y + 17;
+  if (C.wait > 0){ C.wait -= dt; }
+  const pu = chaseProj(px, py), gap = pu - C.u;
+  for (let i = C.P.length - 2; i > C.cpI; i--) if (pu > C.seg[i].s0 + T*1.5){ C.cpI = i; C.cpU = C.seg[i].s0; popups.push({x:px, y:py - 50, text:'✓ mốc an toàn', life:1.2}); popups.push({x:px, y:py - 80, text:CHASE_TIPS[i], life:2.6, big:true}); SFX.play('save'); break; }
+  if (C.wait <= 0){ const si = Math.max(0, C.seg.findIndex(sg=>C.u <= sg.s0 + sg.L)), sp = C.def.speed*(C.def.segMul ? C.def.segMul[si] ?? 1 : 1)*(gap > 12*T ? 1.6 : gap > 7*T ? 1 : gap < 3*T ? .7 : .85); C.u += sp*dt; }
+  const q = chasePos(C.u), hk = C.u > 0 ? clamp(1 - Math.abs(gap)/(4*T), 0, 1) : 0; C.x = q.x + (px - q.x)*hk*.9; C.y = q.y + (py - q.y)*hk*.9; C.dir = {x:q.dx, y:q.dy};   // sát nút thì vươn ngòi về phía Bấc
+  if (C.u > 0 && (!C.trail.length || Math.hypot(C.trail[C.trail.length-1].x - C.x, C.trail[C.trail.length-1].y - C.y) > 10)){ C.trail.push({x:C.x, y:C.y}); if (C.trail.length > 400) C.trail.shift(); }
+  // chạm máy = hết
+  if (!C.killed && Math.hypot(C.x - px, C.y - py) < 50 && C.u > 0){ C.killed = true; SFX.play('crash'); shakeT = .5; popups.push({x:px, y:py - 40, text:'Bị vẽ mất rồi!', life:1.6, big:true}); p.shield = 0; die(); return; }
+  // đòn đánh
+  if (C.wait <= 0 && C.u > 0){ C.atk -= dt; if (C.atk <= 0){ chaseAttack(); C.atk = 2.6 + Math.random()*1.4 - (C.cpI*.25); } }
+  for (const h of C.hz){ h.t += dt;
+    if (h.k==='line'){ if (h.t > h.tell && h.t < h.tell + .3){ const d = Math.abs((py - h.y0) - h.a*(px - h.x0))/Math.sqrt(1 + h.a*h.a); if (d < 16 && p.dashT<=0) hurtPlayer(1, h.x0); } if (h.t > h.tell + .4) h.dead = true; }
+    else if (h.k==='blob'){ if (h.t > .05){ h.vy += 900*dt; h.x += h.vx*dt; h.y += h.vy*dt; } if (Math.hypot(h.x - px, h.y - py) < 18){ h.dead = true; hurtPlayer(1, h.x); } if (solid(Math.floor(h.x/T), Math.floor(h.y/T)) && h.t > .2){ h.dead = true; sparks(h.x, h.y, 8, 200, .4); } if (h.t > h.life) h.dead = true; }
+    else if (h.k==='arrow'){ if (h.t > h.tell){ h.x += h.dx*h.v*dt; h.y += h.dy*h.v*dt; if (Math.hypot(h.x - px, h.y - py) < 16 && p.dashT<=0){ h.dead = true; hurtPlayer(1, h.x); } if (solid(Math.floor(h.x/T), Math.floor(h.y/T))) h.dead = true; } if (h.t > h.life) h.dead = true; }
+    else if (h.k==='sine'){ h.x += h.dir*h.v*dt; const yy = h.y + Math.sin(h.x*.05)*22; if (Math.abs(h.x - px) < 14 && Math.abs(yy - py) < 22 && p.dashT<=0){ h.dead = true; hurtPlayer(1, h.x); } if (h.t > h.life || solid(Math.floor(h.x/T), Math.floor(h.y/T))) h.dead = true; }
+    else if (h.k==='col'){ if (h.t > h.tell && h.t < h.tell + .35 && Math.abs(px - h.x) < 18 && p.dashT<=0) hurtPlayer(1, h.x); if (h.t > h.life) h.dead = true; }
+    else if (h.k==='erase'){ if (h.t > h.tell && !h.gone){ h.gone = true; C.erased.push({x:h.tx, y:h.ty, c:grid[h.ty][h.tx]}); grid[h.ty][h.tx] = '.'; sparks(h.tx*T + T/2, h.ty*T + 4, 6, 160, .4); }
+      if (h.t > h.life){ h.dead = true; const i = C.erased.findIndex(e=>e.x===h.tx && e.y===h.ty); if (i >= 0){ grid[h.ty][h.tx] = C.erased[i].c; C.erased.splice(i, 1); } } }
+  }
+  C.hz = C.hz.filter(h=>!h.dead);
+}
+function finishChase(){ if (chase && !chase.done){ chase.done = true; award('plotter'); for (const e of chase.erased) grid[e.y][e.x] = e.c; chase.erased = []; } }
+function drawChase(){
+  const C = chase; if (!C) return; const t = clock; ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = INK; ctx.fillStyle = INK;
+  // vệt đồ thị máy đã vẽ
+  if (C.trail.length > 1){ ctx.lineWidth = 6; ctx.globalAlpha = .55; ctx.beginPath(); C.trail.forEach((q, i)=>i ? ctx.lineTo(q.x + Math.sin(i*.7)*2, q.y + Math.cos(i*.5)*2) : ctx.moveTo(q.x, q.y)); ctx.stroke(); ctx.globalAlpha = 1; }
+  // đòn
+  for (const h of C.hz){
+    if (h.k==='line'){ const L = 900, x0 = h.x0 - L, x1 = h.x0 + L; if (h.t < h.tell){ ctx.globalAlpha = .35 + .35*Math.sin(t*30); ctx.setLineDash([10, 8]); ctx.lineWidth = 2; line(x0, h.y0 - h.a*L, x1, h.y0 + h.a*L); ctx.setLineDash([]); }
+      else { ctx.globalAlpha = 1 - (h.t - h.tell)/.4; ctx.lineWidth = 16; line(x0, h.y0 - h.a*L, x1, h.y0 + h.a*L); ctx.strokeStyle = PAPER; ctx.lineWidth = 4; line(x0, h.y0 - h.a*L, x1, h.y0 + h.a*L); ctx.strokeStyle = INK; } ctx.globalAlpha = 1; }
+    else if (h.k==='blob'){ ctx.beginPath(); ctx.arc(h.x, h.y, 9, 0, Math.PI*2); ctx.fill(); if (h.t < h.tellT){ ctx.globalAlpha = .4; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(h.tx - 10, h.ty - 10); ctx.lineTo(h.tx + 10, h.ty + 10); ctx.moveTo(h.tx + 10, h.ty - 10); ctx.lineTo(h.tx - 10, h.ty + 10); ctx.stroke(); ctx.globalAlpha = 1; } }
+    else if (h.k==='arrow'){ if (h.t < h.tell){ ctx.globalAlpha = .5; ctx.setLineDash([3, 7]); ctx.lineWidth = 2; line(h.x, h.y, h.x + h.dx*700, h.y + h.dy*700); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      ctx.save(); ctx.translate(h.x, h.y); ctx.rotate(Math.atan2(h.dy, h.dx)); ctx.lineWidth = 3; line(-18, 0, 8, 0); ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(2, -7); ctx.lineTo(2, 7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    else if (h.k==='sine'){ ctx.lineWidth = 5; ctx.beginPath(); for (let k = -50; k <= 0; k += 5){ const x = h.x - h.dir*(-k), y = h.y + Math.sin(x*.05)*22; k === -50 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.stroke(); ctx.beginPath(); ctx.arc(h.x, h.y + Math.sin(h.x*.05)*22, 7, 0, Math.PI*2); ctx.fill(); }
+    else if (h.k==='col'){ if (h.t < h.tell){ ctx.globalAlpha = .18 + .15*Math.sin(t*28); ctx.fillRect(h.x - 18, camY, 36, viewH); ctx.globalAlpha = .7; ctx.font = `700 11px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('x = ' + Math.round(h.x/T), h.x, camY + 70); }
+      else if (h.t < h.tell + .35){ ctx.globalAlpha = 1 - (h.t - h.tell)/.35; ctx.fillRect(h.x - 14, camY, 28, viewH); ctx.fillStyle = PAPER; ctx.fillRect(h.x - 3, camY, 6, viewH); ctx.fillStyle = INK; } ctx.globalAlpha = 1; }
+    else if (h.k==='erase'){ if (!h.gone){ ctx.globalAlpha = .4 + .4*Math.sin(t*26); ctx.setLineDash([4, 4]); ctx.lineWidth = 2; ctx.strokeRect(h.tx*T + 2, h.ty*T - 2, T - 4, 10); ctx.setLineDash([]); ctx.globalAlpha = 1; } }
+  }
+  // thân máy: bầu mực tròn + ngòi bút chĩa theo hướng đuổi + bánh răng + trục toạ độ
+  if (C.u > -T*3){ const X = C.x, Y = C.y, ang = Math.atan2(C.dir.y, C.dir.x), wob = Math.sin(t*9)*2; ctx.save(); ctx.translate(X, Y);
+    for (let i=0;i<2;i++){ ctx.save(); ctx.rotate(t*(i ? -2 : 3)); ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(0, 0, 58 + i*12, 0, Math.PI*2); ctx.setLineDash([8, 10]); ctx.stroke(); ctx.restore(); }
+    ctx.setLineDash([]); ctx.beginPath(); ctx.arc(0, 0, 46 + wob, 0, Math.PI*2); ctx.fill();
+    ctx.save(); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(44, -16); ctx.lineTo(88, 0); ctx.lineTo(44, 16); ctx.closePath(); ctx.fill(); ctx.strokeStyle = PAPER; ctx.lineWidth = 2; line(52, 0, 80, 0); ctx.restore();
+    const lx = clamp(player.x + 11 - X, -1, 1), ly = clamp(player.y + 17 - Y, -1, 1); ctx.fillStyle = PAPER; ctx.beginPath(); ctx.arc(lx*10, ly*8 - 4, 14, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(lx*15, ly*12 - 4, 6, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = PAPER; ctx.lineWidth = 2; line(-30, 26, 30, 26); line(-26, 20, -26, 32); line(26, 20, 26, 32); ctx.restore();
+    if (Math.random() < .5) parts.push({x:X + (Math.random()-.5)*80, y:Y + (Math.random()-.5)*80, vx:-C.dir.x*120, vy:-C.dir.y*120, a:Math.random()*6, va:4, l:3, life:.4}); }
+  ctx.restore();
+}
+function drawChaseHUD(){
+  const C = chase; if (!C || C.done) return; const pu = chaseProj(player.x + 11, player.y + 17), gap = (pu - C.u)/T, w = Math.min(320, viewW - 160), x = (viewW - w)/2, y = viewH - 26;
+  ctx.save(); ctx.fillStyle = INK; ctx.globalAlpha = .85; ctx.fillRect(x, y, w, 8); ctx.globalAlpha = 1; ctx.fillStyle = PAPER; ctx.fillRect(x + 1, y + 1, (w - 2)*clamp(pu/C.total, 0, 1), 6);
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(x + w*clamp(C.u/C.total, 0, 1), y + 4, 7, 0, Math.PI*2); ctx.fill();
+  ctx.font = `700 11px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(C.wait > 0 ? `MÁY VẼ KHỞI ĐỘNG… ${Math.ceil(C.wait)}` : gap < 4 ? `⚠ SÁT SAU LƯNG! ${gap.toFixed(1)} ô` : `Máy vẽ cách ${gap.toFixed(1)} ô`, viewW/2, y - 6);
+  // mũi tên chỉ hướng máy khi khuất màn hình
+  const sx = C.x - camX, sy = C.y - camY; if (sx < 0 || sx > viewW || sy < 0 || sy > viewH){ const ax = clamp(sx, 24, viewW - 24), ay = clamp(sy, 60, viewH - 50), a = Math.atan2(sy - ay, sx - ax);
+    ctx.save(); ctx.translate(ax, ay); ctx.rotate(a); ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(-8, -10); ctx.lineTo(-8, 10); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  ctx.restore();
+}
 // ---------- dấu vết lối vào (vẽ trong màn chủ) ----------
 function drawWarpCue(){
   const L = LEVELS[lvl], w = L.warp; if (!w || !w.look) return; const X = w.x*T, Y = w.y*T, W = w.w*T, H = w.h*T, t = clock;
@@ -8954,7 +9052,7 @@ function drawGame(){
   const y0=Math.max(0,Math.floor(camY/T)), y1=Math.min(GH-1,Math.ceil((camY+viewH)/T));
   cachedWalls(x0, x1);
   for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){ const c=grid[y][x]; if (c!=='.' && c!=='#') drawTile(c,x,y); }
-  if (L.theme==='night' || CHILL[L.theme]){ drawMurals(L.theme); drawMemItems(); } if (L.theme==='memory') memoryWorld(); if (bal) drawBal(); if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
+  if (L.theme==='night' || CHILL[L.theme]){ drawMurals(L.theme); drawMemItems(); } if (L.theme==='memory') memoryWorld(); if (bal) drawBal(); if (chase) drawChase(); if (L.theme==='night') drawNightWorld(); else if (CHILL[L.theme]) CHILL[L.theme].world(); drawWarpCue();
   if (pulley) drawPulley();
   if (heaterOn) drawSteam();
   for (const k of keyItems) if (!k.got) drawKey(k);
@@ -9024,7 +9122,7 @@ function drawGame(){
   const _sec = LEVELS[lvl] && LEVELS[lvl].secret; if (_sec) drawSitVignette(); ctx.globalAlpha = _sec ? hudFade : 1;
   if (!bossCS){ drawManaHUD(); drawCombatHUD(); drawQuestHUD(); drawMathBossHUD(); drawCoreHUD(); drawMathHUD(); drawGearHUD(); drawBossLine(); }
   drawNotes();
-  ctx.globalAlpha = 1; drawNightQuote(); drawWhisper();
+  ctx.globalAlpha = 1; drawNightQuote(); drawWhisper(); drawChaseHUD();
   // nút loa (cạnh thanh mực): bấm hoặc nhấn M
   { const sx = 212, sy = 29; ctx.save(); ctx.fillStyle=PAPER; ctx.strokeStyle=INK; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.arc(sx,sy,13,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle=INK;
@@ -9083,6 +9181,7 @@ function pickMusic(){
   const th = LEVELS[lvl] && LEVELS[lvl].theme;
   if (mboss && mboss.engaged && !mboss.dead) return ['sphinx', 1 + Math.min(2, Math.floor((mboss.max - mboss.hp)/Math.max(1, mboss.max/3)))];
   if (cboss && cboss.engaged && !cboss.dead) return ['core', cboss.phase];
+  if (chase && !chase.done) return ['sphinx', 1 + Math.min(2, chase.cpI)];
   if (th==='night') return ['night', 1]; if (CHILL[th]) return [CHILL[th].music, 1]; if (th==='memory') return ['memory', 1];
   return [{house:'house', basement:'basement', lab:'lab', fallen:'fallen', outside:'outside', math:'math'}[th] || 'house', dangerLevel()];
 }
