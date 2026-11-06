@@ -1102,7 +1102,7 @@ const LEVELS = [
   '##############################################################################################################',
   '##############################################################################################################'
  ]},
- { name:"Ngai Nấm Mực", ch:6, theme:"bio", bio:"fungus", combat:true, fungus:{name:"Nấm Mực Mẹ", cx:32, cy:2.2, arena:[14, 51], entry:13, gate:52, shutters:[[18,12],[32,12],[46,12]], hp:9}, pages:["Nấm không cần ánh sáng. Nó sống nhờ những gì đã mục. Mực Đen đã tìm được chỗ trú ở đây, giữa những chậu cây Hạ để lại.", "Muốn cây sống lại thì phải mở mái cho nắng vào. Ta đã đóng mái này mười năm."], talks:[[6, 12, "Cạc… Nấm Mực Mẹ. Nó sợ nắng! Mở cả 3 cửa mái cùng lúc!"]], hints:["Nhấn E ở 3 cần gạt để mở 3 CỬA MÁI. Mở đủ cả 3 cùng lúc: nắng chiếu vào, nấm co rút — LƯỚT hoặc NÉM LỌ vào nó!", "Né bào tử, né rễ trồi lên (vạch báo trên sàn). Tế bào con sinh ra liên tục: dọn chúng đi."], notes:[["NẤM", "Sinh vật dị dưỡng: không có diệp lục", "Sống nhờ phân giải chất hữu cơ mục", "Sinh sản bằng bào tử"], ["ÁNH SÁNG", "Mở 3 cửa mái cùng lúc → nắng", "Nắng + khô: nấm mất nước, co rút", "Lúc co rút: LƯỚT / NÉM LỌ vào nấm"]], secrets:[], decor:[],
+ { name:"Ngai Nấm Mực", ch:6, theme:"bio", bio:"fungus", combat:true, fungus:{name:"Nấm Mực Mẹ", cx:32, cy:2.2, arena:[14, 51], entry:13, gate:52, shutters:[[18,12],[32,12],[46,12]], hp:9}, pages:["Nấm không cần ánh sáng. Nó sống nhờ những gì đã mục. Mực Đen đã tìm được chỗ trú ở đây, giữa những chậu cây Hạ để lại.", "Muốn cây sống lại thì phải mở mái cho nắng vào. Ta đã đóng mái này mười năm."], talks:[[6, 12, "Cạc… Nấm Mực Mẹ. Nó sợ nắng! Mở cả 3 cửa mái cùng lúc!"]], hints:["Mở đủ 3 CỬA MÁI cùng lúc: nắng vào, nấm co rút — LƯỚT/NÉM LỌ. Trúng bào tử 3 lần: nấm Cordyceps ĐẢO phím ← →, đứng trong vệt nắng để diệt.", "Tế bào chết để lại XÁC: rễ nấm bò tới hút để hồi máu — ném lọ hoặc lướt qua xác để huỷ. Giai đoạn cuối: hạ 3 thể quả trong 14 giây."], notes:[["NẤM · CORDYCEPS", "Nấm Cordyceps kí sinh và điều khiển côn trùng", "Trúng 3 bào tử → ← → bị đảo 4 giây", "Tia UV trong nắng diệt bào tử"], ["NẤM · PHÂN GIẢI", "Nấm dị dưỡng: sống nhờ chất hữu cơ mục", "Xác tế bào = thức ăn → nấm hồi máu", "Hoà tan / phân tán xác trước khi rễ tới"]], secrets:[], decor:[],
   map:[
   '##############################################################',
   '##############################################################',
@@ -1775,6 +1775,7 @@ function hurtPlayer(n, fromX){
 }
 function killEnemy(e, text){
   e.dead = true; SFX.play('enemydie'); engKill();
+  if (fung && fung.engaged && !fung.dead) corpses.push({x:e.x + e.w/2, y:e.y + e.h, t:0});
   if (e.type==='cell' && !e.gen2){   // NGUYÊN PHÂN: tế bào mẹ tách thành 2 tế bào con nhỏ hơn
     for (const sd of [-1, 1]) enemies.push({type:'cell', gen2:true, x:e.x + e.w/2 - 10 + sd*10, y:e.y + e.h - 16, w:20, h:16, vx:sd*120, vy:-260, hp:1, armor:0, mass:.6, dir:sd, t:Math.random()*3, hurtT:.3, ground:false, home:{...e.home}, fly:false, n:3, turnT:0});
     popups.push({x:e.x + e.w/2, y:e.y - 30, text:'Nguyên phân! 1 tế bào → 2', life:1.6}); }
@@ -2310,7 +2311,7 @@ function bhTick(b, dt, A, pats, th, quiet){
     if (u.curve){ const c = Math.cos(u.curve*dt), s2 = Math.sin(u.curve*dt), vx = u.vx*c - u.vy*s2; u.vy = u.vx*s2 + u.vy*c; u.vx = vx; }
     u.x += u.vx*dt; u.y += u.vy*dt;
     if (u.t > u.life || u.x < A.L - 40 || u.x > A.R + 40 || u.y < A.top - 60 || u.y > A.floor + 10) u.dead = true;
-    if (!u.dead && Math.hypot(u.x - px, u.y - py) < u.r + 9 && p.dashT<=0 && p.invT<=0){ u.dead = true; hurtPlayer(1, u.x); }
+    if (!u.dead && Math.hypot(u.x - px, u.y - py) < u.r + 9 && p.dashT<=0 && p.invT<=0){ u.dead = true; if (u.kind==='spore') infect(); hurtPlayer(1, u.x); }
   }
   bhB = bhB.filter(u=>!u.dead); if (bhB.length > 420) bhB.splice(0, bhB.length - 420);
 }
@@ -4793,7 +4794,7 @@ function drawLeverFx(){
   ctx.restore();
 }
 function updateZoom(dt){
-  let want = (boss && (boss.engaged || bossCS) && !boss.dead) ? Math.min(RH, (boss.arena.floor - boss.arena.top) + 3*T) : (mboss && mboss.engaged && !mboss.dead) ? Math.min(RH, VIEW_H*1.3) : (player && player.sit) ? Math.min(RH, VIEW_H*1.3) : (cboss && cboss.engaged && !cboss.dead) ? Math.min(RH, 14.5*T) : VIEW_H;
+  let want = (boss && (boss.engaged || bossCS) && !boss.dead) ? Math.min(RH, (boss.arena.floor - boss.arena.top) + 3*T) : (mboss && mboss.engaged && !mboss.dead) ? Math.min(RH, VIEW_H*1.3) : (player && player.sit) ? Math.min(RH, VIEW_H*1.3) : (cboss && cboss.engaged && !cboss.dead) ? Math.min(RH, 14.5*T) : (fung && fung.engaged && !fung.dead) ? Math.min(RH, 14.5*T) : VIEW_H;
   const wantZ = want, sp = zoomH < VIEW_H*.95 ? 5 : 2.5;
   if (Math.abs(wantZ - zoomH) > .5){ zoomH += (wantZ - zoomH)*Math.min(1, dt*sp); layout(); }
 }
@@ -5448,7 +5449,7 @@ function updatePlayer(dt){
   p.flingT = Math.max(0, (p.flingT||0) - dt);
   if (p.rope){ if (updateRopePlayer(p, dt)) return; }
   else if (!p.ground && !p.crouch) tryGrabRope(p);
-  const dir = p.aiming ? 0 : (inp.right?1:0)-(inp.left?1:0);
+  const dir = (p.aiming ? 0 : (inp.right?1:0)-(inp.left?1:0))*(p.cordy > 0 ? -1 : 1);
   p.lock-=dt; p.dashCd-=dt; jumpBuf-=dt; dashBuf-=dt; p.dropT = (p.dropT||0) - dt;
   if (inp.down && p.ground && onShelf(p)){ p.dropT = .22; p.y += 2; p.ground = false; p.coy = 0; }
   // Cúi xuống (giữ ↓/S): thân thấp còn 22px, đi chậm; đứng dậy chỉ khi trên đầu còn chỗ
@@ -6452,9 +6453,26 @@ function bioWorld(){
 function drawBioHUD(){ if (!LEVELS[lvl] || LEVELS[lvl].theme!=='bio') return; const has = seeds.length || drops2.length; if (has){ ctx.save(); ctx.fillStyle = INK; ctx.font = `700 13px ${FONT}`; ctx.textAlign = 'left'; ctx.fillText('💧 × ' + water, 16, viewH - 18); ctx.restore(); } if (fung && fung.engaged) drawFungHUD(); }
 // ---------- BOSS: NẤM MỰC MẸ ----------
 const BH_FUNGUS = {1:['ring','rain','aimed','flower'], 2:['spiral','ring','rain','burst','wall'], 3:['spiral','flower','cross','rain','burst','wall']};
-function makeFung(d){ return {def:d, x:d.cx*T, y:d.cy*T + 60, hp:d.hp, max:d.hp, phase:1, engaged:false, dead:false, dieT:0, t:0, hurtT:0, exposed:0, open:d.shutters.map(()=>0), spawnT:7, rootT:4, roots:[], bhT:3, dashCd:0, said:false}; }
+function makeFung(d){ corpses = []; return {def:d, x:d.cx*T, y:d.cy*T + 60, hp:d.hp, max:d.hp, phase:1, engaged:false, dead:false, dieT:0, t:0, hurtT:0, exposed:0, open:d.shutters.map(()=>0), spawnT:7, rootT:4, roots:[], bhT:3, dashCd:0, said:false}; }
 function fungA(){ const d = fung.def; return {L:d.arena[0]*T, R:(d.arena[1]+1)*T, top:2*T, floor:13*T}; }
-function fungOpen(i){ const b = fung; b.open[i] = [9, 7.5, 6][b.phase-1]; SFX.play('creak'); const n = b.open.filter(o=>o>0).length; popups.push({x:b.def.shutters[i][0]*T + T/2, y:b.def.shutters[i][1]*T - 40, text:`Cửa mái ${n}/3 mở`, life:1.4, big:true}); }
+
+// ---- cơ chế độc của Nấm Mực Mẹ ----
+// (A) NHIỄM BÀO TỬ kiểu nấm Cordyceps: trúng bào tử 3 lần → nấm điều khiển Bấc, ← → bị đảo 4 giây. Đứng trong vệt nắng để diệt bào tử.
+function infect(){ const p = player; if (p.cordy > 0) return; p.inf = (p.inf||0) + 1; if (p.inf >= 3){ p.inf = 0; p.cordy = 4; SFX.play('roar'); rumble(.4, .8); popups.push({x:p.x + 11, y:p.y - 50, text:'CORDYCEPS! Nấm điều khiển Bấc: ← → bị ĐẢO!', life:2.4, big:true}); }
+  else popups.push({x:p.x + 11, y:p.y - 30, text:`nhiễm bào tử ${p.inf}/3 · ra chỗ nắng để diệt`, life:1.2}); }
+function inSun(x){ const b = fung; if (!b) return false; if (b.exposed > 0) return true; return b.def.shutters.some(([sx], i)=>b.open[i] > 0 && Math.abs(x - (sx*T + T/2)) < 60); }
+function drawInfection(p){
+  if (!(p.inf > 0 || p.cordy > 0)) return; const X = p.x + 11, Y = p.y, t = clock; ctx.save(); ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = 1.5;
+  for (let i=0;i<(p.cordy > 0 ? 3 : p.inf);i++){ const ox = (i - 1)*7, h = 8 + i*2; line(X + ox, Y + 2, X + ox + Math.sin(t*3 + i)*2, Y - h); ctx.beginPath(); ctx.ellipse(X + ox + Math.sin(t*3 + i)*2, Y - h, 5, 3, 0, Math.PI, 0); ctx.fill(); }
+  if (p.cordy > 0){ for (let k=0;k<5;k++){ const a = t*2 + k*1.25; ctx.beginPath(); ctx.moveTo(X, Y + 17); ctx.quadraticCurveTo(X + Math.cos(a)*30, Y + 17 + Math.sin(a)*24, X + Math.cos(a + .6)*44, Y + 17 + Math.sin(a + .6)*34); ctx.stroke(); }
+    ctx.font = `700 10px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('⇄ ' + p.cordy.toFixed(1) + 's', X, Y - 26); }
+  ctx.restore(); }
+// (B) PHÂN GIẢI XÁC: tế bào chết để lại xác; rễ nấm bò tới hút → nấm hồi máu. Ném lọ hoặc lướt qua xác để huỷ trước.
+let corpses = [];
+// (C) GIAI ĐOẠN CUỐI: nấm tách thành 3 THỂ QUẢ dưới 3 cửa mái. Mở cửa nào thì thể quả đó co rút → hạ cả 3 trong 14 giây, không thì chúng mọc lại.
+function fungSplit(b){ b.split = b.def.shutters.map(([sx])=>({x:sx*T + T/2, y:3.6*T, hy:3.6*T, alive:true, exp:0, hurtT:0})); b.regrow = 0; bhClear();
+  popups.push({x:b.x, y:b.y + 120, text:'Nấm tách thành 3 THỂ QUẢ! Mở cửa mái ngay trên từng cái · hạ cả 3 trong 14 giây', life:3.2, big:true}); shakeT = .8; SFX.play('crash'); }
+function fungOpen(i){ const b = fung; if (b.split){ const s2 = b.split[i]; b.open[i] = 4.5; if (s2.alive){ s2.exp = 4.5; popups.push({x:s2.x, y:s2.y + 60, text:'Thể quả co rút: đánh ngay!', life:1.6, big:true}); } SFX.play('creak'); return; } b.open[i] = [9, 7.5, 6][b.phase-1]; SFX.play('creak'); const n = b.open.filter(o=>o>0).length; popups.push({x:b.def.shutters[i][0]*T + T/2, y:b.def.shutters[i][1]*T - 40, text:`Cửa mái ${n}/3 mở`, life:1.4, big:true}); }
 function setCol(x, y0, y1, c){ for (let y=y0;y<=y1;y++) if (grid[y]) grid[y][x] = c; tileCache.clear(); }
 function resetFung(){ if (!fung || fung.dead) return; const d = fung.def; fung = makeFung(d); setCol(d.entry, 2, 12, '.'); bhClear(); enemies = enemies.filter(e=>!e.fungSpawn); }
 function updateFung(dt){
@@ -6463,9 +6481,17 @@ function updateFung(dt){
   if (b.dead){ b.dieT += dt; b.y += dt*30; if (bhB.length) bhClear(); if (b.dieT > 2.4 && !b.opened){ b.opened = true; setCol(d.gate, 2, 12, '.'); setCol(d.entry, 2, 12, '.'); SFX.play('door'); } return; }
   b.t += dt; b.hurtT -= dt; b.dashCd -= dt;
   const ph = b.hp > b.max*2/3 ? 1 : b.hp > b.max/3 ? 2 : 3;
-  if (ph !== b.phase){ b.phase = ph; b.exposed = 0; b.open = b.open.map(()=>0); SFX.play('roar'); shakeT = .5; popups.push({x:b.x, y:b.y + 110, text: ph===2 ? 'Nấm mọc thêm rễ: bào tử dày hơn!' : 'Nấm điên cuồng: cửa mái đóng nhanh hơn!', life:2.4, big:true}); }
+  if (ph !== b.phase && !b.split){ b.phase = ph; b.exposed = 0; b.open = b.open.map(()=>0); SFX.play('roar'); shakeT = .5; if (ph===3) fungSplit(b); else popups.push({x:b.x, y:b.y + 110, text:'Nấm mọc thêm rễ: bào tử dày hơn, xác tế bào nuôi nó!', life:2.4, big:true}); }
+  // nhiễm bào tử: nắng diệt bào tử
+  if (p.cordy > 0) p.cordy = Math.max(0, p.cordy - dt); if ((p.inf > 0 || p.cordy > 0) && inSun(px)){ p.inf = 0; if (p.cordy > 0){ p.cordy = 0; popups.push({x:px, y:p.y - 40, text:'Nắng diệt bào tử: Bấc tự do!', life:1.6}); } }
+  // xác tế bào → rễ hút → hồi máu
+  for (const c of corpses){ c.t += dt; if (Math.hypot(c.x - px, c.y - py) < 26 && p.dashT > 0){ c.dead = true; popups.push({x:c.x, y:c.y - 20, text:'xác bị phân tán trước khi nấm hút', life:1.2}); }
+    for (const f of flasks) if (!f.dead && Math.hypot(f.x - c.x, f.y - c.y) < 34){ f.dead = true; splash(f.x, f.y, f.kind); c.dead = true; popups.push({x:c.x, y:c.y - 20, text:'xác bị hoà tan: nấm không hút được', life:1.4}); }
+    if (c.t > 6 && !c.dead){ c.dead = true; const cap = b.split ? 0 : (b.phase===1 ? b.max : Math.ceil(b.max*2/3)); if (b.hp < cap){ b.hp++; popups.push({x:b.x, y:b.y + 70, text:'Nấm phân giải xác tế bào: +1 máu!', life:1.8, big:true}); SFX.play('blob'); } } }
+  corpses = corpses.filter(c=>!c.dead);
+  if (b.split){ updateSplit(b, dt, A, p, px, py); return; }
   for (let i=0;i<b.open.length;i++) if (b.open[i] > 0 && !b.exposed) b.open[i] = Math.max(0, b.open[i] - dt);
-  if (!b.exposed && b.open.every(o=>o > 0)){ b.exposed = 5.5; b.open = b.open.map(()=>0); bhClear(); flashT = Math.max(flashT, .2); SFX.play('shine'); popups.push({x:b.x, y:b.y + 120, text:'NẮNG! Nấm co rút: LƯỚT hoặc NÉM LỌ vào nó!', life:2.6, big:true}); }
+  if (!b.split && !b.exposed && b.open.every(o=>o > 0)){ b.exposed = 5.5; b.open = b.open.map(()=>0); bhClear(); flashT = Math.max(flashT, .2); SFX.play('shine'); popups.push({x:b.x, y:b.y + 120, text:'NẮNG! Nấm co rút: LƯỚT hoặc NÉM LỌ vào nó!', life:2.6, big:true}); }
   if (b.exposed > 0){ b.exposed -= dt; if (b.exposed <= 0){ b.exposed = 0; popups.push({x:b.x, y:b.y + 100, text:'Mái khép lại…', life:1.4}); } }
   const ty = b.exposed ? A.floor - 3.4*T : d.cy*T + 60 + Math.sin(b.t*.8)*12, tx = b.exposed ? b.x : d.cx*T + Math.sin(b.t*.35)*4*T;
   b.y += (ty - b.y)*Math.min(1, dt*(b.exposed ? 3 : 1.5)); b.x += (tx - b.x)*Math.min(1, dt*1.2);
@@ -6473,7 +6499,7 @@ function updateFung(dt){
   // tế bào con & rễ
   b.spawnT -= dt; if (b.spawnT <= 0 && !b.exposed){ b.spawnT = [9, 7, 5.5][ph-1]; if (enemies.filter(e=>!e.dead && e.fungSpawn).length < 3 + ph){ const x = A.L + 2*T + Math.random()*(A.R - A.L - 4*T); enemies.push({type:'cell', fungSpawn:true, x, y:b.y + 40, w:28, h:22, vx:(Math.random()-.5)*200, vy:-100, hp:2, armor:0, mass:1, dir:1, t:0, hurtT:0, ground:false, home:{x, y:12*T}, fly:false, n:3, turnT:0}); SFX.play('blob'); } }
   b.rootT -= dt; if (b.rootT <= 0 && !b.exposed){ b.rootT = [4.5, 3.4, 2.6][ph-1]; const n = ph; for (let i=0;i<n;i++) b.roots.push({x:clamp(px + (i - (n-1)/2)*3*T + (i ? (Math.random()-.5)*T : 0), A.L + 20, A.R - 20), t:0}); }
-  for (const r of b.roots){ r.t += dt; if (r.t > .8 && r.t < 1.4 && Math.abs(px - r.x) < 18 && p.y + p.h > A.floor - 2*T && p.dashT<=0) hurtPlayer(1, r.x); if (r.t > .8 && !r.snd){ r.snd = true; SFX.play('stomp'); } }
+  for (const r of b.roots){ r.t += dt; if (r.t > .8 && r.t < 1.4 && Math.abs(px - r.x) < 18 && p.y + p.h > A.floor - 2*T && p.dashT<=0 && p.invT<=0){ infect(); hurtPlayer(1, r.x); } if (r.t > .8 && !r.snd){ r.snd = true; SFX.play('stomp'); } }
   b.roots = b.roots.filter(r=>r.t < 1.6);
   // chạm thân nấm
   const R = b.exposed ? 46 : 70; if (!b.exposed && Math.hypot(px - b.x, py - b.y) < R && p.dashT<=0) hurtPlayer(1, b.x);
@@ -6482,6 +6508,23 @@ function updateFung(dt){
     if (p.dashT > 0 && b.dashCd <= 0 && Math.hypot(px - b.x, py - b.y) < R + 16){ b.dashCd = .45; fungHit('Lướt xé toạc mũ nấm'); p.vx = -Math.sign(b.x - px)*420; p.vy = -300; p.dashT = 0; }
     for (const f of flasks) if (!f.dead && Math.hypot(f.x - b.x, f.y - b.y) < R + 6){ f.dead = true; splash(f.x, f.y, f.kind); fungHit(f.kind==='base' ? 'Bazơ phá vách kitin của nấm' : 'Axit làm biến tính protein của nấm'); }
   }
+}
+
+function updateSplit(b, dt, A, p, px, py){
+  for (let i=0;i<b.open.length;i++) if (b.open[i] > 0) b.open[i] = Math.max(0, b.open[i] - dt);
+  if (b.regrow > 0){ b.regrow -= dt; if (b.regrow <= 0){ let n = 0; for (const s2 of b.split) if (!s2.alive){ s2.alive = true; s2.exp = 0; s2.y = s2.hy; n++; } if (n){ b.hp += n; SFX.play('roar'); popups.push({x:b.x, y:b.y + 120, text:`Hết giờ! ${n} thể quả mọc lại`, life:2.2, big:true}); } } }
+  const alive = b.split.filter(s2=>s2.alive); if (!alive.length){ b.hp = 1; fungHit('Thể quả cuối cùng khô héo'); return; }
+  const o = alive[Math.floor(b.t*.5) % alive.length]; b.x += (o.x - b.x)*Math.min(1, dt*2); b.y = o.y;   // điểm bắn bào tử luân phiên
+  bhTick(b, dt, A, BH_FUNGUS, 'spore', false);
+  b.rootT -= dt; if (b.rootT <= 0){ b.rootT = 2.4; b.roots.push({x:clamp(px, A.L + 20, A.R - 20), t:0}); }
+  for (const r of b.roots){ r.t += dt; if (r.t > .8 && r.t < 1.4 && Math.abs(px - r.x) < 18 && p.y + p.h > A.floor - 2*T && p.dashT<=0){ infect(); hurtPlayer(1, r.x); } }
+  b.roots = b.roots.filter(r=>r.t < 1.6);
+  for (const s2 of b.split){ if (!s2.alive) continue; s2.hurtT -= dt;
+    if (s2.exp > 0){ s2.exp -= dt; s2.y += (A.floor - 2.6*T - s2.y)*Math.min(1, dt*3);
+      const hitD = (p.dashT > 0 && Math.hypot(px - s2.x, py - s2.y) < 46) || flasks.some(f=>!f.dead && Math.hypot(f.x - s2.x, f.y - s2.y) < 44 && (f.dead = true));
+      if (hitD){ s2.alive = false; b.hp--; SFX.play('bosshit'); sparks(s2.x, s2.y, 16, 340, .5); shakeT = .3; if (p.dashT > 0){ p.vx = -Math.sign(s2.x - px)*380; p.vy = -280; p.dashT = 0; }
+        if (b.regrow <= 0) b.regrow = 14; popups.push({x:s2.x, y:s2.y - 50, text:`Thể quả vỡ! còn ${b.split.filter(q=>q.alive).length}`, life:1.6, big:true}); }
+    } else { s2.y += (s2.hy + Math.sin(b.t + s2.x)*8 - s2.y)*Math.min(1, dt*2); if (Math.hypot(px - s2.x, py - s2.y) < 42 && p.dashT<=0){ infect(); hurtPlayer(1, s2.x); } } }
 }
 function fungHit(text){ const b = fung; b.hp--; b.hurtT = .35; SFX.play('bosshit'); shakeT = Math.max(shakeT, .25); popups.push({x:b.x, y:b.y - 60, text, life:1.6}); sparks(b.x, b.y, 14, 320, .5);
   if (b.hp <= 0){ b.dead = true; b.dieT = 0; bhClear(); enemies.forEach(e=>{ if (e.fungSpawn && !e.dead) e.dead = true; }); award('fungus'); popups.push({x:b.x, y:b.y - 90, text:'Nấm Mực Mẹ khô lại thành bụi bào tử…', life:3, big:true}); SFX.play('crash'); } }
@@ -6496,8 +6539,18 @@ function drawFung(){
   if (b.exposed){ ctx.save(); ctx.globalAlpha = .12 + .05*Math.sin(t*6); ctx.fillStyle = PAPER; ctx.fillRect(A.L, A.top, A.R - A.L, A.floor - A.top); ctx.restore(); }
   // rễ trồi
   for (const r of b.roots){ if (r.t < .8){ ctx.globalAlpha = .4 + .4*Math.sin(t*30); ctx.fillRect(r.x - 16, A.floor - 5, 32, 5); ctx.globalAlpha = 1; } else { const h = Math.min(1, (r.t - .8)/.1)*(1 - Math.max(0, r.t - 1.4)/.2)*2*T; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(r.x - 10, A.floor); ctx.quadraticCurveTo(r.x - 14, A.floor - h*.5, r.x, A.floor - h); ctx.quadraticCurveTo(r.x + 14, A.floor - h*.5, r.x + 10, A.floor); ctx.fill(); } }
+  // xác tế bào + rễ bò tới hút
+  for (const c of corpses){ const k = Math.min(1, c.t/6); ctx.save(); ctx.globalAlpha = .7; ctx.lineWidth = 2; ctx.fillStyle = PAPER; ctx.beginPath(); ctx.ellipse(c.x, c.y - 5, 15*(1 - k*.5), 6*(1 - k*.5), 0, 0, Math.PI*2); ctx.fill(); ctx.stroke(); ctx.globalAlpha = 1;
+    if (c.t > 1.5){ const q = Math.min(1, (c.t - 1.5)/4.5), sx = b.split ? c.x : b.x, sy = b.split ? A.top : b.y; ctx.lineWidth = 3; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(sx, sy); ctx.quadraticCurveTo((sx + c.x)/2 + 40, (sy + c.y)/2, sx + (c.x - sx)*q, sy + (c.y - sy)*q); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(Math.max(0, 6 - c.t).toFixed(0), c.x, c.y - 16); ctx.restore(); }
   // sợi nấm trên trần
   ctx.lineWidth = 1.5; ctx.globalAlpha = .5; for (let i=0;i<12;i++){ const x0 = A.L + i*(A.R - A.L)/11; ctx.beginPath(); ctx.moveTo(x0, A.top); ctx.quadraticCurveTo((x0 + b.x)/2, A.top + 30 + Math.sin(t + i)*10, b.x, b.y - 30); ctx.stroke(); } ctx.globalAlpha = 1;
+  // giai đoạn cuối: 3 thể quả
+  if (b.split){ for (const s2 of b.split){ if (!s2.alive){ ctx.globalAlpha = .25; ctx.lineWidth = 2; line(s2.x, A.top, s2.x, s2.hy - 20); ctx.globalAlpha = 1; continue; } const e = s2.exp > 0, sc = e ? .45 : .6, X = s2.x, Y = s2.y;
+      ctx.lineWidth = 4; line(X, A.top, X, Y - 10); ctx.fillStyle = INK; ctx.beginPath(); ctx.ellipse(X, Y, 110*sc, 52*sc, 0, Math.PI, 0); ctx.quadraticCurveTo(X, Y + 18*sc, X - 110*sc, Y); ctx.fill(); ctx.fillStyle = PAPER; for (const sd of [-1, 1]){ ctx.beginPath(); ctx.ellipse(X + sd*16, Y - 12*sc, 7, e ? 2 : 6, 0, 0, Math.PI*2); ctx.fill(); }
+      if (e){ ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(X, Y, 60 + Math.sin(clock*10)*4, 0, Math.PI*2); ctx.setLineDash([5, 6]); ctx.stroke(); ctx.setLineDash([]); } }
+    if (b.regrow > 0){ ctx.font = `700 14px ${FONT}`; ctx.textAlign = 'center'; ctx.fillStyle = INK; ctx.fillText('THỂ QUẢ MỌC LẠI SAU ' + b.regrow.toFixed(1) + 's', (A.L + A.R)/2, A.top + 60); }
+    ctx.restore(); return; }
   // thân nấm
   const shr = b.exposed ? .7 + Math.sin(t*20)*.03 : 1, w = 110*shr, h = 52*shr, X = b.x, Y = b.y, hit = b.hurtT > 0 && Math.floor(t*30)%2;
   if (b.dead){ ctx.globalAlpha = Math.max(0, 1 - b.dieT/2.4); }
@@ -6509,7 +6562,7 @@ function drawFung(){
   for (let i=0;i<3;i++){ const q = (t*.7 + i/3) % 1; ctx.fillStyle = INK; ctx.globalAlpha = (1 - q)*.7; ctx.beginPath(); ctx.arc(X + (i - 1)*30, Y + 16 + q*60, 2.5, 0, Math.PI*2); ctx.fill(); } ctx.globalAlpha = 1;
   ctx.restore();
 }
-function drawFungHUD(){ const b = fung; if (b.dead) return; const w = Math.min(360, viewW - 200), x = (viewW - w)/2, y = 64; ctx.save(); ctx.fillStyle = INK; ctx.font = `700 12px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(b.def.name.toUpperCase() + (b.exposed ? '  ·  ☀ ĐANG CO RÚT' : '  ·  mở đủ 3 cửa mái!'), viewW/2, y - 6);
+function drawFungHUD(){ const b = fung; if (b.dead) return; const w = Math.min(360, viewW - 200), x = (viewW - w)/2, y = 64; ctx.save(); ctx.fillStyle = INK; ctx.font = `700 12px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(b.def.name.toUpperCase() + (b.split ? '  ·  mở cửa mái trên từng THỂ QUẢ' : b.exposed ? '  ·  ☀ ĐANG CO RÚT' : '  ·  mở đủ 3 cửa mái!'), viewW/2, y - 6);
   for (let i=0;i<b.max;i++){ const sx = x + i*w/b.max; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(sx + 2, y, w/b.max - 4, 10); if (i < b.hp){ ctx.fillRect(sx + 2, y, w/b.max - 4, 10); } } ctx.restore(); }
 // ---------- dấu vết lối vào (vẽ trong màn chủ) ----------
 function drawWarpCue(){
@@ -9508,7 +9561,7 @@ function drawGame(){
     // viền sáng (rim light) tách nhân vật khỏi nền tối
     ctx.save(); if (player.invT>0 && Math.floor(clock*20)%2) ctx.globalAlpha=.35;
     if (player.rope){ const hx = player.x+11, hy = player.y+6; ctx.translate(hx, hy); ctx.rotate(-player.ropeTh); ctx.translate(-hx, -hy); }
-    glowDraw(()=>drawHero(player), player.x+11, player.y+17, 300, 240, 'rgba(255,255,255,.95)', 7); ctx.restore();
+    glowDraw(()=>drawHero(player), player.x+11, player.y+17, 300, 240, 'rgba(255,255,255,.95)', 7); ctx.restore(); drawInfection(player);
     if (player.shield > 0){ ctx.save(); ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.setLineDash([4,4]); ctx.lineDashOffset = -clock*20; for (let i=0;i<player.shield;i++){ ctx.globalAlpha = .55; ctx.beginPath(); ctx.ellipse(player.x+11, player.y+17, 22 + i*6, 26 + i*6, 0, 0, Math.PI*2); ctx.stroke(); } ctx.restore(); }
     drawItemGetFront();
     drawSwapFx();
