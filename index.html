@@ -4629,7 +4629,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
-  spawnMath = !!L.math; cboss = null; engLevelStart(); if (L.secret) enterChill(); bal = L.balloon ? makeBal(L.balloon) : null; chase = L.chase ? makeChase(L.chase) : null; if (chase) popups.push({x:player.x + 11, y:player.y - 50, text:'Máy Vẽ Đồ Thị đã thấy Bấc… CHẠY SANG TRÁI!', life:2.6, big:true}); ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
+  spawnMath = !!L.math; cboss = null; engLevelStart(); if (L.secret) enterChill(); bal = L.balloon ? makeBal(L.balloon) : null; chase = L.chase ? makeChase(L.chase) : null; ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
   parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
@@ -6032,6 +6032,7 @@ function chaseAttack(){
 }
 function updateChase(dt){
   const C = chase; if (!C || C.done || state!=='play') return; const p = player, px = p.x + 11, py = p.y + 17;
+  if (!C.intro){ C.intro = true; popups.push({x:px, y:py - 50, text:'Máy Vẽ Đồ Thị đã thấy Bấc… CHẠY SANG TRÁI!', life:2.6, big:true}); }
   if (C.wait > 0){ C.wait -= dt; }
   const pu = chaseProj(px, py), gap = pu - C.u;
   for (let i = C.P.length - 2; i > C.cpI; i--) if (pu > C.seg[i].s0 + T*1.5){ C.cpI = i; C.cpU = C.seg[i].s0; popups.push({x:px, y:py - 50, text:'✓ mốc an toàn', life:1.2}); popups.push({x:px, y:py - 80, text:CHASE_TIPS[i], life:2.6, big:true}); SFX.play('save'); break; }
