@@ -979,7 +979,7 @@ const LEVELS = [
   '################################^^^^^^^^^^^^^##############^^^^^^^^^^^^^^##################^^^^^^^^^##########',
   '##############################################################################################################',
  ]},
- { name:"Đỉnh Tháp", ch:5, combat:true, chase:{name:"Máy Vẽ Đồ Thị", path:[[96.5, 35.4], [6, 35.4], [6, 8.4], [104.5, 8.4], [104.5, 41.4], [15, 41.4]], speed:150, delay:2.2, segMul:[1, .42, 1, .72, 1]}, pages:["Cỗ máy này vẽ mọi đồ thị ta từng nghĩ ra. Kể cả những đường ta không dám đi."], talks:[], hints:["CHẠY! Máy Vẽ Đồ Thị vẽ đuổi sau lưng: trái → leo giếng → phải → xuống giếng → trái tới cửa. Chạm vào nó là hết."], notes:[["CUỘC RƯỢT ĐUỔI", "Trái → lên → phải → xuống → trái", "Vạch chấm, chữ nhấp nháy: đòn sắp tới", "Chạm Máy Vẽ là hết · có mốc an toàn"]], secrets:[], decor:[], theme:"math", math:true, quiz:[],
+ { name:"Đỉnh Tháp", ch:5, combat:true, chase:{name:"Máy Vẽ Đồ Thị", path:[[96.5, 35.4], [6, 35.4], [6, 8.4], [104.5, 8.4], [104.5, 41.4], [6, 41.4], [6, 53.4], [104, 53.4]], speed:178, delay:2, segMul:[1, .5, 1, .8, 1, .8, 1.05]}, pages:["Cỗ máy này vẽ mọi đồ thị ta từng nghĩ ra. Kể cả những đường ta không dám đi."], talks:[], hints:["CHẠY! Máy Vẽ Đồ Thị vẽ đuổi sau lưng: trái → leo giếng → phải → xuống giếng → trái tới cửa. Chạm vào nó là hết."], notes:[["CUỘC RƯỢT ĐUỔI", "Trái → lên → phải → xuống → trái", "Vạch chấm, chữ nhấp nháy: đòn sắp tới", "Chạm Máy Vẽ là hết · có mốc an toàn"]], secrets:[], decor:[], theme:"math", math:true, quiz:[],
   map:[
   '##############################################################################################################',
   '##############################################################################################################',
@@ -1019,11 +1019,23 @@ const LEVELS = [
   '#.||......................#.........................#.................#........##.......#.......P...........^#',
   '#################################^^^########^^^###############^^^##################^^^#############____......#',
   '###################################################################################################..........#',
-  '#############.................##.............................................................................#',
-  '#############.................##..........___................................................................#',
-  '#############................................................................................................#',
-  '#############..E..................................................#.................#........................#',
-  '########################################^^^^^^^^##########^^^##############^^^############^^^#################',
+  '#.............................##.............................................................................#',
+  '#.............................##..........___................................................................#',
+  '#............................................................................................................#',
+  '#.................................................................#.................#........................#',
+  '#............###########################^^^^^^^^##########^^^##############^^^############^^^#################',
+  '#.____.......#################################################################################################',
+  '#...........^#################################################################################################',
+  '#^...........#################################################################################################',
+  '#.......____.#################################################################################################',
+  '#............#################################################################################################',
+  '#...........^#################################################################################################',
+  '#.____.......#################################################################################################',
+  '#.............................................##........||...............................................#####',
+  '#.............................................##........||.##.........___................................#####',
+  '#.......................................................||.##....................................#.......#####',
+  '#...............................S.......................||.##.............................#.....##......E#####',
+  '####################^^^############^^^^^############################^^^^^^^#######^^^#########################',
   '##############################################################################################################'
  ]},
  { name:"Nhà Kính", ch:6, theme:"bio", bio:"garden", combat:true, pages:["Nhà kính của Hạ. Ta khoá nó lại từ hôm con bé đi, vì không chịu được cảnh cây vẫn xanh mà người trồng thì không còn ở đây.", "Lá cây biết làm một điều mà ta chưa bao giờ học được: biến ánh sáng thành thứ để sống tiếp."], talks:[[6, 12, "Cạc! Nhà kính của Hạ đây. Cây chết khát cả rồi…"], [16, 12, "Nhặt giọt nước 💧, đứng cạnh hạt giống rồi nhấn E. Quang hợp sẽ lo phần còn lại!"], [38, 12, "Phấn hoa bốc lên thành luồng. Nhảy vào là bay!"], [62, 12, "Leo dây leo lên lấy thêm nước trên kệ cao."]], hints:["Nhặt giọt nước, đứng cạnh hạt giống và nhấn E: dây leo mọc thành bậc để leo qua tường.", "Luồng phấn hoa bốc lên: nhảy vào để bay qua hố gai. Tế bào trúng lọ sẽ nguyên phân thành hai!", "Trồng cây, leo lên kệ cao lấy giọt nước tiếp theo.", "Virus bay lượn: lướt hoặc ném lọ. Lối ra ở cuối nhà kính."], notes:[["QUANG HỢP", "6CO₂ + 6H₂O —ánh sáng→ C₆H₁₂O₆ + 6O₂", "Lục lạp: nơi xảy ra quang hợp", "Cây cần NƯỚC + ÁNH SÁNG + CO₂"], ["PHẤN HOA", "Gió và côn trùng mang phấn hoa đi", "Thụ phấn → thụ tinh → hạt", "Luồng khí ấm bốc lên mang theo phấn"], ["NGUYÊN PHÂN", "1 tế bào mẹ → 2 tế bào con giống hệt", "Kì đầu → kì giữa → kì sau → kì cuối", "Mỗi tế bào con có đủ bộ NST 2n"], ["VIRUS", "Vỏ protein (capsid) + lõi ADN/ARN", "Không tự sinh sản: phải kí sinh tế bào", "Axit/bazơ làm biến tính protein vỏ"]], secrets:["Hạc giấy kẹp trong chậu xương rồng: “Bố ơi, cây xương rồng không cần tưới nhiều đâu. Nhưng bố nhớ nói chuyện với nó.” — Hạ"], decor:[["sign", 5, "NHÀ KÍNH"]],
@@ -2303,7 +2315,7 @@ function bhOn(){ return bhOwner && !bhOwner.dead && state==='play'; }
 function bhTick(b, dt, A, pats, th, quiet){
   bhOwner = b; b.bhT = (b.bhT ?? 3) - dt; const ph = b.phase || 1;
   if (!quiet && b.bhT <= 0 && !bhE.length && bhB.length < 160){ const list = pats[ph] || pats[1]; let k; do { k = list[Math.floor(Math.random()*list.length)]; } while (k === b.bhLast && list.length > 1); b.bhLast = k;
-    const ox = b.x, oy = b.y; bhAnnounce(ox, oy, k); BH_PAT[k](ox, oy, A, ph, th); b.bhT = [4.2, 3.1, 2.3][ph-1] + Math.random()*.8; }
+    const ox = b.x, oy = b.y; bhAnnounce(ox, oy, k); BH_PAT[k](ox, oy, A, ph, th); b.bhT = ([4.2, 3.1, 2.3][ph-1] + Math.random()*.8)*(b.bhRate || 1); }
   for (const e of bhE){ e.t += dt; e.acc += dt; while (e.acc >= e.every && e.t < e.dur){ e.acc -= e.every; e.n++; e.fn(e); } } bhE = bhE.filter(e=>e.t < e.dur);
   const p = player, px = p.x + 11, py = p.y + 17;
   for (const u of bhB){ u.t += dt; if (u.t < u.tell) continue;
@@ -2311,6 +2323,7 @@ function bhTick(b, dt, A, pats, th, quiet){
     if (u.curve){ const c = Math.cos(u.curve*dt), s2 = Math.sin(u.curve*dt), vx = u.vx*c - u.vy*s2; u.vy = u.vx*s2 + u.vy*c; u.vx = vx; }
     u.x += u.vx*dt; u.y += u.vy*dt;
     if (u.t > u.life || u.x < A.L - 40 || u.x > A.R + 40 || u.y < A.top - 60 || u.y > A.floor + 10) u.dead = true;
+    if (b.bhSolid && u.t > .15 && solid(Math.floor(u.x/T), Math.floor(u.y/T))) u.dead = true;
     if (!u.dead && Math.hypot(u.x - px, u.y - py) < u.r + 9 && p.dashT<=0 && p.invT<=0){ u.dead = true; if (u.kind==='spore') infect(); hurtPlayer(1, u.x); }
   }
   bhB = bhB.filter(u=>!u.dead); if (bhB.length > 420) bhB.splice(0, bhB.length - 420);
@@ -2332,6 +2345,7 @@ function bhDraw(){
   }
   ctx.restore();
 }
+const BH_CHASE = {1:['aimed','ring','flower','aimed'], 2:['spiral','aimed','ring','burst','flower'], 3:['spiral','cross','flower','burst','aimed','ring']};
 const BH_SPHINX = {1:['ring','aimed','rain','flower'], 2:['ring','spiral','aimed','rain','wall','flower','burst'], 3:['spiral','cross','rain','wall','flower','burst','ring']};
 const BH_CORE   = {1:['ring','aimed','wall','burst'], 2:['spiral','ring','rain','wall','cross','burst'], 3:['cross','spiral','flower','rain','wall','burst','aimed']};
 function resetMathBoss(){
@@ -6295,17 +6309,17 @@ function makeChase(c){ const P = c.path.map(([x,y])=>({x:x*T, y:y*T})), seg = []
   return {def:c, P, seg, total:acc, u:-c.delay*c.speed, wait:c.delay, cpU:0, cpI:0, atk:3.2, hz:[], erased:[], last:'', x:P[0].x, y:P[0].y, dir:{x:-1, y:0}, done:false, trail:[], killed:false}; }
 function chasePos(u){ const C = chase; u = clamp(u, 0, C.total); for (const sg of C.seg) if (u <= sg.s0 + sg.L){ const k = (u - sg.s0)/sg.L; return {x:sg.a.x + (sg.b.x - sg.a.x)*k, y:sg.a.y + (sg.b.y - sg.a.y)*k, dx:(sg.b.x - sg.a.x)/sg.L, dy:(sg.b.y - sg.a.y)/sg.L}; } const l = C.seg[C.seg.length-1]; return {x:l.b.x, y:l.b.y, dx:0, dy:1}; }
 function chaseProj(x, y){ const C = chase; let best = 0, bd = 1e9; for (const sg of C.seg){ const vx = sg.b.x - sg.a.x, vy = sg.b.y - sg.a.y, k = clamp(((x - sg.a.x)*vx + (y - sg.a.y)*vy)/(sg.L*sg.L), 0, 1), px = sg.a.x + vx*k, py = sg.a.y + vy*k, d = Math.hypot(x - px, y - py); if (d < bd){ bd = d; best = sg.s0 + k*sg.L; } } return best; }
-const CHASE_TIPS = ['Chạy sang TRÁI!', 'LÊN! Cột khí → kệ → cột khí thứ hai → đu dây qua gai', 'Chạy sang PHẢI! Cột khí vượt tường, đu dây qua vực gai', 'XUỐNG GIẾNG: bám từng kệ, tránh gai bám tường!', 'Đáy tháp: chạy sang TRÁI tới cửa ra!'];
-function chaseReset(){ const C = chase; if (!C) return; const back = C.cpI === 0 ? C.def.delay*C.def.speed : 7*T; C.u = C.cpU - back; C.wait = 1.6; C.hz = []; C.atk = 3; for (const e of C.erased) grid[e.y][e.x] = e.c; C.erased = []; C.trail = []; C.killed = false;
-  const CPS = [[93.5, 36], [9.5, 36], [20.5, 9], [100.5, 12], [96.5, 42]], n = CPS[C.cpI]; if (n){ player.x = n[0]*T - 11; player.y = n[1]*T - player.h; player.vx = player.vy = 0; } popups.push({x:player.x + 11, y:player.y - 40, text:'CHẠY! ' + CHASE_TIPS[C.cpI], life:2.2, big:true}); }
+const CHASE_TIPS = ['Chạy sang TRÁI!', 'LÊN! Cột khí → kệ → cột khí thứ hai → đu dây qua gai', 'Chạy sang PHẢI! Cột khí vượt tường, đu dây qua vực gai', 'XUỐNG GIẾNG: bám từng kệ, tránh gai bám tường!', 'Đáy tháp: chạy sang TRÁI!', 'XUỐNG giếng cuối: bám kệ, tránh gai!', 'Hầm cuối: chạy sang PHẢI! Lò xo, cột khí, vực gai — cửa ra ở cuối hầm!'];
+function chaseReset(){ const C = chase; if (!C) return; bhClear(); C.bhT = 2.5; const back = C.cpI === 0 ? C.def.delay*C.def.speed : 7*T; C.u = C.cpU - back; C.wait = 1.6; C.hz = []; C.atk = 3; for (const e of C.erased) grid[e.y][e.x] = e.c; C.erased = []; C.trail = []; C.killed = false;
+  const CPS = [[93.5, 36], [9.5, 36], [20.5, 9], [100.5, 12], [96.5, 42], [9.5, 42], [14.5, 54]], n = CPS[C.cpI]; if (n){ player.x = n[0]*T - 11; player.y = n[1]*T - player.h; player.vx = player.vy = 0; } popups.push({x:player.x + 11, y:player.y - 40, text:'CHẠY! ' + CHASE_TIPS[C.cpI], life:2.2, big:true}); }
 function chaseAttack(){
   const C = chase, p = player, px = p.x + 11, py = p.y + 17, sec = C.seg.findIndex(sg=>C.u <= sg.s0 + sg.L), pool = ['line','par','vec','sine','grid'];
   if (sec >= 2) pool.push('erase', 'grid'); if (sec >= 1) pool.push('par', 'line');
   let mv; do { mv = pool[Math.floor(Math.random()*pool.length)]; } while (mv === C.last && pool.length > 1); C.last = mv;
   const bx = C.x, by = C.y;
   if (mv==='line'){ const a = (Math.random()-.5)*1.2; C.hz.push({k:'line', x0:px, y0:py, a, t:0, tell:.85}); popups.push({x:px, y:py - 50, text:`y = ${a>=0?'':'−'}${Math.abs(a).toFixed(1)}x + b`, life:1}); }
-  else if (mv==='par'){ for (let i=0;i<3;i++){ const tx = px + (i-1)*2.2*T + p.vx*.5, ty = py, t = .9 + i*.12, vx = (tx - bx)/t, vy = (ty - by)/t - .5*900*t; C.hz.push({k:'blob', x:bx, y:by, vx, vy, t:0, life:2.2, tx, ty, tellT:t}); } }
-  else if (mv==='vec'){ const ang = Math.atan2(py - by, px - bx); for (let i=-1;i<=1;i++){ const a = ang + i*.22; C.hz.push({k:'arrow', x:bx, y:by, dx:Math.cos(a), dy:Math.sin(a), t:0, tell:.7, v:640, life:2.2}); } }
+  else if (mv==='par'){ for (let i=0;i<5;i++){ const tx = px + (i-2)*1.8*T + p.vx*.5, ty = py, t = .9 + i*.12, vx = (tx - bx)/t, vy = (ty - by)/t - .5*900*t; C.hz.push({k:'blob', x:bx, y:by, vx, vy, t:0, life:2.2, tx, ty, tellT:t}); } }
+  else if (mv==='vec'){ const ang = Math.atan2(py - by, px - bx); for (let i=-2;i<=2;i++){ const a = ang + i*.18; C.hz.push({k:'arrow', x:bx, y:by, dx:Math.cos(a), dy:Math.sin(a), t:0, tell:.7, v:640, life:2.2}); } }
   else if (mv==='sine'){ const dir = Math.sign(px - bx) || -1; C.hz.push({k:'sine', x:bx, y:py + 10, dir, t:0, v:300, life:4}); }
   else if (mv==='grid'){ const cols = []; for (let i=-2;i<=2;i++) if (i !== 0 || Math.random() < .5) cols.push(Math.round(px/T + i*2 + (Math.random() < .5 ? 1 : 0))); for (const cx of cols) C.hz.push({k:'col', x:cx*T + T/2, t:0, tell:.9, life:1.4}); popups.push({x:px, y:py - 60, text:'x = k', life:.8}); }
   else if (mv==='erase'){ let n = 0; for (let y = Math.floor(py/T) + 1; y < GH && n < 3; y++) for (let x = Math.floor(px/T) - 3; x <= Math.floor(px/T) + 3 && n < 3; x++){ if (grid[y] && grid[y][x]==='_' && Math.random() < .8){ C.hz.push({k:'erase', tx:x, ty:y, t:0, tell:1.1, life:3.8}); n++; } } if (!n) return chaseAttack(); }
@@ -6317,13 +6331,16 @@ function updateChase(dt){
   if (C.wait > 0){ C.wait -= dt; }
   const pu = chaseProj(px, py), gap = pu - C.u;
   for (let i = C.P.length - 2; i > C.cpI; i--) if (pu > C.seg[i].s0 + T*1.5){ C.cpI = i; C.cpU = C.seg[i].s0; popups.push({x:px, y:py - 50, text:'✓ mốc an toàn', life:1.2}); popups.push({x:px, y:py - 80, text:CHASE_TIPS[i], life:2.6, big:true}); SFX.play('save'); break; }
-  if (C.wait <= 0){ const si = Math.max(0, C.seg.findIndex(sg=>C.u <= sg.s0 + sg.L)), sp = C.def.speed*(C.def.segMul ? C.def.segMul[si] ?? 1 : 1)*(gap > 12*T ? 1.6 : gap > 7*T ? 1 : gap < 3*T ? .7 : .85); C.u += sp*dt; }
+  if (C.wait <= 0){ const si = Math.max(0, C.seg.findIndex(sg=>C.u <= sg.s0 + sg.L)), sp = C.def.speed*(C.def.segMul ? C.def.segMul[si] ?? 1 : 1)*(gap > 12*T ? 1.7 : gap > 7*T ? 1.15 : gap < 3*T ? .85 : 1); C.u += sp*dt; }
   const q = chasePos(C.u), hk = C.u > 0 ? clamp(1 - Math.abs(gap)/(4*T), 0, 1) : 0; C.x = q.x + (px - q.x)*hk*.9; C.y = q.y + (py - q.y)*hk*.9; C.dir = {x:q.dx, y:q.dy};   // sát nút thì vươn ngòi về phía Bấc
   if (C.u > 0 && (!C.trail.length || Math.hypot(C.trail[C.trail.length-1].x - C.x, C.trail[C.trail.length-1].y - C.y) > 10)){ C.trail.push({x:C.x, y:C.y}); if (C.trail.length > 400) C.trail.shift(); }
   // chạm máy = hết
   if (!C.killed && Math.hypot(C.x - px, C.y - py) < 50 && C.u > 0){ C.killed = true; SFX.play('crash'); shakeT = .5; popups.push({x:px, y:py - 40, text:'Bị vẽ mất rồi!', life:1.6, big:true}); p.shield = 0; die(); return; }
+  // mưa đạn số bắn ra từ máy vẽ (dày dần theo chặng)
+  C.phase = C.cpI < 2 ? 1 : C.cpI < 5 ? 2 : 3; C.bhRate = .55; C.bhSolid = true;
+  bhTick(C, dt, {L:camX - 80, R:camX + viewW + 80, top:camY - 80, floor:camY + viewH + 80}, BH_CHASE, 'num', C.wait > 0 || C.u <= 0);
   // đòn đánh
-  if (C.wait <= 0 && C.u > 0){ C.atk -= dt; if (C.atk <= 0){ chaseAttack(); C.atk = 2.6 + Math.random()*1.4 - (C.cpI*.25); } }
+  if (C.wait <= 0 && C.u > 0){ C.atk -= dt; if (C.atk <= 0){ chaseAttack(); C.atk = Math.max(.9, 1.6 + Math.random()*.9 - C.cpI*.12); } }
   for (const h of C.hz){ h.t += dt;
     if (h.k==='line'){ if (h.t > h.tell && h.t < h.tell + .3){ const d = Math.abs((py - h.y0) - h.a*(px - h.x0))/Math.sqrt(1 + h.a*h.a); if (d < 16 && p.dashT<=0) hurtPlayer(1, h.x0); } if (h.t > h.tell + .4) h.dead = true; }
     else if (h.k==='blob'){ if (h.t > .05){ h.vy += 900*dt; h.x += h.vx*dt; h.y += h.vy*dt; } if (Math.hypot(h.x - px, h.y - py) < 18){ h.dead = true; hurtPlayer(1, h.x); } if (solid(Math.floor(h.x/T), Math.floor(h.y/T)) && h.t > .2){ h.dead = true; sparks(h.x, h.y, 8, 200, .4); } if (h.t > h.life) h.dead = true; }
@@ -6335,7 +6352,7 @@ function updateChase(dt){
   }
   C.hz = C.hz.filter(h=>!h.dead);
 }
-function finishChase(){ if (chase && !chase.done){ chase.done = true; award('plotter'); for (const e of chase.erased) grid[e.y][e.x] = e.c; chase.erased = []; } }
+function finishChase(){ if (chase && !chase.done){ chase.done = true; bhClear(); award('plotter'); for (const e of chase.erased) grid[e.y][e.x] = e.c; chase.erased = []; } }
 function drawChase(){
   const C = chase; if (!C) return; const t = clock; ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = INK; ctx.fillStyle = INK;
   // vệt đồ thị máy đã vẽ
@@ -6360,7 +6377,7 @@ function drawChase(){
     const lx = clamp(player.x + 11 - X, -1, 1), ly = clamp(player.y + 17 - Y, -1, 1); ctx.fillStyle = PAPER; ctx.beginPath(); ctx.arc(lx*10, ly*8 - 4, 14, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(lx*15, ly*12 - 4, 6, 0, Math.PI*2); ctx.fill();
     ctx.strokeStyle = PAPER; ctx.lineWidth = 2; line(-30, 26, 30, 26); line(-26, 20, -26, 32); line(26, 20, 26, 32); ctx.restore();
     if (Math.random() < .5) parts.push({x:X + (Math.random()-.5)*80, y:Y + (Math.random()-.5)*80, vx:-C.dir.x*120, vy:-C.dir.y*120, a:Math.random()*6, va:4, l:3, life:.4}); }
-  ctx.restore();
+  ctx.restore(); bhDraw();
 }
 function drawChaseHUD(){
   const C = chase; if (!C || C.done) return; const pu = chaseProj(player.x + 11, player.y + 17), gap = (pu - C.u)/T, w = Math.min(320, viewW - 160), x = (viewW - w)/2, y = viewH - 26;
