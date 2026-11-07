@@ -2316,9 +2316,9 @@ function bhOn(){ return bhOwner && !bhOwner.dead && state==='play'; }
 function bhTick(b, dt, A, pats, th, quiet){
   bhOwner = b; b.bhT = (b.bhT ?? 3) - dt; const ph = b.phase || 1; bhGrazeT -= dt;
   // Ô GIẤY: giữ ↓ để bung ô đỡ đạn phía trên/trước (tốn mực, đi chậm lại)
-  { const p = player; p.umb = inp.down && mana > 3 && state==='play'; if (p.umb){ mana = Math.max(0, mana - dt*4); p.x -= p.vx*dt*.55; } }
+  { const p = player; p.umbT = Math.max(0, (p.umbT||0) - dt); p.umb = p.umbT > 0 && state==='play'; } updateProps(dt);
   if (!quiet && b.bhT <= 0 && !bhE.length && bhB.length < 160){ const list = pats[ph] || pats[1]; let k; do { k = list[Math.floor(Math.random()*list.length)]; } while (k === b.bhLast && list.length > 1); b.bhLast = k;
-    const ox = b.x, oy = b.y; bhAnnounce(ox, oy, k); if (!bhTold && b !== chase){ bhTold = true; showTip('bhdodge', ['↓','Q'], 'Né mưa đạn: NẤP sau cột/bệ (đạn vỡ khi chạm) · giữ ↓ bung Ô GIẤY đỡ đạn (tốn mực) · LƯỚT xuyên đạn · sượt sát đạn được hồi mực.', null, 9); } BH_PAT[k](ox, oy, A, ph, th); b.bhT = ([4.2, 3.1, 2.3][ph-1] + Math.random()*.8)*(b.bhRate || 1); }
+    const ox = b.x, oy = b.y; bhAnnounce(ox, oy, k); if (!bhTold && b !== chase){ bhTold = true; showTip('bhdodge', ['↓','Q'], 'Né mưa đạn: nấp sau BÌNH PHONG / cột / bệ · nhặt Ô GIẤY ở giá ô (che 8s) · BONG BÓNG đỡ 1 đòn · ô SỐ 0 nuốt đạn số · CỘT HƠI cuốn sạch đạn · LƯỚT xuyên đạn · sượt đạn hồi mực.', null, 9); } BH_PAT[k](ox, oy, A, ph, th); b.bhT = ([4.2, 3.1, 2.3][ph-1] + Math.random()*.8)*(b.bhRate || 1); }
   for (const e of bhE){ e.t += dt; e.acc += dt; while (e.acc >= e.every && e.t < e.dur){ e.acc -= e.every; e.n++; e.fn(e); } } bhE = bhE.filter(e=>e.t < e.dur);
   const p = player, px = p.x + 11, py = p.y + 17;
   for (const u of bhB){ u.t += dt; if (u.t < u.tell) continue;
@@ -2327,8 +2327,9 @@ function bhTick(b, dt, A, pats, th, quiet){
     u.x += u.vx*dt; u.y += u.vy*dt;
     if (u.t > u.life || u.x < A.L - 40 || u.x > A.R + 40 || u.y < A.top - 60 || u.y > A.floor + 10) u.dead = true;
     if (b.bhSolid && u.t > .15 && solid(Math.floor(u.x/T), Math.floor(u.y/T))) u.dead = true;
+    if (!u.dead && props.length) propBlock(u);
     const du = Math.hypot(u.x - px, u.y - py);
-    if (!u.dead && p.umb && du < u.r + 28 && (u.y < py + 10)){ u.dead = true; mana = Math.max(0, mana - 5); sparks(u.x, u.y, 4, 160, .25); if (Math.random() < .3) SFX.play('tick'); continue; }
+    if (!u.dead && p.umb && du < u.r + 28 && (u.y < py + 10)){ u.dead = true; sparks(u.x, u.y, 4, 160, .25); if (Math.random() < .3) SFX.play('tick'); continue; }
     if (!u.dead && du < u.r + 9 && p.dashT<=0 && p.invT<=0){ u.dead = true; if (u.kind==='spore') infect(); hurtPlayer(1, u.x); }
     else if (!u.dead && !u.grazed && du < u.r + 30){ u.grazed = true; mana = Math.min(100, mana + 2); bhGraze++; if (bhGrazeT <= 0){ bhGrazeT = .6; popups.push({x:px, y:py - 34, text:'sượt! +mực', life:.6}); } }
   }
@@ -2337,11 +2338,56 @@ function bhTick(b, dt, A, pats, th, quiet){
 function drawUmb(p){ if (!p.umb) return; const X = p.x + 11, Y = p.y - 6, t = clock; ctx.save(); ctx.strokeStyle = INK; ctx.fillStyle = PAPER; ctx.lineWidth = 2;
   ctx.beginPath(); ctx.arc(X, Y + 8, 26, Math.PI, 0); ctx.closePath(); ctx.fill(); ctx.stroke(); for (let i=1;i<4;i++){ const a = Math.PI + i*Math.PI/4; line(X, Y + 8, X + Math.cos(a)*26, Y + 8 + Math.sin(a)*26); }
   line(X, Y + 8, X, Y + 30); ctx.beginPath(); ctx.arc(X - 3, Y + 30, 3, 0, Math.PI); ctx.stroke(); ctx.restore(); }
+
+// ===== ĐỒ VẬT TRONG ĐẤU TRƯỜNG ĐỂ NÉ ĐẠN =====
+// bình phong (đỡ đạn, vỡ rồi tự dựng lại) · ô số 0 (đạn số lọt vào là biến mất: x·0 = 0) · cột hơi nước (phụt lên định kỳ, cuốn sạch đạn)
+// giá ô giấy (nhặt: ô che đầu 8 giây) · bong bóng xà phòng (nhặt: đỡ 1 đòn)
+let props = [];
+const PROPS_DEF = {
+  sphinx: [['cover',27,15],['cover',50,15],['zero',35,15],['zero',44,15],['umb',39.5,15],['bubble',24,13],['bubble',39.5,11]],
+  core:   [['cover',24,14],['cover',53,14],['vent',37,14],['vent',42,14],['umb',34,14],['bubble',22,9],['bubble',54,9]],
+};
+function initProps(kind){ props = (PROPS_DEF[kind]||[]).map(([k, x, fy])=>({k, x:x*T + (k==='cover' ? 0 : 0), y:fy*T, hp:10, max:10, down:0, cd:0, t:Math.random()*3, flash:0})); }
+function updateProps(dt){
+  const p = player, px = p.x + 11, py = p.y + 17;
+  for (const o of props){ o.flash -= dt;
+    if (o.k==='cover' && o.down > 0){ o.down -= dt; if (o.down <= 0){ o.hp = o.max; SFX.play('tick'); } }
+    if (o.k==='vent'){ o.t += dt; }
+    if ((o.k==='umb' || o.k==='bubble') && o.cd > 0) o.cd -= dt;
+    if (o.k==='umb' && o.cd <= 0 && Math.abs(px - o.x) < 26 && Math.abs(p.y + p.h - o.y) < 30){ o.cd = 16; p.umbT = 8; SFX.play('pickup'); popups.push({x:o.x, y:o.y - 70, text:'Ô GIẤY! che đạn trên đầu 8 giây', life:1.8, big:true}); }
+    if (o.k==='bubble' && o.cd <= 0 && Math.hypot(px - o.x, py - (o.y - 22)) < 26 && !(p.shield > 0)){ o.cd = 13; p.shield = 1; SFX.play('pop'); popups.push({x:o.x, y:o.y - 60, text:'Bong bóng: đỡ 1 đòn!', life:1.6}); }
+  }
+}
+function ventOn(o){ return (o.t % 4.5) > 3.1; }
+function propBlock(u){
+  for (const o of props){
+    if (o.k==='cover' && o.down <= 0 && u.x > o.x + 4 && u.x < o.x + T - 4 && u.y > o.y - 2*T && u.y < o.y){ u.dead = true; o.hp--; o.flash = .1; sparks(u.x, u.y, 3, 120, .2); if (o.hp <= 0){ o.down = 5; SFX.play('crash'); popups.push({x:o.x + T/2, y:o.y - 2*T - 10, text:'bình phong vỡ · dựng lại sau 5s', life:1.4}); } return; }
+    if (o.k==='zero' && u.kind==='num' && Math.hypot(u.x - o.x, u.y - (o.y - 40)) < 52){ u.dead = true; o.flash = .15; return; }
+    if (o.k==='vent' && ventOn(o) && Math.abs(u.x - o.x) < 24 && u.y > o.y - 6*T){ u.dead = true; return; }
+  }
+}
+function drawProps(){
+  if (!props.length) return; const t = clock; ctx.save(); ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineCap = 'round';
+  for (const o of props){
+    if (o.k==='cover'){ const X = o.x, Y = o.y, H = 2*T; if (o.down > 0){ ctx.globalAlpha = .35; ctx.lineWidth = 2; for (let i=0;i<4;i++) line(X + i*10, Y, X + i*10 + 8, Y - 10); ctx.globalAlpha = 1; continue; }
+      ctx.fillStyle = o.flash > 0 ? INK : PAPER; ctx.lineWidth = 2.5; for (let i=0;i<3;i++){ const px2 = X + i*T/3; ctx.beginPath(); ctx.moveTo(px2, Y); ctx.lineTo(px2 + (i%2 ? 2 : -2), Y - H + 6); ctx.lineTo(px2 + T/3 + (i%2 ? -2 : 2), Y - H + 6); ctx.lineTo(px2 + T/3, Y); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+      ctx.fillStyle = INK; ctx.fillRect(X, Y - H + 2, T*(o.hp/o.max), 3); }
+    else if (o.k==='zero'){ const X = o.x, Y = o.y - 40, r = 52 + Math.sin(t*2)*3; ctx.lineWidth = o.flash > 0 ? 6 : 3; ctx.setLineDash([10, 6]); ctx.beginPath(); ctx.ellipse(X, Y, r*.8, r, 0, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.globalAlpha = .5; ctx.font = `700 13px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('× 0', X, Y + 5); ctx.globalAlpha = 1; }
+    else if (o.k==='vent'){ const X = o.x, Y = o.y, on = ventOn(o), pre = !on && (o.t % 4.5) > 2.4; ctx.fillRect(X - 14, Y - 8, 28, 8); ctx.fillStyle = PAPER; for (let i=0;i<3;i++) ctx.fillRect(X - 10 + i*8, Y - 6, 4, 4); ctx.fillStyle = INK;
+      if (pre){ ctx.globalAlpha = .4 + .4*Math.sin(t*30); ctx.font = `700 10px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('HƠI SẮP PHỤT', X, Y - 16); ctx.globalAlpha = 1; }
+      if (on){ ctx.globalAlpha = .55; ctx.fillStyle = PAPER; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; for (let i=0;i<9;i++){ const yy = Y - 10 - ((t*260 + i*40) % (6*T)), rr = 12 + ((Y - yy)/(6*T))*12; ctx.beginPath(); ctx.arc(X + Math.sin(i + t*6)*6, yy, rr, 0, Math.PI*2); ctx.fill(); ctx.stroke(); } ctx.globalAlpha = 1; ctx.fillStyle = INK; } }
+    else if (o.k==='umb'){ const X = o.x, Y = o.y; ctx.lineWidth = 2.5; line(X, Y, X, Y - 40); line(X - 10, Y, X + 10, Y); if (o.cd <= 0){ const b2 = Math.sin(t*3)*2; ctx.fillStyle = PAPER; ctx.beginPath(); ctx.arc(X, Y - 44 + b2, 18, Math.PI, 0); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.globalAlpha = .5 + .3*Math.sin(t*4); ctx.font = `700 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillStyle = INK; ctx.fillText('Ô GIẤY', X, Y - 68); ctx.globalAlpha = 1; }
+      else { ctx.font = `400 9px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText(Math.ceil(o.cd) + 's', X, Y - 46); } }
+    else if (o.k==='bubble'){ if (o.cd > 0) continue; const X = o.x, Y = o.y - 22 + Math.sin(t*2.5 + o.x)*4; ctx.lineWidth = 2; ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.beginPath(); ctx.arc(X, Y, 12, 0, Math.PI*2); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.arc(X - 4, Y - 4, 3, 0, Math.PI*2); ctx.stroke(); }
+  }
+  ctx.restore();
+}
 function bhAnnounce(x, y, k){ bfxAdd({k:'ring', x, y, r0:80, r1:20, lw:3, life:.4});
   const name = {ring:'VÒNG ĐẠN · tìm khe hở', spiral:'XOẮN ỐC', aimed:'NGẮM BẮN', rain:'MƯA ĐẠN · tìm khe', wall:'TƯỜNG ĐẠN · nhảy/đứng vào khe', flower:'HOA XOẮN', cross:'CHỮ THẬP XOAY', burst:'MÌN NỔ VÒNG'}[k];
   popups.push({x, y:y - 90, text:name, life:1.2}); }
 function bhDraw(){
-  if (!bhB.length) return; ctx.save(); const t = clock;
+  drawProps(); if (!bhB.length) return; ctx.save(); const t = clock;
   for (const u of bhB){
     if (u.t < u.tell){ ctx.globalAlpha = .25 + .35*(u.t/u.tell); ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.arc(u.x, u.y, u.r + 6*(1 - u.t/u.tell), 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; continue; }
     if (u.kind==='mine'){ const q = (u.t - u.tell)/(u.life - u.tell), bl = Math.floor(t*(6 + q*20))%2; ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(u.x, u.y, u.r, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = bl ? PAPER : INK; ctx.beginPath(); ctx.arc(u.x, u.y, 4, 0, Math.PI*2); ctx.fill();
@@ -4889,7 +4935,7 @@ function load(i){
   const L = LEVELS[i]; grid = L.map.map(r => r.split(''));
   GH = grid.length; GW = grid[0].length; RW = GW*T; RH = GH*T;
   boxes=[]; secrets=[]; pendulums=[]; ropes=[]; keyItems=[]; crystals=[]; saws=[]; orbs=[]; diary=[]; reading=null; wave = L.waves ? {...L.waves, idx:0, active:false, done:false} : null; enemies=[]; flasks=[]; blobs=[]; drops=[]; decals=[]; litLamps=new Set(); boss=null; pulley=null; heaterOn=false; springA={}; noteSeg=-1; toxicT=0; mana=MANA_MAX; manaShow=MANA_MAX; hasKey=false; leverOn=false; gateOpen={}; gateAnim={};
-  spawnMath = !!L.math; spawnBio = L.theme==='bio'; cboss = null; engLevelStart(); if (L.secret) enterChill(); bal = L.balloon ? makeBal(L.balloon) : null; chase = L.chase ? makeChase(L.chase) : null; bhClear(); ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
+  spawnMath = !!L.math; spawnBio = L.theme==='bio'; cboss = null; engLevelStart(); if (L.secret) enterChill(); bal = L.balloon ? makeBal(L.balloon) : null; chase = L.chase ? makeChase(L.chase) : null; bhClear(); initProps(L.mboss && L.mboss.kind==='sphinx' ? 'sphinx' : (L.coreBoss && !L.coreBoss.phase) ? 'core' : null); ores=[]; ceramics=[]; forgeSeq=null; forgeDone=hasH2SO4; sines=[]; launchers=[]; numTiles={}; pedestals=[]; rulers=[]; const orbCells = []; let bossCell = null;
   parts=[]; ghosts=[]; dashFx=[]; jamT=0; msgT=3; tiles={}; jumpBuf=0; dashBuf=0; actPress=false; cpSeg=0; curSeg=0;
   for (let y=0;y<GH;y++) for (let x=0;x<GW;x++){
     const c = grid[y][x];
@@ -7294,7 +7340,7 @@ function drawNotes(){
 // ===== QUẠ GIẤY: bạn đồng hành, bay theo và bình luận =====
 
 // ===== QUẠ CHỈ CÁCH ĐÁNH BOSS: vào trận / sang giai đoạn mới thì quạ nói cách vượt; đánh lâu không tiến triển thì nhắc lại =====
-const BOSS_COACH = {"vm1": ["Cạc! Vỏ đá vôi: ném AXIT (HCl) vào nó! Bấm X để đổi lọ.", "Chỉ đánh được lúc nó đang ra đòn hoặc bị CHOÁNG. Khép vỏ xoay tròn thì chờ.", "Dụ nó vào ngay dưới ĐÈN CHÙM rồi lướt đứt xích: đèn rơi trúng là choáng!"], "vm2": ["Vỏ vỡ rồi! Thân axit: giờ ném BAZƠ (NaOH) để trung hoà!", "Lũ axit dâng lên: nhảy lên bệ cao. Vũng axit khung nhấp nháy: tránh ra!"], "vm3": ["Lõi mực! Lọ vô dụng rồi: chỉ LƯỚT (Q) thẳng vào lõi.", "Chờ nó đập sàn tới CHOÁNG hoặc húc đầu vào tường, rồi lướt: sát thương ×2!", "Cầu mực đuổi theo? Lướt xuyên qua là phá được."], "vm4": ["Tối quá… Thắp cả 3 ĐÈN cùng lúc (E): vỏ của tim sẽ bay hơi!", "Ngay sau tiếng PHÙ!, nó mất 9 giây mới thổi được: thắp liền một mạch cả 3!", "Vỏ bay hơi thì LƯỚT vào tim liên tục!"], "sp1": ["Cạc! Nhân Sư hỏi: chạm quả cầu có đáp án ĐÚNG để đánh nó!", "Đạn số vỡ khi chạm bệ: NẤP dưới bệ! Giữ ↓ bung Ô GIẤY đỡ đạn, sượt sát đạn còn được hồi mực.", "Chưa chắc? Dùng kính lúp (V) soi số. Sai là bị phạt đấy.", "Lúc nó đang hỏi thì không bắn: tranh thủ tính nhẩm!"], "sp2": ["Nó nổi giận: đạn số dày hơn! Né khe hở trước, trả lời sau.", "Mưa đạn từ trần: đứng dưới bệ hoặc giơ Ô GIẤY (giữ ↓).", "Lướt xuyên qua đạn thì không bị trúng."], "sp3": ["Giai đoạn cuối: nó vừa hỏi vừa bắn! Tìm khe trong mưa đạn rồi chạy tới quả cầu đúng."], "core1": ["Cạc! Lõi Nhiệt Động: đứng sát CỘT CHỊU LỰC để dụ piston đập vào cột!", "Giọt nhiệt vỡ khi chạm cột: nấp sau cột! Giữ ↓ bung Ô GIẤY đỡ đạn.", "Piston kẹt vào cột thì lõi hạ xuống: LƯỚT hoặc NÉM LỌ vào lõi!", "Đứng giữa sàn thì piston không kẹt đâu."], "core2": ["Quá nhiệt! Khi nhiệt ≥ 60%, chạy tới VAN LÀM MÁT nhấn E: lõi xả nhiệt và lộ ra.", "Tường đạn bay ngang: nhảy qua khe hoặc nấp sau cột.", "Nhiệt chạm 100% là nổ hơi nước: chạy vào VÙNG LÀM MÁT!", "Tia nhiệt hay tua-bin quét: trốn sau cột!"], "core3": ["Sụp đổ! Còn 45 giây! LƯỚT vào CẦU NHIỆT để bật nó ngược vào lõi!", "Điểm kỳ dị hút vào giữa: bám tường rồi lướt ngược ra!"], "fung1": ["Cạc! Nấm sợ nắng: mở đủ 3 CỬA MÁI (E ở cần gạt) cùng lúc!", "Nắng vào, nấm co rút: LƯỚT hoặc NÉM LỌ vào nó!", "Trúng bào tử 3 lần là bị Cordyceps đảo phím: đứng vào vệt nắng để chữa!"], "fung2": ["Xác tế bào nuôi nấm! Ném lọ hoặc lướt qua xác trước khi rễ bò tới.", "Cửa mái khép nhanh hơn rồi: mở liền một mạch cả 3!"], "fung3": ["Nấm tách thành 3 THỂ QUẢ! Mở cửa mái NGAY TRÊN từng cái rồi lướt vào.", "Phá cái đầu tiên là đếm 14 giây: hạ đủ 3 trước khi chúng mọc lại!"]};
+const BOSS_COACH = {"vm1": ["Cạc! Vỏ đá vôi: ném AXIT (HCl) vào nó! Bấm X để đổi lọ.", "Chỉ đánh được lúc nó đang ra đòn hoặc bị CHOÁNG. Khép vỏ xoay tròn thì chờ.", "Dụ nó vào ngay dưới ĐÈN CHÙM rồi lướt đứt xích: đèn rơi trúng là choáng!"], "vm2": ["Vỏ vỡ rồi! Thân axit: giờ ném BAZƠ (NaOH) để trung hoà!", "Lũ axit dâng lên: nhảy lên bệ cao. Vũng axit khung nhấp nháy: tránh ra!"], "vm3": ["Lõi mực! Lọ vô dụng rồi: chỉ LƯỚT (Q) thẳng vào lõi.", "Chờ nó đập sàn tới CHOÁNG hoặc húc đầu vào tường, rồi lướt: sát thương ×2!", "Cầu mực đuổi theo? Lướt xuyên qua là phá được."], "vm4": ["Tối quá… Thắp cả 3 ĐÈN cùng lúc (E): vỏ của tim sẽ bay hơi!", "Ngay sau tiếng PHÙ!, nó mất 9 giây mới thổi được: thắp liền một mạch cả 3!", "Vỏ bay hơi thì LƯỚT vào tim liên tục!"], "sp1": ["Cạc! Nhân Sư hỏi: chạm quả cầu có đáp án ĐÚNG để đánh nó!", "Né đạn: nấp sau BÌNH PHONG, đứng trong vòng SỐ 0 (đạn số lọt vào là mất: x·0 = 0), nhặt Ô GIẤY ở giá ô, BONG BÓNG đỡ 1 đòn!", "Chưa chắc? Dùng kính lúp (V) soi số. Sai là bị phạt đấy.", "Lúc nó đang hỏi thì không bắn: tranh thủ tính nhẩm!"], "sp2": ["Nó nổi giận: đạn số dày hơn! Né khe hở trước, trả lời sau.", "Mưa đạn dày quá thì chui vào vòng SỐ 0 hoặc lấy Ô GIẤY.", "Lướt xuyên qua đạn thì không bị trúng."], "sp3": ["Giai đoạn cuối: nó vừa hỏi vừa bắn! Tìm khe trong mưa đạn rồi chạy tới quả cầu đúng."], "core1": ["Cạc! Lõi Nhiệt Động: đứng sát CỘT CHỊU LỰC để dụ piston đập vào cột!", "Né đạn: nấp sau BÌNH PHONG hoặc cột · đứng cạnh CỘT HƠI lúc nó phụt (cuốn sạch đạn) · nhặt Ô GIẤY, BONG BÓNG trên bệ.", "Piston kẹt vào cột thì lõi hạ xuống: LƯỚT hoặc NÉM LỌ vào lõi!", "Đứng giữa sàn thì piston không kẹt đâu."], "core2": ["Quá nhiệt! Khi nhiệt ≥ 60%, chạy tới VAN LÀM MÁT nhấn E: lõi xả nhiệt và lộ ra.", "Tường đạn bay ngang: nhảy qua khe hoặc nấp sau cột.", "Nhiệt chạm 100% là nổ hơi nước: chạy vào VÙNG LÀM MÁT!", "Tia nhiệt hay tua-bin quét: trốn sau cột!"], "core3": ["Sụp đổ! Còn 45 giây! LƯỚT vào CẦU NHIỆT để bật nó ngược vào lõi!", "Điểm kỳ dị hút vào giữa: bám tường rồi lướt ngược ra!"], "fung1": ["Cạc! Nấm sợ nắng: mở đủ 3 CỬA MÁI (E ở cần gạt) cùng lúc!", "Nắng vào, nấm co rút: LƯỚT hoặc NÉM LỌ vào nó!", "Trúng bào tử 3 lần là bị Cordyceps đảo phím: đứng vào vệt nắng để chữa!"], "fung2": ["Xác tế bào nuôi nấm! Ném lọ hoặc lướt qua xác trước khi rễ bò tới.", "Cửa mái khép nhanh hơn rồi: mở liền một mạch cả 3!"], "fung3": ["Nấm tách thành 3 THỂ QUẢ! Mở cửa mái NGAY TRÊN từng cái rồi lướt vào.", "Phá cái đầu tiên là đếm 14 giây: hạ đủ 3 trước khi chúng mọc lại!"]};
 const coach = {key:null, t:0, idx:0, hpSnap:null};
 function coachState(){
   if (boss && boss.engaged && !boss.dead) return ['vm' + boss.phase, boss.armor + boss.body + boss.core + (boss.heart||0)];
