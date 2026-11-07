@@ -4951,6 +4951,7 @@ function respawn(){
   for (const c of crystals) c.cd = 0;
   mana = Math.max(mana, MANA_DASH);
   if (chase && !chase.done) chaseReset();
+  coach.key = null;
   updateCam(0, true, true); engRespawn();
   // hoạt ảnh hiện hình: mực tụ lại
   for (let i=0;i<14;i++){ const a=i/14*Math.PI*2; parts.push({x:cp.x+11+Math.cos(a)*40,y:cp.y+17+Math.sin(a)*40,vx:-Math.cos(a)*90,vy:-Math.sin(a)*90-60,a,va:0,l:5,life:.45}); }
@@ -5668,7 +5669,7 @@ function update(dt){
   shakeT -= dt; updateAmbience(dt); updateZoom(dt);
   computeSteam();
   updatePulley(dt); if (sines.length) updateSines();
-  updateBal(dt); updateChase(dt); if (LEVELS[lvl] && LEVELS[lvl].theme==='bio') updateBio(dt); updatePlayer(dt);
+  updateCoach(dt); updateBal(dt); updateChase(dt); if (LEVELS[lvl] && LEVELS[lvl].theme==='bio') updateBio(dt); updatePlayer(dt);
   if (LEVELS[lvl].combat){ updateCombat(dt); if (state!=='play' && state!=='trans') return; }
   for (const b of boxes){
     const wet = tileAt(b.x+T/2, b.y+T/2)==='w';
@@ -7282,6 +7283,26 @@ function drawNotes(){
   ctx.restore();
 }
 // ===== QUẠ GIẤY: bạn đồng hành, bay theo và bình luận =====
+
+// ===== QUẠ CHỈ CÁCH ĐÁNH BOSS: vào trận / sang giai đoạn mới thì quạ nói cách vượt; đánh lâu không tiến triển thì nhắc lại =====
+const BOSS_COACH = {"vm1": ["Cạc! Vỏ đá vôi: ném AXIT (HCl) vào nó! Bấm X để đổi lọ.", "Chỉ đánh được lúc nó đang ra đòn hoặc bị CHOÁNG. Khép vỏ xoay tròn thì chờ.", "Dụ nó vào ngay dưới ĐÈN CHÙM rồi lướt đứt xích: đèn rơi trúng là choáng!"], "vm2": ["Vỏ vỡ rồi! Thân axit: giờ ném BAZƠ (NaOH) để trung hoà!", "Lũ axit dâng lên: nhảy lên bệ cao. Vũng axit khung nhấp nháy: tránh ra!"], "vm3": ["Lõi mực! Lọ vô dụng rồi: chỉ LƯỚT (Q) thẳng vào lõi.", "Chờ nó đập sàn tới CHOÁNG hoặc húc đầu vào tường, rồi lướt: sát thương ×2!", "Cầu mực đuổi theo? Lướt xuyên qua là phá được."], "vm4": ["Tối quá… Thắp cả 3 ĐÈN cùng lúc (E): vỏ của tim sẽ bay hơi!", "Ngay sau tiếng PHÙ!, nó mất 9 giây mới thổi được: thắp liền một mạch cả 3!", "Vỏ bay hơi thì LƯỚT vào tim liên tục!"], "sp1": ["Cạc! Nhân Sư hỏi: chạm quả cầu có đáp án ĐÚNG để đánh nó!", "Chưa chắc? Dùng kính lúp (V) soi số. Sai là bị phạt đấy.", "Lúc nó đang hỏi thì không bắn: tranh thủ tính nhẩm!"], "sp2": ["Nó nổi giận: đạn số dày hơn! Né khe hở trước, trả lời sau.", "Lướt xuyên qua đạn thì không bị trúng."], "sp3": ["Giai đoạn cuối: nó vừa hỏi vừa bắn! Tìm khe trong mưa đạn rồi chạy tới quả cầu đúng."], "core1": ["Cạc! Lõi Nhiệt Động: đứng sát CỘT CHỊU LỰC để dụ piston đập vào cột!", "Piston kẹt vào cột thì lõi hạ xuống: LƯỚT hoặc NÉM LỌ vào lõi!", "Đứng giữa sàn thì piston không kẹt đâu."], "core2": ["Quá nhiệt! Khi nhiệt ≥ 60%, chạy tới VAN LÀM MÁT nhấn E: lõi xả nhiệt và lộ ra.", "Nhiệt chạm 100% là nổ hơi nước: chạy vào VÙNG LÀM MÁT!", "Tia nhiệt hay tua-bin quét: trốn sau cột!"], "core3": ["Sụp đổ! Còn 45 giây! LƯỚT vào CẦU NHIỆT để bật nó ngược vào lõi!", "Điểm kỳ dị hút vào giữa: bám tường rồi lướt ngược ra!"], "fung1": ["Cạc! Nấm sợ nắng: mở đủ 3 CỬA MÁI (E ở cần gạt) cùng lúc!", "Nắng vào, nấm co rút: LƯỚT hoặc NÉM LỌ vào nó!", "Trúng bào tử 3 lần là bị Cordyceps đảo phím: đứng vào vệt nắng để chữa!"], "fung2": ["Xác tế bào nuôi nấm! Ném lọ hoặc lướt qua xác trước khi rễ bò tới.", "Cửa mái khép nhanh hơn rồi: mở liền một mạch cả 3!"], "fung3": ["Nấm tách thành 3 THỂ QUẢ! Mở cửa mái NGAY TRÊN từng cái rồi lướt vào.", "Phá cái đầu tiên là đếm 14 giây: hạ đủ 3 trước khi chúng mọc lại!"]};
+const coach = {key:null, t:0, idx:0, hpSnap:null};
+function coachState(){
+  if (boss && boss.engaged && !boss.dead) return ['vm' + boss.phase, boss.armor + boss.body + boss.core + (boss.heart||0)];
+  if (mboss && mboss.engaged && !mboss.dead && mboss.def.kind==='sphinx') return ['sp' + (mboss.phase||1), mboss.hp];
+  if (cboss && cboss.engaged && !cboss.dead && !cboss.def.phase) return ['core' + cboss.phase, cboss.hp];
+  if (fung && fung.engaged && !fung.dead) return ['fung' + (fung.split ? 3 : fung.phase), fung.hp];
+  return [null, 0];
+}
+function coachSay(lines){ if (!crow) return; crow.queue = crow.queue.filter(q=>!q.coach); for (const l of lines){ const q = new String(l); q.coach = true; crow.queue.push(q); } crow.sayT = Math.min(crow.sayT, .2); }
+function updateCoach(dt){
+  if (state!=='play' || !crow) return; const [key, hp] = coachState();
+  if (!key){ coach.key = null; return; }
+  const lines = BOSS_COACH[key]; if (!lines) return;
+  if (key !== coach.key){ coach.key = key; coach.t = 0; coach.idx = 0; coach.hpSnap = hp; coachSay(lines); return; }
+  coach.t += dt; if (hp !== coach.hpSnap){ coach.hpSnap = hp; coach.t = 0; }   // vừa gây được sát thương → khỏi nhắc
+  if (coach.t > 20){ coach.t = 0; coach.idx = (coach.idx + 1) % lines.length; coachSay(['Gợi ý: ' + lines[coach.idx]]); }
+}
 function updateCrow(dt){
   const c = crow, p = player; if (!c || LEVELS[lvl].secret) return;
   const idle = p.ground && Math.abs(p.vx) < 10 && p.idleT > 1.2;
